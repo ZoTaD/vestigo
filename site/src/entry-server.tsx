@@ -6,6 +6,7 @@ import { VALHEIM_TABS, type Route } from "./route";
 import { loadBuilds } from "./deadlockBuildsData";
 import { loadMastery } from "./deadlockMasteryData";
 import { loadDetail } from "./deadlockItemsData";
+import { loadRanks } from "./deadlockRanksData";
 import { loadEdition, resolveSlug } from "./deadlockNewsData";
 import { loadHeroDetail, loadHeroKit, loadInsights } from "./deadlockHeroKitData";
 import { BANDS, BRAWL, loadBand, PUBLISHED_BAND } from "./deadlockData";
@@ -109,6 +110,7 @@ async function preload(route: Route): Promise<void> {
     ]);
   }
   if (route.dlSection === "heroes") await quiet(loadHeroKit());
+  if (route.dlSection === "ranks") await quiet(loadRanks());
   if (route.dlSection === "street-brawl") await quiet(loadBand(BRAWL));
   if (route.dlSection === "items" && route.detail) await quiet(loadDetail());
   if (route.dlSection === "patches") {

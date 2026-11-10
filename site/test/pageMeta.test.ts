@@ -28,7 +28,7 @@ describe("cada pestaña de Deadlock tiene su propio título", () => {
   });
 
   it("deja el meta con el título llano del juego, que es la URL indexada", () => {
-    expect(de("meta").title).toContain("Hero Tier List");
+    expect(de("meta").title).toContain("Deadlock Tier List");
   });
 
   it("nombra al héroe o al ítem cuando la ruta abre uno", () => {

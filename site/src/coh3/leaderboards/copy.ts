@@ -3,7 +3,9 @@ import { useLang } from "../../i18n";
 
 const EN = {
   k: "Live ladder",
-  h1: "Leaderboards",
+  h1: (g: string) => `${g} leaderboards`,
+  /** El rótulo de la tabla abierta ("Leaderboards 1v1 · Wehrmacht"). */
+  label: "Leaderboards",
   lede: "Live automatch standings for each mode and faction. Tap a player to open their profile.",
   mode: "Mode",
   faction: "Faction",
@@ -40,7 +42,8 @@ const EN = {
 
 const ES: typeof EN = {
   k: "Ranking en vivo",
-  h1: "Ranking",
+  h1: (g: string) => `Ranking de ${g}`,
+  label: "Ranking",
   lede: "Las posiciones de automatch de cada modo y facción, en vivo. Tocá un jugador para ver su ficha.",
   mode: "Modo",
   faction: "Facción",

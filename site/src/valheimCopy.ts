@@ -10,17 +10,64 @@ import { useLang } from "./i18n";
 import type { ValheimTab } from "./route";
 import type { BiomeId } from "./valheimData";
 
+/** Las pestañas de la enciclopedia: su nombre corto, el de la barra y las migas. */
+const EN_TABS: Record<ValheimTab, string> = {
+  foods: "Food", meads: "Meads", weapons: "Weapons", armor: "Armor", tools: "Tools",
+  building: "Building", materials: "Materials", creatures: "Creatures", biomes: "Biomes", places: "Places", bosses: "Bosses",
+};
+const ES_TABS: Record<ValheimTab, string> = {
+  foods: "Comidas", meads: "Hidromieles", weapons: "Armas", armor: "Armaduras", tools: "Herramientas",
+  building: "Construcción", materials: "Materiales", creatures: "Criaturas", biomes: "Biomas", places: "Lugares", bosses: "Jefes",
+};
+
+/** El `<title>` de cada pestaña: el juego primero y lo que se busca de esa lista (2026-11-10). */
+const EN_TAB_TITLES: Record<ValheimTab, string> = {
+  foods: "Valheim Food List: Health, Stamina, Duration and Recipes | Vestigo",
+  meads: "Valheim Meads: Every Mead Recipe and Effect | Vestigo",
+  weapons: "Valheim Weapons List: Damage, Recipes and Upgrade Costs | Vestigo",
+  armor: "Valheim Armor List: Every Set, Stats and Upgrades | Vestigo",
+  tools: "Valheim Tools, Arrows and Bolts: Full List and Recipes | Vestigo",
+  building: "Valheim Building Pieces: Every Piece and Its Cost | Vestigo",
+  materials: "Valheim Materials: Where to Find Every Resource | Vestigo",
+  creatures: "Valheim Creatures: Health, Weaknesses, Drops and Spawns | Vestigo",
+  biomes: "Valheim Biomes in Order: Enemies, Resources and Bosses | Vestigo",
+  places: "Valheim Dungeons and Locations: Enemies and Loot | Vestigo",
+  bosses: "Valheim Bosses: How to Summon, Weaknesses and Powers | Vestigo",
+};
+const ES_TAB_TITLES: Record<ValheimTab, string> = {
+  foods: "Comidas de Valheim: salud, aguante, duración y recetas | Vestigo",
+  meads: "Hidromieles de Valheim: todas las recetas y sus efectos | Vestigo",
+  weapons: "Armas de Valheim: daño, recetas y costo de las mejoras | Vestigo",
+  armor: "Armaduras de Valheim: todos los sets, stats y mejoras | Vestigo",
+  tools: "Herramientas, flechas y virotes de Valheim: lista y recetas | Vestigo",
+  building: "Construcción en Valheim: todas las piezas y su costo | Vestigo",
+  materials: "Materiales de Valheim: dónde conseguir cada recurso | Vestigo",
+  creatures: "Criaturas de Valheim: vida, debilidades, botín y dónde aparecen | Vestigo",
+  biomes: "Biomas de Valheim en orden: enemigos, recursos y jefes | Vestigo",
+  places: "Mazmorras y lugares de Valheim: enemigos y botín | Vestigo",
+  bosses: "Jefes de Valheim: cómo invocarlos, debilidades y poderes | Vestigo",
+};
+
+/** De nombre de pestaña a su título (ver `seo.tab`). */
+function titleOfTab(tabs: Record<ValheimTab, string>, titles: Record<ValheimTab, string>, name: string): string | undefined {
+  const id = (Object.keys(tabs) as ValheimTab[]).find((k) => tabs[k] === name);
+  return id ? titles[id] : undefined;
+}
+
 const EN = {
   seo: {
     home: {
       title: "Valheim encyclopedia: recipes, food, meads, weapons and bosses | Vestigo",
       description: "Every recipe, food, mead, weapon, armor piece, building piece and creature in Valheim 1.0, with official names in English and Spanish and where each thing comes from.",
     },
-    tab: (tab: string) => `Valheim ${tab.toLowerCase()}: full list with filters | Vestigo`,
+    // El título de cada pestaña sale de `EN_TAB_TITLES` (lo que se busca de cada una); `metaFor` pasa el nombre de
+    // la pestaña, así que se vuelve a su id. El genérico queda por si una pestaña nueva todavía no tiene el suyo.
+    tab: (tab: string) => titleOfTab(EN_TABS, EN_TAB_TITLES, tab) ?? `Valheim ${tab.toLowerCase()}: full list | Vestigo`,
     detail: (name: string, tab: string) => `${name} — Valheim ${tab.toLowerCase()} | Vestigo`,
     detailDesc: (name: string) => `${name} in Valheim: recipe, stats, upgrade costs, where it comes from and everything it is used in.`,
   },
   title: "Valheim",
+  homeH1: "Valheim encyclopedia",
   lede: "Everything the game lets you make, eat, build and hunt — with the official names and where each thing comes from.",
   loading: "Opening the chest…",
   notFound: "That isn't in the encyclopedia.",
@@ -88,22 +135,26 @@ const EN = {
   wikiCredit: "Places, habitats and photos of creatures and places:",
   wikiLicense: "under CC BY-SA 3.0 (the author of each photo shows when you hover it).",
   wikiExtraCredit: "Deep North data (places, attacks, drop rates) checked against",
-  tabs: {
-    foods: "Food", meads: "Meads", weapons: "Weapons", armor: "Armor", tools: "Tools",
-    building: "Building", materials: "Materials", creatures: "Creatures", biomes: "Biomes", places: "Places", bosses: "Bosses",
+  tabs: EN_TABS,
+  // El título visible de cada pestaña: con el nombre del juego, que es como se busca.
+  tabH1: {
+    foods: "Valheim food list", meads: "Valheim meads", weapons: "Valheim weapons", armor: "Valheim armor list",
+    tools: "Valheim tools and ammo", building: "Valheim building pieces", materials: "Valheim materials",
+    creatures: "Valheim creatures", biomes: "Valheim biomes", places: "Valheim dungeons and places", bosses: "Valheim bosses",
   } as Record<ValheimTab, string>,
+  // También es la descripción de la página: arranca por el juego.
   tabLede: {
-    foods: "Everything you can eat: what it gives, how long it lasts and how to cook it.",
-    meads: "From the base at the mead ketill to the fermenter: what every mead needs and what it does.",
-    weapons: "Every weapon, its damage, and what each upgrade costs.",
-    armor: "Helmets, chests, legs, capes, shields and trinkets, with their armor and sets.",
-    tools: "Tools, arrows, bolts and the rest of the ammo.",
-    building: "Everything the hammer, the hoe, the cultivator and the serving tray can place, and what it takes.",
-    materials: "Every material and trophy, where it comes from and what it is for.",
-    creatures: "Every creature: health, what hurts it, what it drops and where it lives.",
-    biomes: "The nine biomes in order: what lives there, what you find, what to bring and who rules it.",
-    places: "Dungeons, ruins and landmarks of every biome: who lives inside and what you can find there.",
-    bosses: "The Forsaken: how to summon them, what hurts them and the power they leave.",
+    foods: "Every Valheim food: what it gives, how long it lasts and how to cook it.",
+    meads: "Every Valheim mead, from the base at the mead ketill to the fermenter: what it needs and what it does.",
+    weapons: "Every Valheim weapon, its damage, and what each upgrade costs.",
+    armor: "Valheim helmets, chests, legs, capes, shields and trinkets, with their armor and sets.",
+    tools: "Valheim tools, arrows, bolts and the rest of the ammo, with their recipes.",
+    building: "Everything the Valheim hammer, hoe, cultivator and serving tray can place, and what it takes.",
+    materials: "Every Valheim material and trophy, where it comes from and what it is for.",
+    creatures: "Every Valheim creature: health, what hurts it, what it drops and where it lives.",
+    biomes: "The nine Valheim biomes in order: what lives there, what you find, what to bring and who rules it.",
+    places: "Valheim dungeons, ruins and landmarks of every biome: who lives inside and what you can find there.",
+    bosses: "The Valheim bosses, the Forsaken: how to summon them, what hurts them and the power they leave.",
   } as Record<ValheimTab, string>,
   biomes: {
     meadows: "Meadows", blackforest: "Black Forest", swamp: "Swamp", mountain: "Mountain", plains: "Plains",
@@ -248,7 +299,7 @@ const EN = {
     hub: "What to gather, and where",
     seoTitle: "Valheim Crafting Planner (1.0): every material and where to find it | Vestigo",
     seoDesc: "Pick what you want to make in Valheim — weapons and armor at any upgrade level, food, meads, buildings, boss offerings — and get every material you need, the biome and creature it comes from, the stations and the total weight. Free, in your browser.",
-    title: "Planner",
+    title: "Valheim crafting planner",
     lede: "Build your list and get the route: what to gather, how much and in which biome.",
     search: "Search anything you can craft, cook or build",
     all: "All",
@@ -310,7 +361,7 @@ const EN = {
   },
   pat: {
     tab: "Patches",
-    title: "The Chronicle",
+    title: "Valheim patch notes",
     lede: "Every official Valheim patch, one edition per version: what's new, what changed and what got fixed, with every item linked to the encyclopedia.",
     seoTab: "Valheim patch notes: every update, item by item | Vestigo",
     seoEdition: (label: string) => `Valheim patch ${label} | Vestigo`,
@@ -343,11 +394,12 @@ const ES: typeof EN = {
       title: "Valheim en español: recetas, comidas, hidromieles, armas y jefes | Vestigo",
       description: "Todas las recetas, comidas, hidromieles, armas, armaduras, construcciones y criaturas de Valheim 1.0, con los nombres oficiales en español e inglés y de dónde sale cada cosa.",
     },
-    tab: (tab) => `${tab} de Valheim: la lista completa con filtros | Vestigo`,
+    tab: (tab) => titleOfTab(ES_TABS, ES_TAB_TITLES, tab) ?? `${tab} de Valheim: la lista completa | Vestigo`,
     detail: (name, tab) => `${name} — ${tab} de Valheim | Vestigo`,
     detailDesc: (name) => `${name} en Valheim: receta, estadísticas, costo de las mejoras, de dónde sale y en qué se usa.`,
   },
   title: "Valheim",
+  homeH1: "Enciclopedia de Valheim",
   lede: "Todo lo que el juego te deja fabricar, comer, construir y cazar, con los nombres oficiales y de dónde sale cada cosa.",
   loading: "Abriendo el cofre…",
   notFound: "Eso no está en la enciclopedia.",
@@ -415,22 +467,24 @@ const ES: typeof EN = {
   wikiCredit: "Lugares, hábitats y fotos de criaturas y lugares:",
   wikiLicense: "bajo licencia CC BY-SA 3.0 (el autor de cada foto aparece al pasar el cursor).",
   wikiExtraCredit: "Datos del Norte profundo (lugares, ataques, probabilidades) revisados contra",
-  tabs: {
-    foods: "Comidas", meads: "Hidromieles", weapons: "Armas", armor: "Armaduras", tools: "Herramientas",
-    building: "Construcción", materials: "Materiales", creatures: "Criaturas", biomes: "Biomas", places: "Lugares", bosses: "Jefes",
+  tabs: ES_TABS,
+  tabH1: {
+    foods: "Comidas de Valheim", meads: "Hidromieles de Valheim", weapons: "Armas de Valheim", armor: "Armaduras de Valheim",
+    tools: "Herramientas y munición de Valheim", building: "Construcción en Valheim", materials: "Materiales de Valheim",
+    creatures: "Criaturas de Valheim", biomes: "Biomas de Valheim", places: "Mazmorras y lugares de Valheim", bosses: "Jefes de Valheim",
   },
   tabLede: {
-    foods: "Todo lo que se come: cuánto da, cuánto dura y cómo se cocina.",
-    meads: "De la malta en el caldero de aguamiel al fermentador: qué lleva cada hidromiel y qué hace.",
-    weapons: "Cada arma, su daño y lo que cuesta cada mejora.",
-    armor: "Cascos, pecheras, grebas, capas, escudos y abalorios, con su armadura y su set.",
-    tools: "Herramientas, flechas, virotes y el resto de la munición.",
-    building: "Todo lo que ponen el martillo, la azada, el cultivador y la bandeja, y lo que cuesta.",
-    materials: "Cada material y trofeo, de dónde sale y para qué sirve.",
-    creatures: "Cada criatura: vida, qué le hace daño, qué suelta y dónde vive.",
-    biomes: "Los nueve biomas en orden: qué vive ahí, qué encuentras, qué llevar y quién manda.",
-    places: "Mazmorras, ruinas y lugares de cada bioma: quién vive adentro y qué se encuentra ahí.",
-    bosses: "Los Desterrados: cómo invocarlos, qué les pega y el poder que dejan.",
+    foods: "Todas las comidas de Valheim: cuánto dan, cuánto duran y cómo se cocinan.",
+    meads: "Todos los hidromieles de Valheim, de la malta en el caldero de aguamiel al fermentador: qué lleva cada uno y qué hace.",
+    weapons: "Cada arma de Valheim, su daño y lo que cuesta cada mejora.",
+    armor: "Cascos, pecheras, grebas, capas, escudos y abalorios de Valheim, con su armadura y su set.",
+    tools: "Herramientas, flechas, virotes y el resto de la munición de Valheim, con sus recetas.",
+    building: "Todo lo que ponen el martillo, la azada, el cultivador y la bandeja de Valheim, y lo que cuesta.",
+    materials: "Cada material y trofeo de Valheim, de dónde sale y para qué sirve.",
+    creatures: "Cada criatura de Valheim: vida, qué le hace daño, qué suelta y dónde vive.",
+    biomes: "Los nueve biomas de Valheim en orden: qué vive ahí, qué encuentras, qué llevar y quién manda.",
+    places: "Mazmorras, ruinas y lugares de cada bioma de Valheim: quién vive adentro y qué se encuentra ahí.",
+    bosses: "Los jefes de Valheim, los Desterrados: cómo invocarlos, qué les pega y el poder que dejan.",
   },
   biomes: {
     meadows: "Praderas", blackforest: "Bosque negro", swamp: "Pantano", mountain: "Montaña", plains: "Llanuras",
@@ -573,7 +627,7 @@ const ES: typeof EN = {
     hub: "Qué juntar y dónde",
     seoTitle: "Planificador de Valheim (1.0): todos los materiales y dónde conseguirlos | Vestigo",
     seoDesc: "Elige lo que quieres fabricar en Valheim — armas y armaduras en cualquier nivel, comidas, hidromieles, construcciones, ofrendas de jefes — y obtén cada material que necesitas, el bioma y la criatura de donde sale, las estaciones y el peso total. Gratis, en tu navegador.",
-    title: "Planificador",
+    title: "Planificador de Valheim",
     lede: "Arma tu lista y te damos la hoja de ruta: qué juntar, cuánto y en qué bioma.",
     search: "Busca cualquier cosa que se fabrique, se cocine o se construya",
     all: "Todo",
@@ -635,7 +689,7 @@ const ES: typeof EN = {
   },
   pat: {
     tab: "Parches",
-    title: "La Crónica",
+    title: "Parches de Valheim",
     lede: "Todos los parches oficiales de Valheim, una edición por versión: lo nuevo, lo que cambió y lo que se arregló, con cada objeto enlazado a la enciclopedia.",
     seoTab: "Parches de Valheim: todas las actualizaciones, objeto por objeto | Vestigo",
     seoEdition: (label) => `Valheim · parche ${label} | Vestigo`,

@@ -7,7 +7,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang, type Lang } from "../../i18n";
 import { loadFicha, loadList, peekFicha, peekList, tr, type BattlegroupRow, type L10n, type UnitRow } from "../data";
-import { Coh3Loading, FactionTag, Icon, Panel, useCohGame, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Icon, Panel, useCohGame, CohTitle, type Nav } from "../ui";
 import { FactionFilter } from "./Coh3Units";
 import type { Faction } from "../../coh3Copy";
 import "./explorer.css";
@@ -21,7 +21,7 @@ interface CommanderFicha extends BattlegroupRow {
 
 const EN = {
   k: "Commanders",
-  h1: "Commanders",
+  h1: (g: string) => `${g} commanders`,
   lede: "Every commander of each faction with its five abilities and the units they unlock.",
   abilities: "Abilities",
   unit: "Unlocks",
@@ -30,7 +30,7 @@ const EN = {
 };
 const ES: typeof EN = {
   k: "Comandantes",
-  h1: "Comandantes",
+  h1: (g: string) => `Comandantes de ${g}`,
   lede: "Cada comandante de cada facción con sus cinco habilidades y las unidades que habilitan.",
   abilities: "Habilidades",
   unit: "Habilita",
@@ -68,7 +68,7 @@ function Lista({ route, navigate }: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-bgs">
       <header className="c3-head">
         <div className="c3-k">{t.k}</div>
-        <h1 className="c3-h1">{t.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.h1} /></h1>
         <p className="c3-lede">{t.lede}</p>
       </header>
       <div className="c3-filters">

@@ -11,7 +11,7 @@ const EN = {
   credit: "Match data: coh3stats.com open data.",
   stats: {
     k: "Statistics",
-    h1: "Win rates by faction",
+    h1: (g: string) => `${g} win rates by faction`,
     lede: "Every automatch game of the last weeks: who wins, who gets picked, which matchup and which map favor each side.",
     winrate: "Win rate",
     winrateLede: "Share of games won by each faction (the bar's middle line is 50%).",
@@ -36,7 +36,7 @@ const EN = {
   },
   tier: {
     k: "Tier list",
-    h1: "Faction tier list by map",
+    h1: (g: string) => `${g} faction tier list by map`,
     lede: "Which faction wins most on each map at your Elo. The letter comes from the win rate: S 53% or more, A 51%, B 49%, C 47%, D below. With too few games the cell stays empty.",
     overall: "Overall",
     best: "Strongest",
@@ -60,7 +60,7 @@ const ES: typeof EN = {
   credit: "Datos de partidas: datos abiertos de coh3stats.com.",
   stats: {
     k: "Estadísticas",
-    h1: "Victorias por facción",
+    h1: (g: string) => `Victorias por facción en ${g}`,
     lede: "Cada partida de automatch de las últimas semanas: quién gana, a quién eligen, qué cruce y qué mapa favorecen a cada bando.",
     winrate: "Porcentaje de victorias",
     winrateLede: "Qué parte de sus partidas gana cada facción (la línea del medio de la barra es el 50 %).",
@@ -85,7 +85,7 @@ const ES: typeof EN = {
   },
   tier: {
     k: "Tier list",
-    h1: "Tier list de facciones por mapa",
+    h1: (g: string) => `Tier list de facciones de ${g} por mapa`,
     lede: "Qué facción gana más en cada mapa a tu ELO. La letra sale del porcentaje de victorias: S 53 % o más, A 51 %, B 49 %, C 47 %, D menos. Con pocas partidas la casilla queda vacía.",
     overall: "General",
     best: "La más fuerte",

@@ -7,6 +7,19 @@
  */
 import { COPY, useLang, type Lang } from "./i18n";
 
+/**
+ * El mes y el año en curso para los títulos de las tier lists (2026-11-10):
+ * "Deadlock Tier List (November 2026)" es como se titulan los resultados que
+ * Google pone arriba, y la nuestra se mide de nuevo todos los días, así que el
+ * mes de hoy es el de los datos. En UTC para que el prerender y el navegador
+ * digan lo mismo.
+ */
+export function monthYear(lang: Lang, now: Date = new Date()): string {
+  return new Intl.DateTimeFormat(lang === "es" ? "es-AR" : "en-US", { month: "long", year: "numeric", timeZone: "UTC" })
+    .format(now)
+    .replace(" de ", " ");
+}
+
 const EN = {
   /**
    * What search engines and link previews show.
@@ -84,31 +97,31 @@ const EN = {
     },
     deadlock: {
       heroes: {
-        title: () => "Deadlock Heroes Compared — Health, Weapon and Stats | Vestigo",
+        title: () => "Deadlock Heroes List: Health, Weapon DPS and Stats | Vestigo",
         description: () =>
           "All Deadlock heroes side by side with the game's own numbers: health, speed, weapon " +
           "DPS, clip, reload and what each boon adds. Sort by any column.",
       },
       "street-brawl": {
-        title: () => "Deadlock Street Brawl Tier List and Win Rates | Vestigo",
+        title: () => `Deadlock Street Brawl Tier List (${monthYear("en")}) | Vestigo`,
         description: () =>
           "Which Deadlock heroes win Street Brawl, the 4v4 mode. Win rate and pick rate measured " +
           "on real Street Brawl matches, with who moved since the patch.",
       },
       meta: {
-        title: () => "Deadlock Hero Tier List and Win Rates | Vestigo",
+        title: () => `Deadlock Tier List (${monthYear("en")}): Best Heroes by Rank | Vestigo`,
         description: () =>
-          "Which Deadlock heroes are actually winning, by rank. Win rate, pick rate and how " +
-          "much each hero rewards knowing the game, measured on real matches.",
+          "Deadlock tier list updated daily: which heroes are winning at your rank, with win rate, " +
+          "pick rate and ban rate measured on real ranked matches this season.",
       },
       items: {
-        title: () => "Deadlock Item Tier List — Best Items by Price | Vestigo",
+        title: () => `Deadlock Item Tier List (${monthYear("en")}): Best Items | Vestigo`,
         description: () =>
           "Which Deadlock items are actually worth their souls. Every item measured against " +
           "what its own price is worth, so a 6400 item is not called good just for being late.",
       },
       builder: {
-        title: () => "Deadlock Build Maker — Plan Your Items | Vestigo",
+        title: () => "Deadlock Build Maker and Planner: Plan Your Items | Vestigo",
         description: () =>
           "Build a Deadlock item build in a copy of the game's shop: souls, investment bonus, upgrades, " +
           "and how close it is to the builds that win. Share it with a link.",
@@ -120,7 +133,7 @@ const EN = {
           "counters and synergies, and the best next pick for each side.",
       },
       ranks: {
-        title: () => "Deadlock Ranks — Distribution and Rank Points per Game | Vestigo",
+        title: () => "Deadlock Ranks Explained: Distribution and Rank Points | Vestigo",
         description: () =>
           "How many players sit at every Deadlock rank, and how many rank points a win or a loss " +
           "gives by win streak, with demotion shields and calibration, measured on a million games.",
@@ -148,7 +161,7 @@ const EN = {
           "ranked Deadlock match, by rank.",
       },
       ladder: {
-        title: () => "Deadlock Player Ladder — Best Players by Hero and Rank | Vestigo",
+        title: () => "Deadlock Leaderboard: Best Players by Hero and Rank | Vestigo",
         description: () =>
           "The best Deadlock players on each hero, at every rank, with the number of matches " +
           "behind every win rate so a new account never passes for a veteran.",
@@ -160,7 +173,7 @@ const EN = {
           "nerfed or buffed, ability by ability, and what the numbers say since it landed.",
       },
       player: {
-        title: () => "Deadlock Match History and Post-Game Report | Vestigo",
+        title: () => "Deadlock Stats Tracker: Match History and Player Stats | Vestigo",
         description: () =>
           "Search your Deadlock matches and see what each one cost you: the items you skipped, " +
           "bought late or never upgraded, against the players who won from the same spot.",
@@ -184,12 +197,12 @@ const EN = {
          */
         title: (name: string, dlSection: string) =>
           dlSection === "items"
-            ? `${name} — Deadlock Item Stats | Vestigo`
+            ? `${name} – Deadlock Item: Stats, Win Rate and Best Heroes | Vestigo`
             : dlSection === "patches"
               ? `Deadlock ${name}: Every Nerf, Buff and Change | Vestigo News`
               : dlSection === "heroes"
-                ? `${name} — Deadlock Counters, Abilities and Stats | Vestigo`
-                : `${name} — Deadlock Build & Win Rate | Vestigo`,
+                ? `${name} Deadlock Guide: Counters, Abilities and Stats | Vestigo`
+                : `${name} Build – Deadlock Best Items, Abilities and Win Rate | Vestigo`,
         description: (name: string, dlSection: string) =>
           dlSection === "patches"
             ? `Every hero and item change in Deadlock's ${name}, ability by ability and marked as ` +
@@ -286,25 +299,25 @@ const ES: typeof EN = {
     },
     deadlock: {
       heroes: {
-        title: () => "Héroes de Deadlock comparados — vida, arma y atributos | Vestigo",
+        title: () => "Héroes de Deadlock: vida, DPS del arma y atributos | Vestigo",
         description: () =>
           "Todos los héroes de Deadlock lado a lado con los números del juego: vida, velocidad, " +
           "DPS del arma, cargador, recarga y lo que suma cada bendición. Ordena por cualquier columna.",
       },
       "street-brawl": {
-        title: () => "Tier list de pelea callejera (Street Brawl) de Deadlock | Vestigo",
+        title: () => `Tier list de Street Brawl de Deadlock (${monthYear("es")}) | Vestigo`,
         description: () =>
           "Qué héroes de Deadlock ganan en la pelea callejera, el modo 4 contra 4. Victorias y uso " +
           "medidos sobre partidas reales de Street Brawl, con quién se movió desde el parche.",
       },
       meta: {
-        title: () => "Tier list de héroes de Deadlock y porcentajes de victoria | Vestigo",
+        title: () => `Tier list de Deadlock (${monthYear("es")}): mejores héroes por rango | Vestigo`,
         description: () =>
-          "Qué héroes de Deadlock están ganando de verdad, por rango. Victorias, uso y cuánto " +
-          "premia cada héroe saber jugarlo, medido sobre partidas reales.",
+          "Tier list de Deadlock actualizada todos los días: qué héroes ganan en tu rango, con " +
+          "victorias, uso y baneos medidos sobre clasificatorias reales de esta temporada.",
       },
       items: {
-        title: () => "Tier list de objetos de Deadlock — los mejores por precio | Vestigo",
+        title: () => `Tier list de objetos de Deadlock (${monthYear("es")}): los mejores | Vestigo`,
         description: () =>
           "Qué objetos de Deadlock valen de verdad sus almas. Cada uno medido contra lo que " +
           "rinde su propio precio, para que uno de 6400 no parezca bueno sólo por ser tardío.",
@@ -322,7 +335,7 @@ const ES: typeof EN = {
           "en tu rango, counters, sinergias y el mejor próximo héroe para cada lado.",
       },
       ranks: {
-        title: () => "Rangos de Deadlock — distribución y puntos por partida | Vestigo",
+        title: () => "Rangos de Deadlock: distribución y puntos por partida | Vestigo",
         description: () =>
           "Cuánta gente hay en cada rango de Deadlock y cuántos puntos da ganar o perder según la " +
           "racha, con escudos de descenso y calibración, medido en un millón de partidas.",
@@ -350,13 +363,13 @@ const ES: typeof EN = {
           "almas en cada minuto de una clasificatoria de Deadlock, por rango.",
       },
       ladder: {
-        title: () => "Escalera de jugadores de Deadlock — los mejores por héroe | Vestigo",
+        title: () => "Ranking de jugadores de Deadlock: los mejores por héroe | Vestigo",
         description: () =>
           "Los mejores jugadores de Deadlock con cada héroe y en cada rango, con las partidas " +
           "detrás de cada porcentaje para que una cuenta nueva no pase por veterana.",
       },
       player: {
-        title: () => "Historial de partidas e informe post-partida de Deadlock | Vestigo",
+        title: () => "Estadísticas de Deadlock: historial de partidas y perfil | Vestigo",
         description: () =>
           "Busca tus partidas de Deadlock y mira qué te costó cada una: los objetos que no " +
           "compraste, los que compraste tarde y los que no mejoraste, contra los que ganaron " +
@@ -377,12 +390,12 @@ const ES: typeof EN = {
       detail: {
         title: (name: string, dlSection: string) =>
           dlSection === "items"
-            ? `${name} — estadísticas de Deadlock | Vestigo`
+            ? `${name} – objeto de Deadlock: estadísticas y mejores héroes | Vestigo`
             : dlSection === "patches"
               ? `Deadlock ${name}: todos los nerfs, buffs y cambios | Vestigo News`
               : dlSection === "heroes"
-                ? `${name} — counters, habilidades y atributos de Deadlock | Vestigo`
-                : `${name} — build y winrate de Deadlock | Vestigo`,
+                ? `${name} en Deadlock: guía, counters, habilidades y atributos | Vestigo`
+                : `Build de ${name} – Deadlock: mejores objetos, habilidades y winrate | Vestigo`,
         description: (name: string, dlSection: string) =>
           dlSection === "patches"
             ? `Todos los cambios de héroes y objetos del ${name} de Deadlock, habilidad por habilidad ` +

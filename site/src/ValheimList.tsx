@@ -244,7 +244,7 @@ export default function ValheimList({ tab, rows, to, navigate }: { tab: ListTab;
   return (
     <>
       <header className="vh-head">
-        <h1>{t.tabs[tab]}</h1>
+        <h1>{t.tabH1[tab]}</h1>
         <p>{t.tabLede[tab]}</p>
         <span className="vh-count">{t.count(shown.length, rows.length)}</span>
       </header>

@@ -16,7 +16,7 @@ import { REGIONS } from "../api/leaderboards";
 import { GAMES } from "../games";
 import { loadElo } from "../stats/elo";
 import type { LeaderboardRow } from "../api/relic";
-import { LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { LeagueTag, Panel, nextSort, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { MODES, ladderQuery, pageCount, pageStart, parseLadderQuery, winRate, withKnownElo, PAGE_SIZE, type LadderState } from "../live/logic";
 import { PlayerLink, currentSearch, useAgo, useApi } from "../live/ui";
 import { useLbCopy } from "./copy";
@@ -109,7 +109,7 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
       <Panel>
         <div className="c3-head">
           <div className="c3-k">{t.k}</div>
-          <h1 className="c3-h1">{t.h1}</h1>
+          <h1 className="c3-h1"><CohTitle text={t.h1} /></h1>
           <p className="c3-lede">{t.lede}</p>
         </div>
         <p>
@@ -173,7 +173,7 @@ export default function Coh3Leaderboards({ route, navigate }: { route: Route; na
         <div className="c3-tablewrap">
           <table className="c3-table c3-cq c3-lb is-stack">
             <caption className="c3-sr">
-              {t.h1} {c.modes[st.mode]} · {conf.factionName[lang][st.faction]}
+              {t.label} {c.modes[st.mode]} · {conf.factionName[lang][st.faction]}
             </caption>
             <thead>
               <tr>

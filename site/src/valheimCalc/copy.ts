@@ -8,7 +8,7 @@ import type { CalcTool } from "../route";
 const EN = {
   tab: "Calculators",
   hub: "Food, combat, comfort and skills",
-  title: "Calculators",
+  title: "Valheim calculators",
   lede: "Plan your meals, fights, base and skills with the numbers the game uses.",
   loading: "Sharpening the pencil…",
   tools: {
@@ -130,7 +130,7 @@ const EN = {
 const ES: typeof EN = {
   tab: "Calculadoras",
   hub: "Comida, combate, confort y habilidades",
-  title: "Calculadoras",
+  title: "Calculadoras de Valheim",
   lede: "Planea tus comidas, peleas, base y habilidades con los números que usa el juego.",
   loading: "Afilando el lápiz…",
   tools: {

@@ -27,7 +27,7 @@ const EN = {
   vetUnknown: "Not applied (doesn't change combat):",
   pen: {
     k: "Calculator",
-    h1: "Will it penetrate?",
+    h1: (g: string) => `${g} penetration calculator`,
     lede: "Pick a weapon and a target: the chance to penetrate front, side and rear armor at every range, and how many shots and seconds it takes to kill, with veterancy.",
     ledeCoh1: "Pick a weapon and a target: the chance to penetrate from the front and the rear at every range, and how many shots and seconds it takes to kill.",
     modelCoh1: "Model: each weapon's accuracy, damage and penetration are multiplied by its modifiers against the target's type; values between near, mid and far are linear; expected shots count misses and bounces; seconds use aim, cooldown and reload. Cover, scatter and criticals are not counted.",
@@ -41,7 +41,7 @@ const EN = {
   },
   dps: {
     k: "Calculator",
-    h1: "DPS comparison",
+    h1: (g: string) => `${g} DPS calculator`,
     lede: "Damage per second of two units against the same target at every range, adding every weapon in their loadout and veterancy.",
     a: "Unit A",
     b: "Unit B",
@@ -84,7 +84,7 @@ const ES: typeof EN = {
   vetUnknown: "No se aplica (no cambia el combate):",
   pen: {
     k: "Calculadora",
-    h1: "¿Le entra o rebota?",
+    h1: (g: string) => `Calculadora de penetración de ${g}`,
     lede: "Elegí el arma y el objetivo: la probabilidad de penetrar el blindaje frontal, lateral y trasero a cada distancia, y cuántos disparos y segundos hacen falta para matarlo, con veteranía.",
     ledeCoh1: "Elegí el arma y el objetivo: la probabilidad de penetrar de frente y por detrás a cada distancia, y cuántos disparos y segundos hacen falta para matarlo.",
     modelCoh1: "Modelo: la precisión, el daño y la penetración de cada arma se multiplican por sus modificadores contra el tipo de objetivo; entre corta, media y larga distancia los valores van en línea recta; los disparos esperados cuentan fallos y rebotes; los segundos usan apuntado, enfriamiento y recarga. No cuenta cobertura, dispersión ni críticos.",
@@ -98,7 +98,7 @@ const ES: typeof EN = {
   },
   dps: {
     k: "Calculadora",
-    h1: "Comparador de DPS",
+    h1: (g: string) => `Calculadora de DPS de ${g}`,
     lede: "El daño por segundo de dos unidades contra el mismo objetivo a cada distancia, sumando todas las armas de su equipo y la veteranía.",
     a: "Unidad A",
     b: "Unidad B",

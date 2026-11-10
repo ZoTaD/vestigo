@@ -36,7 +36,7 @@ const EN = {
      * base del juego, ordenable por columna. Cada fila abre la página del héroe.
      */
     heroes: {
-      title: "Heroes",
+      title: "Deadlock heroes",
       accent: "side by side",
       lead:
         "Every hero's base numbers exactly as the game client ships them — health, speed, weapon, " +
@@ -102,7 +102,7 @@ const EN = {
     },
     /** La página de cada héroe, en la dirección "C · Cartel" elegida el 2026-09-22. */
     hero: {
-      back: "Heroes",
+      back: "Deadlock heroes",
       kicker: (rank: number, total: number, band: string) => `#${rank} of ${total} in ${band}`,
       complexity: "Complexity",
       complexityTip: (n: number) => `The game rates this hero's complexity at ${n}.`,
@@ -321,7 +321,7 @@ const EN = {
     mode: { label: "Game mode", ranked: "Ranked", brawl: "Street Brawl" },
     /** La tier list de Street Brawl (2026-09-24), `/deadlock/street-brawl`. */
     brawl: {
-      title: "Street Brawl",
+      title: "Deadlock Street Brawl",
       titleBreak: " tier list",
       lead:
         "Win rates in Street Brawl, the 4v4 mode that lasts about 13 minutes. It has no ranked " +
@@ -337,19 +337,21 @@ const EN = {
         "Deadlock is a Valve game and Vestigo is not affiliated with Valve. Street Brawl matches " +
         "come from deadlock-api.com's live API; every figure on this page is our own.",
     },
-    title: "Hero",
+    title: "Deadlock",
     titleBreak: " tier list",
+    /** El H1 de la build de un héroe (2026-11-10): lo que se busca es "abrams build". */
+    buildOf: (hero: string) => `${hero} build`,
     lead:
-      "Win rates measured on real matches, cut by the rank the match was played at. " +
-      "Heroes move — a hero that carries at Phantom can be the worst pick below Sentinel — " +
-      "so pick the band you actually play in.",
+      "Every Deadlock hero ranked by win rate on real ranked matches, updated every day and cut by " +
+      "the rank the match was played at. Heroes move — a hero that carries at Phantom can be the " +
+      "worst pick below Sentinel — so pick the band you actually play in.",
     /**
      * "Patches" y no "Updates": el sitio ya se actualiza solo, así que
      * "Actualizaciones" se leería como novedades del producto. Lo que hay ahí
      * son los parches del juego, que es la palabra que usa el jugador.
      */
     live: {
-      title: "Live matches",
+      title: "Deadlock live matches",
       lead: "The highest-level Deadlock matches being played right now, with every hero, who's ahead on souls and the match ID to spectate it in the game.",
       loading: "Looking for matches in progress…",
       error: "Couldn't get the live matches. Try again in a minute.",
@@ -477,7 +479,7 @@ const EN = {
      * oración, en vez de dejarlo colgado al lado.
      */
     report: {
-      searchTitle: "Your matches",
+      searchTitle: "Deadlock stats and match history",
       searchLead:
         "Search your Steam name and open a match. The report compares what you bought, and when, " +
         "against the players who won from the same spot — same hero, same kind of enemy team.",
@@ -1028,7 +1030,7 @@ const EN = {
      * minuto. La pregunta más repetida de los foros después del parche del 16/9.
      */
     map: {
-      title: "The map,",
+      title: "Deadlock map,",
       accent: " minute by minute",
       lead:
         "Every jungle camp, crate, statue and objective on the Deadlock map: how much health it has, " +
@@ -1160,8 +1162,8 @@ const EN = {
     },
     draft: {
       kicker: "Team builder",
-      title: "Who wins",
-      titleBreak: " the draft?",
+      title: "Deadlock draft:",
+      titleBreak: " who wins?",
       lead:
         "Pick the six heroes on each side and see which team the draft favours, and why: how strong " +
         "each hero is at your rank, who counters whom and which heroes play well together.",
@@ -1189,8 +1191,8 @@ const EN = {
       noModel: "No model for this rank yet.",
     },
     comebacks: {
-      title: "What a lead",
-      titleBreak: " is worth",
+      title: "Deadlock comebacks:",
+      titleBreak: " what a lead is worth",
       lead:
         "Lose your lane, lose the game? How often a team wins by how many souls ahead or behind " +
         "it was at each minute of a ranked match.",
@@ -1233,8 +1235,8 @@ const EN = {
      * en un objeto literal, sólo lo avisa el bundler.
      */
     ladder: {
-      title: "The",
-      titleBreak: " ladder",
+      title: "Deadlock",
+      titleBreak: " ranks",
       lead:
         "Season 1 reset every rank on July 30. This is the ladder rebuilding itself, " +
         "day by day — how many players sit at each rank, and where the games are being played.",
@@ -1333,7 +1335,7 @@ const EN = {
     /** El armador de builds (`/deadlock/builder`). Ver `DeadlockBuilder.tsx`. */
     builder: {
       kicker: "Build maker",
-      title: "Make your build",
+      title: "Deadlock build maker",
       lead:
         "Pick a hero and twelve items from the game's own shop. You get the souls, the investment " +
         "bonus and how close it is to the builds people actually win with.",
@@ -1595,7 +1597,7 @@ const EN = {
         buys: (n: string) => `${n} purchases`,
         note: "Buying anything early wins more, because early buyers are already ahead. That is why each window is read against its own price.",
       },
-      title: "Item",
+      title: "Deadlock item",
       titleBreak: " tier list",
       lead:
         "Every item measured against what its own price is worth, not against the whole shop. " +
@@ -1765,8 +1767,8 @@ const EN = {
      * el puesto en la métrica elegida.
      */
     playerLadder: {
-      title: "Best",
-      titleBreak: " players",
+      title: "Deadlock",
+      titleBreak: " leaderboard",
       lead:
         "The best ranked players in the world, and who tops each hero. Every row shows how many " +
         "matches it is measured on — a 100% win rate over thirty games is a new account, not a king.",
@@ -1911,7 +1913,7 @@ const ES: typeof EN = {
       kpis: { winRate: "Victorias", pickRate: "Uso", skillGap: "Brecha", trend: "Desde el parche" },
     },
     heroes: {
-      title: "Héroes",
+      title: "Héroes de Deadlock",
       accent: "lado a lado",
       lead:
         "Los números base de cada héroe tal como los trae el cliente del juego — vida, velocidad, " +
@@ -1977,7 +1979,7 @@ const ES: typeof EN = {
       pelletsTip: (n: number, each: string) => `${n} perdigones de ${each}`,
     },
     hero: {
-      back: "Héroes",
+      back: "Héroes de Deadlock",
       kicker: (rank: number, total: number, band: string) => `#${rank} de ${total} en ${band}`,
       complexity: "Complejidad",
       complexityTip: (n: number) => `El juego le pone complejidad ${n} a este héroe.`,
@@ -2186,7 +2188,7 @@ const ES: typeof EN = {
     mode: { label: "Modo de juego", ranked: "Clasificatorias", brawl: "Pelea callejera" },
     brawl: {
       title: "Tier list",
-      titleBreak: " de pelea callejera",
+      titleBreak: " de Street Brawl de Deadlock",
       lead:
         "Porcentajes de victoria en la pelea callejera (Street Brawl), el modo 4 contra 4 que dura " +
         "unos 13 minutos. No tiene cola clasificatoria y el juego no le asigna rango a sus " +
@@ -2203,13 +2205,15 @@ const ES: typeof EN = {
         "página son nuestros.",
     },
     title: "Tier list",
-    titleBreak: " de héroes",
+    titleBreak: " de Deadlock",
+    buildOf: (hero: string) => `Build de ${hero}`,
     lead:
-      "Porcentajes de victoria medidos sobre partidas reales, separados por el rango al que " +
-      "se jugó cada una. Los héroes se mueven — uno que carga en Fantasma puede ser la peor " +
-      "elección debajo de Centinela — así que elige la banda en la que juegas.",
+      "Todos los héroes de Deadlock ordenados por victorias en clasificatorias reales, actualizado " +
+      "todos los días y separado por el rango al que se jugó cada partida. Los héroes se mueven — " +
+      "uno que carga en Fantasma puede ser la peor elección debajo de Centinela — así que elige la " +
+      "banda en la que juegas.",
     live: {
-      title: "Partidas en vivo",
+      title: "Partidas en vivo de Deadlock",
       lead: "Las partidas de Deadlock de mayor nivel que se están jugando ahora, con cada héroe, quién va arriba en almas y el ID para espectarla desde el juego.",
       loading: "Buscando partidas en juego…",
       error: "No se pudieron traer las partidas en vivo. Probá de nuevo en un minuto.",
@@ -2323,7 +2327,7 @@ const ES: typeof EN = {
     },
 
     report: {
-      searchTitle: "Tus partidas",
+      searchTitle: "Estadísticas e historial de partidas de Deadlock",
       searchLead:
         "Busca tu nombre de Steam y abre una partida. El informe compara qué compraste, y cuándo, " +
         "contra los que ganaron desde la misma situación: mismo héroe y mismo tipo de equipo rival.",
@@ -2744,7 +2748,7 @@ const ES: typeof EN = {
      * minuto. La pregunta más repetida de los foros después del parche del 16/9.
      */
     map: {
-      title: "El mapa,",
+      title: "Mapa de Deadlock,",
       accent: " minuto a minuto",
       lead:
         "Cada campamento de la jungla, caja, estatua y objetivo del mapa de Deadlock: cuánta vida tiene, " +
@@ -2874,8 +2878,8 @@ const ES: typeof EN = {
     },
     draft: {
       kicker: "Armador de equipo",
-      title: "¿Quién gana",
-      titleBreak: " el draft?",
+      title: "Draft de Deadlock:",
+      titleBreak: " ¿quién gana?",
       lead:
         "Elegí los seis héroes de cada lado y mirá a qué equipo favorece el draft, y por qué: qué tan " +
         "fuerte es cada héroe en tu rango, quién le gana a quién y qué héroes se llevan bien.",
@@ -2903,8 +2907,8 @@ const ES: typeof EN = {
       noModel: "Todavía no hay modelo para este rango.",
     },
     comebacks: {
-      title: "Cuánto vale",
-      titleBreak: " ir adelante",
+      title: "Remontadas en Deadlock:",
+      titleBreak: " cuánto vale ir adelante",
       lead:
         "Si perdés la línea, ¿perdiste? Cuántas veces gana un equipo según cuántas almas de ventaja " +
         "o de desventaja llevaba en cada minuto de una clasificatoria.",
@@ -2941,8 +2945,8 @@ const ES: typeof EN = {
       },
     },
     ladder: {
-      title: "La",
-      titleBreak: " escalera",
+      title: "Rangos",
+      titleBreak: " de Deadlock",
       lead:
         "La Temporada 1 reinició todos los rangos el 30 de julio. Esto es la escalera " +
         "reconstruyéndose, día a día: cuánta gente hay en cada escalón y a qué nivel se juega.",
@@ -3013,7 +3017,7 @@ const ES: typeof EN = {
     },
     builder: {
       kicker: "Armador de builds",
-      title: "Armá tu build",
+      title: "Armador de builds de Deadlock",
       lead:
         "Elegí un héroe y doce objetos de la tienda del juego. Te decimos cuántas almas son, qué " +
         "bonificación de inversión te dan y cuánto se parece a las builds que ganan de verdad.",
@@ -3213,7 +3217,7 @@ const ES: typeof EN = {
         note: "Comprar cualquier cosa temprano gana más, porque el que compra temprano ya va adelante. Por eso cada tramo se lee contra su propio precio.",
       },
       title: "Tier list",
-      titleBreak: " de objetos",
+      titleBreak: " de objetos de Deadlock",
       lead:
         "Cada objeto medido contra lo que rinde su propio precio, no contra toda la tienda. " +
         "Uno de 6400 gana más que uno de 800 porque sólo se compra en una partida que ya venía " +
@@ -3339,8 +3343,8 @@ const ES: typeof EN = {
     },
     ranks: { label: "Rango", filter: "Filtrar por rango", above: (rank: string) => `${rank}+` },
     playerLadder: {
-      title: "Mejores",
-      titleBreak: " jugadores",
+      title: "Ranking",
+      titleBreak: " de Deadlock",
       lead:
         "Los mejores jugadores clasificatorios del mundo, y quién encabeza cada héroe. Cada fila " +
         "dice sobre cuántas partidas está medida — un 100% en treinta partidas es una cuenta nueva, no un rey.",

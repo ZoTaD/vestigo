@@ -9,7 +9,7 @@ import { routePath, type Route } from "../../route";
 import { useLang } from "../../i18n";
 import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type UnitRow, type WeaponRow } from "../data";
-import { Coh3Loading, FactionTag, Icon, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Icon, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import { factionLabel, sideOf } from "../games";
 import { hit } from "../combat/engine";
 import { isAntiTank, isArmored, isVehicle, targetStats, weaponStats, type WeaponData } from "../combat/weapons";
@@ -85,7 +85,7 @@ function WeaponList({ route, navigate }: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-weapons">
       <header className="c3-head">
         <div className="c3-k">{t.weapons.k}</div>
-        <h1 className="c3-h1">{t.weapons.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.weapons.h1} /></h1>
         <p className="c3-lede">{t.weapons.lede}</p>
       </header>
       <div className="c3-filters">
@@ -208,7 +208,7 @@ function WeaponPage({ slug, route, navigate }: { slug: string; route: Route; nav
     <main className="c3-main c3-weapon">
       <p className="c3-crumb">
         <RouteLink to={{ ...route, view: "coh3", c3Section: "weapons", detail: undefined }} onNavigate={navigate}>
-          {t.weapons.h1}
+          <CohTitle text={t.weapons.h1} />
         </RouteLink>{" "}
         › {w.faction ? factionLabel(game, lang, w.faction, true) : ""}
       </p>

@@ -45,7 +45,7 @@ export default function Cs2Patches({ route, navigate }: { route: Route; navigate
   return (
     <main className="c2-main">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.patches}</h1>
+        <h1 className="c2-h1">{t.tabH1.patches}</h1>
         <p className="c2-lede">{t.pt.lede}</p>
       </header>
       <div className="c2-pt">

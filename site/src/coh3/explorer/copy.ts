@@ -30,7 +30,7 @@ const EN = {
   core: "Core army",
   units: {
     k: "Explorer",
-    h1: "Units",
+    h1: (g: string) => `${g} units`,
     lede: "Every multiplayer unit by faction with health, armor, cost, weapons, upgrades and veterancy. Tap a header to sort.",
     ledeCoh1: "Every multiplayer unit by faction with health, cost, weapons, upgrades and abilities. Tap a header to sort.",
     weapons: "Weapons",
@@ -48,7 +48,7 @@ const EN = {
   },
   weapons: {
     k: "Explorer",
-    h1: "Weapons",
+    h1: (g: string) => `${g} weapons`,
     lede: "Damage, accuracy, penetration and range of every weapon at near, mid and far distance. Tap a header to sort.",
     cls: "Class",
     dmg: "Damage",
@@ -71,12 +71,12 @@ const EN = {
   },
   docs: {
     k: "Explorer",
-    h1: "Doctrines",
+    h1: (g: string) => `${g} doctrines`,
     lede: "Every doctrine with its two branches, what each upgrade unlocks and its command point cost.",
   },
   bgs: {
     k: "Explorer",
-    h1: "Battlegroups",
+    h1: (g: string) => `${g} battlegroups`,
     lede: "Every battlegroup with its two branches, what each upgrade unlocks and its command point cost.",
     branch: "Branch",
     cp: (n: string) => `${n} CP`,
@@ -114,7 +114,7 @@ const ES: typeof EN = {
   core: "Ejército base",
   units: {
     k: "Explorador",
-    h1: "Unidades",
+    h1: (g: string) => `Unidades de ${g}`,
     lede: "Cada unidad multijugador por facción con vida, blindaje, costo, armas, mejoras y veteranía. Tocá un encabezado para ordenar.",
     ledeCoh1: "Cada unidad multijugador por facción con vida, costo, armas, mejoras y habilidades. Tocá un encabezado para ordenar.",
     weapons: "Armas",
@@ -132,7 +132,7 @@ const ES: typeof EN = {
   },
   weapons: {
     k: "Explorador",
-    h1: "Armas",
+    h1: (g: string) => `Armas de ${g}`,
     lede: "Daño, precisión, penetración y alcance de cada arma a corta, media y larga distancia. Tocá un encabezado para ordenar.",
     cls: "Clase",
     dmg: "Daño",
@@ -155,12 +155,12 @@ const ES: typeof EN = {
   },
   docs: {
     k: "Explorador",
-    h1: "Doctrinas",
+    h1: (g: string) => `Doctrinas de ${g}`,
     lede: "Cada doctrina con sus dos ramas, qué habilita cada mejora y cuántos puntos de mando cuesta.",
   },
   bgs: {
     k: "Explorador",
-    h1: "Battlegroups",
+    h1: (g: string) => `Battlegroups de ${g}`,
     lede: "Cada battlegroup con sus dos ramas, qué desbloquea cada mejora y cuántos puntos de mando cuesta.",
     branch: "Rama",
     cp: (n) => `${n} PM`,

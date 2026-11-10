@@ -345,7 +345,7 @@ function HeroPage({
             {copy.deadlock.titleBreak}
           </RouteLink>
         }
-        title={hero.name}
+        title={copy.deadlock.buildOf(hero.name)}
         accent={hero.tier}
         controls={picker}
         meta={metaLine}

@@ -26,6 +26,10 @@ export const SIDE: Record<Faction, "allies" | "axis"> = { american: "allies", br
 type Seo = { title: string; description: string };
 /** Una descripción entra en 160 caracteres: lo que sobra se corta en una palabra entera. */
 const clip = (s: string): string => (s.length <= 160 ? s : `${s.slice(0, 157).replace(/[\s,;:]+\S*$/, "")}…`);
+/** El título con la marca al final, como el resto del sitio ("CoH3 Units: … | Vestigo"). */
+const marca = (s: Seo): Seo => ({ ...s, title: `${s.title} | Vestigo` });
+const conMarca = <K extends string>(r: Record<K, Seo>): Record<K, Seo> =>
+  Object.fromEntries(Object.entries<Seo>(r).map(([k, v]) => [k, marca(v)])) as Record<K, Seo>;
 
 const EN = {
   tabs: {
@@ -82,13 +86,13 @@ const EN = {
       players: "", matches: "", home: "",
     } satisfies Record<Coh3Section, string>,
   },
-  seo: {
+  seo: conMarca({
     home: { title: "Company of Heroes 3 Stats, Leaderboards and Unit Explorer", description: "CoH3 leaderboards, faction win rates, battlegroup tier list, every unit and weapon, a penetration calculator and patch changes. Free, updated daily." },
     units: { title: "CoH3 Units: Health, Armor, Cost and Weapons", description: "Every Company of Heroes 3 unit by faction with health, front/side/rear armor, cost, weapons, upgrades and veterancy." },
     weapons: { title: "CoH3 Weapons: Damage, Penetration and Range", description: "Every Company of Heroes 3 weapon with damage, accuracy, penetration and range at near, mid and far distance." },
     battlegroups: { title: "CoH3 Battlegroups: Abilities and Unlocks", description: "Every Company of Heroes 3 battlegroup with its branches, abilities, units and command point costs." },
     maps: { title: "CoH3 Maps: Points and Size", description: "Every Company of Heroes 3 multiplayer map with its players, size and resource points." },
-    penetration: { title: "CoH3 Penetration Calculator: Front, Side and Rear Armor", description: "Will it penetrate? Chance to penetrate front, side and rear armor at every range, with shots and seconds to kill." },
+    penetration: { title: "CoH3 Penetration Calculator: Front, Side and Rear Armor", description: "Company of Heroes 3 penetration calculator: the chance to penetrate front, side and rear armor at every range, with shots and seconds to kill." },
     dps: { title: "CoH3 DPS Calculator: Compare Units", description: "Compare the damage per second of Company of Heroes 3 units against infantry and vehicles at every range." },
     patches: { title: "CoH3 Patch Changes Unit by Unit", description: "What changed in each Company of Heroes 3 patch: health, armor, cost, damage and penetration, unit by unit." },
     leaderboards: { title: "CoH3 Leaderboards: 1v1 to 4v4 by Faction", description: "Live Company of Heroes 3 leaderboards for every faction and mode: Elo, wins, losses and win rate." },
@@ -103,7 +107,7 @@ const EN = {
     bulletins: { title: "Intel bulletins", description: "Intel bulletins and what they boost." },
     doctrines: { title: "Doctrines", description: "Doctrines and their branches." },
     "final-stand": { title: "CoH3 Final Stand: Perks, Technologies and Units", description: "Company of Heroes 3 Final Stand perks, technologies and units by faction." },
-  } satisfies Record<Coh3Section, Seo>,
+  } satisfies Record<Coh3Section, Seo>),
   detailSeo: (sec: Coh3Tab, name: string): Seo => {
     const d: Partial<Record<Coh3Tab, Seo>> = {
       units: { title: `${name} – CoH3 Unit Stats`, description: clip(`${name} in Company of Heroes 3: health, armor, cost, weapons, upgrades, veterancy and what it penetrates.`) },
@@ -113,7 +117,7 @@ const EN = {
       patches: { title: `CoH3 ${name} Changes`, description: clip(`What changed in Company of Heroes 3 ${name}, unit by unit: health, armor, cost, damage and penetration.`) },
       players: { title: `${name} – CoH3 Player Stats`, description: clip(`${name} in Company of Heroes 3: standings, recent matches and win rate by faction.`) },
     };
-    return d[sec] ?? { title: `${name} – Company of Heroes 3`, description: clip(`${name} in Company of Heroes 3.`) };
+    return marca(d[sec] ?? { title: `${name} – Company of Heroes 3`, description: clip(`${name} in Company of Heroes 3.`) });
   },
   credit: "Icons and game data © Relic Entertainment / SEGA. Match stats: coh3stats.com open data.",
 };
@@ -172,17 +176,17 @@ const ES: typeof EN = {
       players: "", matches: "", home: "",
     },
   },
-  seo: {
+  seo: conMarca({
     home: { title: "Company of Heroes 3: estadísticas, ranking y unidades", description: "Ranking de CoH3, victorias por facción, tier list de battlegroups, cada unidad y arma, calculadora de penetración y cambios de cada parche. Gratis." },
     units: { title: "Unidades de CoH3: vida, blindaje, costo y armas", description: "Cada unidad de Company of Heroes 3 por facción con vida, blindaje frontal, lateral y trasero, costo, armas, mejoras y veteranía." },
     weapons: { title: "Armas de CoH3: daño, penetración y alcance", description: "Cada arma de Company of Heroes 3 con daño, precisión, penetración y alcance a corta, media y larga distancia." },
     battlegroups: { title: "Battlegroups de CoH3: habilidades y desbloqueos", description: "Cada battlegroup de Company of Heroes 3 con sus ramas, habilidades, unidades y costo en puntos de mando." },
     maps: { title: "Mapas de CoH3: puntos y tamaño", description: "Cada mapa multijugador de Company of Heroes 3 con sus jugadores, tamaño y puntos de recursos." },
-    penetration: { title: "Calculadora de penetración de CoH3: frente, lateral y trasero", description: "¿Le entra o rebota? La probabilidad de penetrar el blindaje frontal, lateral y trasero a cada distancia, con disparos y segundos para matar." },
+    penetration: { title: "Calculadora de penetración de CoH3: frente, lateral y trasero", description: "Calculadora de penetración de CoH3: la probabilidad de penetrar el blindaje frontal, lateral y trasero a cada distancia, con disparos y segundos para matar." },
     dps: { title: "Calculadora de DPS de CoH3: compará unidades", description: "Compará el daño por segundo de las unidades de Company of Heroes 3 contra infantería y vehículos a cada distancia." },
     patches: { title: "Cambios de cada parche de CoH3, unidad por unidad", description: "Qué cambió en cada parche de Company of Heroes 3: vida, blindaje, costo, daño y penetración, unidad por unidad." },
     leaderboards: { title: "Ranking de CoH3: de 1v1 a 4v4 por facción", description: "El ranking en vivo de Company of Heroes 3 para cada facción y modo: ELO, victorias, derrotas y porcentaje." },
-    players: { title: "Estadísticas de jugador de CoH3", description: "Posiciones, partidas recientes y porcentaje de victorias por facción de un jugador de Company of Heroes 3." },
+    players: { title: "Estadísticas de jugador de CoH3", description: "Jugadores de Company of Heroes 3: posiciones, partidas recientes y porcentaje de victorias por facción." },
     matches: { title: "Detalle de partida de CoH3", description: "El detalle de una partida de Company of Heroes 3: jugadores, facciones, cambio de ELO y estadísticas." },
     stats: { title: "Estadísticas de CoH3: victorias por facción y cruces", description: "Porcentaje de victorias de Company of Heroes 3 por facción, cruce, mapa y banda de ELO, de cada partida de automatch." },
     "tier-list": { title: "Tier list de CoH3: la mejor facción por mapa y ELO", description: "La tier list de facciones de Company of Heroes 3 en cada mapa y cruce, por banda de ELO, de cada partida de automatch. Se actualiza a diario." },
@@ -192,8 +196,8 @@ const ES: typeof EN = {
     commanders: { title: "Comandantes", description: "Los comandantes y sus habilidades." },
     bulletins: { title: "Boletines de inteligencia", description: "Los boletines de inteligencia y qué mejoran." },
     doctrines: { title: "Doctrinas", description: "Las doctrinas y sus ramas." },
-    "final-stand": { title: "Final Stand de CoH3: mejoras, tecnologías y unidades", description: "Las mejoras, tecnologías y unidades de Final Stand de Company of Heroes 3 por facción." },
-  },
+    "final-stand": { title: "Final Stand de CoH3: mejoras, tecnologías y unidades", description: "Final Stand de Company of Heroes 3: mejoras, tecnologías y unidades por facción." },
+  }),
   detailSeo: (sec: Coh3Tab, name: string): Seo => {
     const d: Partial<Record<Coh3Tab, Seo>> = {
       units: { title: `${name}: stats de la unidad en CoH3`, description: clip(`${name} en Company of Heroes 3: vida, blindaje, costo, armas, mejoras, veteranía y qué penetra.`) },
@@ -203,7 +207,7 @@ const ES: typeof EN = {
       patches: { title: `Cambios de CoH3 ${name}`, description: clip(`Qué cambió en Company of Heroes 3 ${name}, unidad por unidad: vida, blindaje, costo, daño y penetración.`) },
       players: { title: `${name}: estadísticas de jugador de CoH3`, description: clip(`${name} en Company of Heroes 3: posiciones, partidas recientes y porcentaje de victorias por facción.`) },
     };
-    return d[sec] ?? { title: `${name}: Company of Heroes 3`, description: clip(`${name} en Company of Heroes 3.`) };
+    return marca(d[sec] ?? { title: `${name}: Company of Heroes 3`, description: clip(`${name} en Company of Heroes 3.`) });
   },
   credit: "Íconos y datos del juego © Relic Entertainment / SEGA. Estadísticas de partidas: datos abiertos de coh3stats.com.",
 };
@@ -233,10 +237,10 @@ function textos(lang: Lang, nombre: string, corto: string, facciones: string, si
   const s = t.seo;
   if (lang === "es") {
     s.units = { title: `Unidades de ${corto}: vida, costo y armas`, description: clip(`Cada unidad de ${nombre} por facción con vida, costo, armas, mejoras y habilidades.`) };
-    s.penetration = { title: `Calculadora de penetración de ${corto}`, description: clip(`¿Penetra? La probabilidad de penetrar de frente y por detrás en ${nombre} a cada distancia, según el tipo de objetivo, con disparos y segundos para matar.`) };
+    s.penetration = { title: `Calculadora de penetración de ${corto}`, description: clip(`Calculadora de penetración de ${nombre}: la probabilidad de penetrar de frente y por detrás a cada distancia, según el tipo de objetivo, con disparos y segundos para matar.`) };
   } else {
     s.units = { title: `${corto} Units: Health, Cost and Weapons`, description: clip(`Every ${nombre} unit by faction with health, cost, weapons, upgrades and abilities.`) };
-    s.penetration = { title: `${corto} Penetration Calculator`, description: clip(`Will it penetrate? Chance to penetrate from the front and the rear in ${nombre} at every range, by target type, with shots and seconds to kill.`) };
+    s.penetration = { title: `${corto} Penetration Calculator`, description: clip(`${nombre} penetration calculator: the chance to penetrate from the front and the rear at every range, by target type, with shots and seconds to kill.`) };
   }
   return t;
 }
@@ -255,13 +259,13 @@ function conBlindaje(lang: Lang, nombre: string, corto: string, facciones: strin
         stats: { title: `Estadísticas de ${corto}: victorias por facción, mapa y ELO`, description: clip(`Qué facción gana más en ${nombre}, en cada cruce, cada mapa y cada tramo de ELO, con las partidas de las últimas semanas.`) },
         "tier-list": { title: `Tier list de ${corto}: la mejor facción por mapa y ELO`, description: clip(`La tier list de facciones de ${nombre} en cada mapa y cruce, por tramo de ELO, con las partidas de automatch de las últimas semanas.`) },
         achievements: { title: `Logros de ${corto}: qué porcentaje los tiene`, description: clip(`Todos los logros de ${nombre}, lo que piden y qué parte de los jugadores los desbloqueó.`) },
-        players: { title: `Jugadores de ${corto}`, description: clip(`Posiciones, partidas recientes y ELO de un jugador de ${nombre}.`) },
+        players: { title: `Jugadores de ${corto}`, description: clip(`Jugadores de ${nombre}: posiciones, partidas recientes y ELO.`) },
         matches: { title: `Partida de ${corto}`, description: clip(`Una partida de ${nombre}: jugadores, facciones y cambio de ELO.`) },
         units: { title: `Unidades de ${corto}: vida, blindaje, costo y armas`, description: clip(`Cada unidad de ${nombre} por facción con vida, blindaje, costo, armas, mejoras, habilidades y veteranía.`) },
         weapons: { title: `Armas de ${corto}: daño, penetración y alcance`, description: clip(`Cada arma de ${nombre} con daño, precisión, penetración y alcance a corta, media y larga distancia.`) },
         commanders: { title: `Comandantes de ${corto}: habilidades y unidades`, description: clip(`Cada comandante de ${nombre} con sus cinco habilidades y las unidades que habilitan.`) },
         bulletins: { title: `Boletines de inteligencia de ${corto}`, description: clip(`Todos los boletines de inteligencia de ${nombre}, qué mejoran y para qué facciones sirven.`) },
-        penetration: { title: `Calculadora de penetración de ${corto}`, description: clip(`¿Penetra? La probabilidad de penetrar el blindaje frontal y trasero en ${nombre} a cada distancia, con disparos y segundos para matar.`) },
+        penetration: { title: `Calculadora de penetración de ${corto}`, description: clip(`Calculadora de penetración de ${nombre}: la probabilidad de penetrar el blindaje frontal y trasero a cada distancia, con disparos y segundos para matar.`) },
         dps: { title: `Calculadora de DPS de ${corto}: comparar unidades`, description: clip(`El daño por segundo de las unidades de ${nombre} contra infantería y vehículos a cada distancia.`) },
         maps: { title: `Mapas de ${corto}`, description: clip(`Cada mapa de multijugador de ${nombre} con sus jugadores, tamaño y puntos.`) },
         doctrines: { title: `Doctrinas de ${corto}: ramas y puntos de mando`, description: clip(`Cada doctrina de ${nombre} con sus dos ramas, el costo en puntos de mando y las unidades que habilitan.`) },
@@ -286,7 +290,7 @@ function conBlindaje(lang: Lang, nombre: string, corto: string, facciones: strin
       weapons: { title: `${corto} Weapons: Damage, Penetration and Range`, description: clip(`Every ${nombre} weapon with damage, accuracy, penetration and range at near, mid and far distance.`) },
       commanders: { title: `${corto} Commanders: Abilities and Units`, description: clip(`Every ${nombre} commander with its five abilities and the units they unlock.`) },
       bulletins: { title: `${corto} Intel Bulletins`, description: clip(`Every ${nombre} intel bulletin, what it boosts and which factions can use it.`) },
-      penetration: { title: `${corto} Penetration Calculator`, description: clip(`Will it penetrate? Chance to penetrate front and rear armor in ${nombre} at every range, with shots and seconds to kill.`) },
+      penetration: { title: `${corto} Penetration Calculator`, description: clip(`${nombre} penetration calculator: the chance to penetrate front and rear armor at every range, with shots and seconds to kill.`) },
       dps: { title: `${corto} DPS Calculator: Compare Units`, description: clip(`Compare the damage per second of ${nombre} units against infantry and vehicles at every range.`) },
       maps: { title: `${corto} Maps`, description: clip(`Every ${nombre} multiplayer map with its players, size and points.`) },
       doctrines: { title: `${corto} Doctrines: Branches and Command Points`, description: clip(`Every ${nombre} doctrine with its two branches, command point costs and the units they unlock.`) },
@@ -306,11 +310,11 @@ export const COH_GAME_COPY: Record<"coh2" | "coh1", Record<Lang, GameText>> = {
 /** El SEO de una pestaña de CoH2 o CoH1; una que no tiene texto propio cae en la portada. */
 export function cohGameSeo(game: "coh2" | "coh1", lang: Lang, sec: string, detailName?: string | null): Seo {
   const g = COH_GAME_COPY[game][lang];
-  if (sec === "players" && detailName) return { title: `${detailName} – ${g.seo.players.title}`, description: g.seo.players.description };
+  if (sec === "players" && detailName) return marca({ title: `${detailName} – ${g.seo.players.title}`, description: g.seo.players.description });
   // Una ficha de la enciclopedia: el nombre adelante, y el resto del título de su pestaña.
   if ((sec === "units" || sec === "weapons" || sec === "commanders" || sec === "doctrines" || sec === "maps") && detailName) {
     const base = g.seo[sec];
-    return { title: `${detailName} – ${base.title.split(":")[0]}`, description: clip(`${detailName}. ${base.description}`) };
+    return marca({ title: `${detailName} – ${base.title.split(":")[0]}`, description: clip(`${detailName}. ${base.description}`) });
   }
-  return g.seo[sec as LiveSec] ?? g.seo.home;
+  return marca(g.seo[sec as LiveSec] ?? g.seo.home);
 }

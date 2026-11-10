@@ -5,7 +5,7 @@ const EN = {
   all: "All",
   maps: {
     k: "Explorer",
-    h1: "Maps",
+    h1: (g: string) => `${g} maps`,
     lede: "Every multiplayer map with its victory points, resources and income. Tap a header to sort; open one to see its layout and how each faction does there.",
     layout: "Mode",
     community: "Show community maps",
@@ -28,7 +28,7 @@ const EN = {
   },
   ch: {
     k: "Explorer",
-    h1: "Challenges",
+    h1: (g: string) => `${g} daily and weekly challenges`,
     lede: "Every daily and weekly challenge the game can give you, what it asks and how many merits it pays.",
     daily: "Daily",
     weekly: "Weekly",
@@ -39,7 +39,7 @@ const EN = {
   },
   fs: {
     k: "Final Stand",
-    h1: "Final Stand",
+    h1: (g: string) => `${g} Final Stand`,
     lede: "The wave survival mode: each faction's permanent perks by tier, with the cost of every grade, and the technologies you buy during a run.",
     perks: "Perks",
     perksLede: "Each number is the cost of one more grade.",
@@ -54,6 +54,8 @@ const EN = {
   patches: {
     k: "Patches",
     h1: "Patch changes, unit by unit",
+    /** El H1 de la página: el parche, con el juego adelante ("CoH3 Patch 3.0.0"). */
+    title: (name: string) => `CoH3 ${name}`,
     lede: "What changed in each patch: health, armor, cost, damage, penetration and more, for every unit and weapon.",
     pick: "Patch",
     units: "Units",
@@ -76,7 +78,7 @@ const ES: typeof EN = {
   all: "Todos",
   maps: {
     k: "Explorador",
-    h1: "Mapas",
+    h1: (g: string) => `Mapas de ${g}`,
     lede: "Cada mapa multijugador con sus puntos de victoria, recursos e ingresos. Tocá un encabezado para ordenar; abrí uno para ver su plano y cómo le va a cada facción.",
     layout: "Modo",
     community: "Mostrar mapas de la comunidad",
@@ -99,7 +101,7 @@ const ES: typeof EN = {
   },
   ch: {
     k: "Explorador",
-    h1: "Desafíos",
+    h1: (g: string) => `Desafíos diarios y semanales de ${g}`,
     lede: "Cada desafío diario y semanal que te puede tocar, qué pide y cuántos méritos da.",
     daily: "Diarios",
     weekly: "Semanales",
@@ -110,7 +112,7 @@ const ES: typeof EN = {
   },
   fs: {
     k: "Final Stand",
-    h1: "Final Stand",
+    h1: (g: string) => `Final Stand de ${g}`,
     lede: "El modo de supervivencia por oleadas: las mejoras permanentes de cada facción por nivel, con el costo de cada grado, y las tecnologías que se compran durante la partida.",
     perks: "Mejoras",
     perksLede: "Cada número es lo que cuesta un grado más.",
@@ -125,6 +127,7 @@ const ES: typeof EN = {
   patches: {
     k: "Parches",
     h1: "Cambios de cada parche, unidad por unidad",
+    title: (name: string) => `${name} de CoH3`,
     lede: "Qué cambió en cada parche: vida, blindaje, costo, daño, penetración y más, de cada unidad y arma.",
     pick: "Parche",
     units: "Unidades",

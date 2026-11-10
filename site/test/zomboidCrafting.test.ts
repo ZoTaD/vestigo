@@ -95,7 +95,7 @@ describe("Fabricación publicada", () => {
   it("el prerender trae la página entera, con las cifras, las ideas y la solapa marcada", async () => {
     const html = await renderApp(parseRoute(ES));
     expect(html).not.toContain("pz-loading");
-    expect(html).toMatch(/<h1 class="pzi-h1"[^>]*>Planificador de fabricación<\/h1>/);
+    expect(html).toMatch(/<h1 class="pzi-h1"[^>]*>Planificador de fabricación de Project Zomboid<\/h1>/);
     expect(html).toContain(craft.counts.craftable.toLocaleString("es-AR"));
     expect(html).toContain(`Se pueden fabricar ${craft.counts.craftable.toLocaleString("es-AR")} objetos`);
     expect(html).toContain(`Build ${craft.v}`);
@@ -107,7 +107,7 @@ describe("Fabricación publicada", () => {
 
     const en = await renderApp(parseRoute(EN));
     expect(en).not.toContain("pz-loading");
-    expect(en).toMatch(/<h1 class="pzi-h1"[^>]*>Crafting planner<\/h1>/);
+    expect(en).toMatch(/<h1 class="pzi-h1"[^>]*>Project Zomboid crafting planner<\/h1>/);
     expect(en).toContain(`${craft.counts.craftable.toLocaleString("en-US")} items can be crafted`);
     for (const id of IDEAS) expect(en, id).toContain(esc(nameOf(id, "en")));
     expect(en).toMatch(/<a [^>]*href="\/en\/project-zomboid\/crafting"[^>]*aria-current="page"[^>]*>Crafting</);

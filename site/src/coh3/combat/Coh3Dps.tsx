@@ -10,7 +10,7 @@ import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { tr, type UnitRow } from "../data";
-import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, type Nav } from "../ui";
+import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, CohTitle, type Nav } from "../ui";
 import { hit, type Side, type TargetStats, type WeaponStats } from "./engine";
 import { vetAt } from "./vet";
 import { armaContra, isArmored, weaponStats, type WeaponData } from "./weapons";
@@ -153,7 +153,7 @@ function View({ route, navigate, units, q, setQ, a, b, tf, wa, wb }: {
     <main className="c3-main c3-dps">
       <header className="c3-head">
         <div className="c3-k">{t.dps.k}</div>
-        <h1 className="c3-h1">{t.dps.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.dps.h1} /></h1>
         <p className="c3-lede">{t.dps.lede}</p>
       </header>
       <Panel>

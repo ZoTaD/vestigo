@@ -80,7 +80,7 @@ export interface PzPatchesCopy {
 }
 
 const EN: PzPatchesCopy = {
-  title: "Patch notes",
+  title: "Project Zomboid patch notes",
   intro: (oldest, first, current) =>
     first
       ? `Every Project Zomboid version since ${oldest}, told in our own words, and since ${first} the exact list of what changed in items, recipes, traits, skills, moodles and server options. We're on ${current}.`
@@ -151,7 +151,7 @@ const EN: PzPatchesCopy = {
 };
 
 const ES: PzPatchesCopy = {
-  title: "Notas del parche",
+  title: "Notas del parche de Project Zomboid",
   intro: (oldest, first, current) =>
     first
       ? `Cada versión de Project Zomboid desde la ${oldest}, contada con nuestras palabras, y desde la ${first} la lista exacta de lo que cambió en objetos, recetas, rasgos, habilidades, moodles y opciones de servidor. Vamos por la ${current}.`

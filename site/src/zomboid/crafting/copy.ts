@@ -124,7 +124,7 @@ export const IDEAS = [
 ] as const;
 
 const EN: CraftCopy = {
-  title: "Crafting planner",
+  title: "Project Zomboid crafting planner",
   intro: (n, builds, multi, v) => [
     `Pick what you want to make in Project Zomboid Build ${v} and get everything it takes: the full recipe tree, the materials to gather, the tools, the stations, the skills and what you need to learn.`,
     `${n} items can be crafted and ${builds} things can be built; ${multi} of them have more than one recipe, and you can switch any step.`,
@@ -220,7 +220,7 @@ const EN: CraftCopy = {
 };
 
 const ES: CraftCopy = {
-  title: "Planificador de fabricación",
+  title: "Planificador de fabricación de Project Zomboid",
   intro: (n, builds, multi, v) => [
     `Elegí qué querés fabricar en Project Zomboid Build ${v} y mirá todo lo que hace falta: el árbol completo de recetas, los materiales para juntar, las herramientas, las estaciones, las habilidades y lo que tenés que aprender.`,
     `Se pueden fabricar ${n} objetos y construir ${builds} cosas; ${multi} tienen más de una receta, y cualquier paso se puede cambiar.`,

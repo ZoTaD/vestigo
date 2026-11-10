@@ -35,7 +35,7 @@ function PlayerList({ idx, route, navigate }: { idx: EsIndex; route: Route; navi
   return (
     <main className="c2-main">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.players}</h1>
+        <h1 className="c2-h1">{t.tabH1.players}</h1>
         <p className="c2-lede">{t.home.cards.players("")}</p>
       </header>
       <ul className="c2-tm-plist">

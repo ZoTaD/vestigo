@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
-import { useCohGame } from "../ui";
+import { CohTitle, useCohGame } from "../ui";
 import { sideOf } from "../games";
 import { tr, type UnitRow, type WeaponRow } from "../data";
 import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
@@ -97,7 +97,7 @@ function Calc({ route, navigate, lists, q, setQ, wFicha, uFicha, tFicha, t }: {
     <main className="c3-main c3-pen">
       <header className="c3-head">
         <div className="c3-k">{t.pen.k}</div>
-        <h1 className="c3-h1">{t.pen.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.pen.h1} /></h1>
         <p className="c3-lede">{game === "coh1" ? t.pen.ledeCoh1 : t.pen.lede}</p>
       </header>
       <div className="c3-grid2">

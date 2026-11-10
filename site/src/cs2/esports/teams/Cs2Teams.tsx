@@ -33,7 +33,7 @@ function TeamList({ idx, route, navigate }: { idx: EsIndex; route: Route; naviga
   return (
     <main className="c2-main">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.teams}</h1>
+        <h1 className="c2-h1">{t.tabH1.teams}</h1>
         <p className="c2-lede">{t.tm.lede}</p>
       </header>
       {groups.map(([name, rows]) =>

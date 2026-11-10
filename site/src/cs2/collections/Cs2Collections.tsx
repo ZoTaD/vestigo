@@ -22,7 +22,7 @@ function CollList({ rows, route, navigate }: { rows: CollRow[]; route: Route; na
   return (
     <main className="c2-main">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.collections}</h1>
+        <h1 className="c2-h1">{t.tabH1.collections}</h1>
         <p className="c2-lede">{t.seo.collections.description}</p>
       </header>
       <div className="c2-tablewrap">

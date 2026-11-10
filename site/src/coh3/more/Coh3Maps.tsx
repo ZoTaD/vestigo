@@ -10,7 +10,7 @@ import { useLang } from "../../i18n";
 import { useCoh3Copy } from "../../coh3Copy";
 import { tr, type L10n } from "../data";
 import { SettledImg } from "../../SettledImg";
-import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, FactionTag, Panel, sortRows, useCohGame, useNum, useSort, CohTitle, type Nav } from "../ui";
 import type { CohGame } from "../../route";
 import { GAMES } from "../games";
 import { loadSummary, peekSummary, wr, type Summary } from "../stats/data";
@@ -141,7 +141,7 @@ function MapList({ maps, route, navigate }: { maps: MapRow[]; route: Route; navi
     <main className="c3-main c3-maps">
       <header className="c3-head">
         <div className="c3-k">{t.maps.k}</div>
-        <h1 className="c3-h1">{t.maps.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.maps.h1} /></h1>
         <p className="c3-lede">{t.maps.lede}</p>
       </header>
       <div className="c3-filters">
@@ -283,7 +283,7 @@ function MapPage({ m, route, navigate }: { m: MapRow; route: Route; navigate: Na
     <main className="c3-main c3-map">
       <p className="c3-crumb">
         <RouteLink to={{ ...route, view: "coh3", c3Section: "maps", detail: undefined }} onNavigate={navigate}>
-          {t.maps.h1}
+          <CohTitle text={t.maps.h1} />
         </RouteLink>{" "}
         › {m.layout}
       </p>

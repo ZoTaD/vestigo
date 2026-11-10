@@ -54,7 +54,7 @@ export default function SkinList({ rows, prices, route, navigate }: { rows: Skin
   return (
     <main className="c2-main">
       <header className="c2-head">
-        <h1 className="c2-h1">{t.tabs.skins}</h1>
+        <h1 className="c2-h1">{t.tabH1.skins}</h1>
         <p className="c2-lede">{t.seo.skins.description}</p>
       </header>
       <div className="c2-filters">

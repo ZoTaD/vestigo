@@ -8,7 +8,7 @@ import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { FACTIONS, type Faction } from "../../coh3Copy";
 import { tr, type L10n } from "../data";
-import { Coh3Loading, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
+import { Coh3Loading, CohTitle, FactionTag, Icon, Panel, useNum, type Nav } from "../ui";
 import { useMoreCopy } from "./copy";
 import "./more.css";
 import "../explorer/explorer.css";
@@ -44,7 +44,7 @@ export default function Coh3FinalStand(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-fs">
       <header className="c3-head">
         <div className="c3-k">{t.fs.k}</div>
-        <h1 className="c3-h1">{t.fs.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.fs.h1} /></h1>
         <p className="c3-lede">{t.fs.lede}</p>
       </header>
       <div className="c3-filters">

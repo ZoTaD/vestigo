@@ -8,7 +8,7 @@ import type { Route } from "../../route";
 import { useLang, type Lang } from "../../i18n";
 import { LazyRows } from "../../LazyRows";
 import { tr, type L10n } from "../data";
-import { Coh3Loading, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
+import { Coh3Loading, CohTitle, FactionTag, Icon, Panel, sortRows, useNum, useSort, type Nav } from "../ui";
 import { FactionFilter } from "./Coh3Units";
 import type { Faction } from "../../coh3Copy";
 import "./explorer.css";
@@ -22,7 +22,7 @@ export const loadBulletins = (): Promise<Data> =>
 
 const EN = {
   k: "Intel bulletins",
-  h1: "Intel bulletins",
+  h1: (g: string) => `${g} intel bulletins`,
   lede: "Every intel bulletin, what it boosts and which factions can equip it.",
   search: "Search bulletins",
   name: "Bulletin",
@@ -31,7 +31,7 @@ const EN = {
 };
 const ES: typeof EN = {
   k: "Boletines de inteligencia",
-  h1: "Boletines de inteligencia",
+  h1: (g: string) => `Boletines de inteligencia de ${g}`,
   lede: "Cada boletín de inteligencia, qué mejora y qué facciones lo pueden equipar.",
   search: "Buscar boletines",
   name: "Boletín",
@@ -69,7 +69,7 @@ export default function CohBulletins(_: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-bulletins">
       <header className="c3-head">
         <div className="c3-k">{t.k}</div>
-        <h1 className="c3-h1">{t.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={t.h1} /></h1>
         <p className="c3-lede">{t.lede}</p>
       </header>
       <div className="c3-filters">

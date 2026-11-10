@@ -104,7 +104,7 @@ export default function Cs2Inventory({ route, navigate }: { route: Route; naviga
     <main className="c2-main c2-inv">
       <section className="c2-inv-hero">
         <div className="c2-head">
-          <h1 className="c2-h1">{t.tabs.inventory}</h1>
+          <h1 className="c2-h1">{t.tabH1.inventory}</h1>
           <p className="c2-lede">{t.seo.inventory.description}</p>
           <form
             className="c2-inv-form"

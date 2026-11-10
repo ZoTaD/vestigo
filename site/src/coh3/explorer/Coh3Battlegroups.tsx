@@ -9,7 +9,7 @@ import type { Route } from "../../route";
 import { useLang } from "../../i18n";
 import { useCoh3Copy, type Faction } from "../../coh3Copy";
 import { loadFicha, loadList, peekFicha, peekList, tr, type BattlegroupRow, type L10n, type UnitRow } from "../data";
-import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, type Nav } from "../ui";
+import { Coh3Loading, Cost, FactionTag, Icon, Panel, useCohGame, useNum, CohTitle, type Nav } from "../ui";
 import { useExplorerCopy } from "./copy";
 import { SettledImg } from "../../SettledImg";
 import { FactionFilter } from "./Coh3Units";
@@ -55,7 +55,7 @@ function BgList({ route, navigate }: { route: Route; navigate: Nav }) {
     <main className="c3-main c3-bgs">
       <header className="c3-head">
         <div className="c3-k">{game === "coh1" ? t.docs.k : t.bgs.k}</div>
-        <h1 className="c3-h1">{game === "coh1" ? t.docs.h1 : t.bgs.h1}</h1>
+        <h1 className="c3-h1"><CohTitle text={game === "coh1" ? t.docs.h1 : t.bgs.h1} /></h1>
         <p className="c3-lede">{game === "coh1" ? t.docs.lede : t.bgs.lede}</p>
       </header>
       <div className="c3-filters">
@@ -113,7 +113,7 @@ function BgPage({ slug, route, navigate }: { slug: string; route: Route; navigat
     <main className="c3-main c3-bg">
       <p className="c3-crumb">
         <RouteLink to={{ ...route, view: "coh3", c3Section: tab, detail: undefined }} onNavigate={navigate}>
-          {game === "coh1" ? t.docs.h1 : t.bgs.h1}
+          <CohTitle text={game === "coh1" ? t.docs.h1 : t.bgs.h1} />
         </RouteLink>{" "}
         › {c.factionShort[b.faction]}
       </p>

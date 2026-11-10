@@ -601,6 +601,30 @@ export function jsonLdFor(
     ];
   }
   if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+  /**
+   * Las tier lists se miden de nuevo todos los días (2026-11-10): se dice con la
+   * fecha real de los datos (el sello del pipeline, la misma del `lastmod` del
+   * sitemap), que es una de las señales de frescura que Google mira en una
+   * búsqueda como "deadlock tier list". Sin sello, sin fecha.
+   */
+  const fecha = data.dates?.deadlock;
+  if ((route.dlSection === "meta" || route.dlSection === "street-brawl") && !route.detail && fecha) {
+    return [
+      crumbs(trail),
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        name: page.title.replace(/\s*\|.*$/, ""),
+        description: page.description,
+        url: page.canonical,
+        dateModified: fecha,
+        inLanguage: lang,
+        isAccessibleForFree: true,
+        publisher: org,
+        about: { "@type": "VideoGame", name: "Deadlock" },
+      },
+    ];
+  }
   return [crumbs(trail)];
 }
 
