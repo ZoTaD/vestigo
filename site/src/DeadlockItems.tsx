@@ -24,10 +24,11 @@ import DeadlockItemsShop from "./DeadlockItemsShop";
 import DeadlockItemsTiers from "./DeadlockItemsTiers";
 import GameImg from "./GameImg";
 import { ItemsEarlyLate, ItemsPatchChanges } from "./DeadlockItemsTrends";
+import { ItemsValue } from "./DeadlockItemsValue";
 
 /** Tienda (como el juego), tier list por letra o lista con gráficos. */
-type Vista = "shop" | "tiers" | "list" | "patch" | "timing";
-const VISTAS: Vista[] = ["shop", "tiers", "list", "patch", "timing"];
+type Vista = "shop" | "tiers" | "list" | "patch" | "timing" | "value";
+const VISTAS: Vista[] = ["shop", "tiers", "list", "patch", "timing", "value"];
 
 /**
  * La tier list de ítems de Deadlock.
@@ -398,6 +399,12 @@ export default function DeadlockItems({
           {selector}
           {detalleAbierto()}
           <ItemsPatchChanges items={meta.items} patchTitle={meta.file.patch.title} onOpenItem={onOpen} />
+        </div>
+      ) : vista === "value" ? (
+        <div className="dl-items-shopview">
+          {selector}
+          {detalleAbierto()}
+          <ItemsValue items={meta.items} band={band} onOpenItem={onOpen} />
         </div>
       ) : vista === "timing" ? (
         <div className="dl-items-shopview">

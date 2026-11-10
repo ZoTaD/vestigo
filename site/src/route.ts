@@ -29,6 +29,7 @@ export type DeadlockSection =
   | "ranks"
   | "ladder"
   | "comebacks"
+  | "live"
   | "map"
   | "patches"
   | "dle"
@@ -255,6 +256,7 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = [
   "draft",
   "ranks",
   "ladder",
+  "live",
   "comebacks",
   "map",
   "patches",

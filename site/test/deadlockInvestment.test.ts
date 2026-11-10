@@ -8,3 +8,14 @@ describe("escalera de inversión", () => {
     expect(copia.INVESTMENT_CAP).toBe(original.INVESTMENT_CAP);
   });
 });
+
+describe("rungFill", () => {
+  it("llena por escalones, no por almas", () => {
+    expect(copia.rungFill("vitality", 0)).toBe(0);
+    expect(copia.rungFill("vitality", 800)).toBeCloseTo(1 / 11);
+    expect(copia.rungFill("vitality", 11_200)).toBeCloseTo(8 / 11);
+    expect(copia.rungFill("weapon", 24_800)).toBeCloseTo((10 + 2400 / 6400) / 11);
+    expect(copia.rungFill("spirit", 28_800)).toBe(1);
+    expect(copia.rungFill("spirit", 40_000)).toBe(1);
+  });
+});

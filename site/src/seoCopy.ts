@@ -137,6 +137,10 @@ const EN = {
           "Guess today's Deadlock hero, item and ability from their stats, with a daily ranking for each. " +
           "New puzzles every day at 00:00 UTC.",
       },
+      live: {
+        title: () => "Deadlock Live Matches — High-Level Games Right Now | Vestigo",
+        description: () => "Watch what's being played in Deadlock right now: the top live matches, every hero, the soul lead and the match ID to spectate in game.",
+      },
       comebacks: {
         title: () => "Deadlock Comebacks — What a Soul Lead Is Worth | Vestigo",
         description: () =>
@@ -334,6 +338,10 @@ const ES: typeof EN = {
         description: () =>
           "Adiviná el héroe, el objeto y la habilidad de Deadlock del día por sus stats, con un ranking diario " +
           "para cada uno. Nuevos todos los días a las 00:00 UTC.",
+      },
+      live: {
+        title: () => "Partidas en vivo de Deadlock — las de mayor nivel ahora | Vestigo",
+        description: () => "Qué se está jugando en Deadlock ahora: las mejores partidas en vivo, cada héroe, la ventaja de almas y el ID para espectarla desde el juego.",
       },
       comebacks: {
         title: () => "Remontadas en Deadlock — cuánto vale una ventaja de almas | Vestigo",

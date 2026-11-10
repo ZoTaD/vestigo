@@ -47,6 +47,7 @@ const DeadlockNews = lazyWithPreload(() => import("./DeadlockNews"));
 const DeadlockRanks = lazyWithPreload(() => import("./DeadlockRanks"));
 const DeadlockPlayerLadder = lazyWithPreload(() => import("./DeadlockPlayerLadder"));
 const DeadlockComebacks = lazyWithPreload(() => import("./DeadlockComebacks"));
+const DeadlockLive = lazyWithPreload(() => import("./DeadlockLive"));
 const DeadlockMap = lazyWithPreload(() => import("./DeadlockMap"));
 const DeadlockDle = lazyWithPreload(() => import("./DeadlockDle"));
 const DeadlockPlayer = lazyWithPreload(() => import("./DeadlockPlayer"));
@@ -64,6 +65,7 @@ const TABS: Partial<Record<DeadlockSection, { preload: () => Promise<void> }>> =
   ranks: DeadlockRanks,
   ladder: DeadlockPlayerLadder,
   comebacks: DeadlockComebacks,
+  live: DeadlockLive,
   map: DeadlockMap,
   dle: DeadlockDle,
   player: DeadlockPlayer,
@@ -177,6 +179,8 @@ export default function DeadlockArea({
            filtro que tenía era por promedio del lobby, no por rango del
            jugador — ver el comentario de `DeadlockPlayerLadder`. */
         <DeadlockPlayerLadder route={route} navigate={navigate} />
+      ) : route.dlSection === "live" ? (
+        <DeadlockLive route={route} navigate={navigate} />
       ) : route.dlSection === "comebacks" ? (
         <DeadlockComebacks band={band} picker={picker} />
       ) : route.dlSection === "dle" ? (

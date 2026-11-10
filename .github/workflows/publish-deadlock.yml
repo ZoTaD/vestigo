@@ -243,6 +243,25 @@ jobs:
         continue-on-error: true
         run: npm run build:item-timing --prefix games/deadlock/pipeline
 
+      # Infravalorados y sobrevalorados por héroe (2026-11-10), para la vista de
+      # Objetos. Un pedido por héroe y banda (~180, ~2 min), una vez por día con
+      # la puerta por edad. **Perdona fallar**: queda lo commiteado.
+      - name: build item value
+        continue-on-error: true
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/item-value.phantom-above.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            timeout -k 1m 15m npm run build:item-value --prefix games/deadlock/pipeline
+          else
+            echo "infravalorados tiene ${edad_h}h (< 20); esta corrida lo saltea"
+          fi
+
       # Las builds por héroe, que es lo que se despliega al apretar un héroe en
       # la tier list. Es el paso más caro con diferencia —~10 minutos contra los
       # ~10 segundos de ítems— y el motivo no es el volumen de partidas: para
@@ -419,6 +438,25 @@ jobs:
             timeout -k 1m 20m npm run build:top-players --prefix games/deadlock/pipeline
           else
             echo "el top de jugadores tiene ${edad_h}h (< 20); esta corrida lo saltea"
+          fi
+
+      # Las partidas de pros por héroe (2026-11-10): parte del top de la escalera,
+      # así que va después. Un pedido por héroe (~45, ~2 min), una vez por día.
+      # **Perdona fallar**: queda lo commiteado.
+      - name: build pro matches
+        continue-on-error: true
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/pro-matches/7.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            timeout -k 1m 10m npm run build:pro-matches --prefix games/deadlock/pipeline
+          else
+            echo "las partidas de pros tienen ${edad_h}h (< 20); esta corrida las saltea"
           fi
 
       # La curva de maestría, **una vez por día y no en cada corrida**.
