@@ -84,3 +84,25 @@ export function bonusFor(category: Category, souls: number): number {
   }
   return bonus;
 }
+
+/**
+ * Cuánto se llena la barra de inversión, de 0 a 1, **por escalones y no por
+ * almas** (2026-11-10).
+ *
+ * La barra de la tienda del juego sube por los once escalones a la par: cada
+ * uno ocupa lo mismo aunque el de 800 cueste 800 almas y el último 6.400. Antes
+ * se llenaba en línea recta hasta 28.800 y una build con 11.200 de vitalidad (8
+ * de 11 escalones) se veía al 39 %, muy por debajo de lo que muestra el juego.
+ * Entre dos escalones avanza en proporción a las almas que faltan para el
+ * siguiente.
+ */
+export function rungFill(category: Category, souls: number): number {
+  const escalera = LADDERS[category];
+  let previo = 0;
+  for (let i = 0; i < escalera.length; i++) {
+    const r = escalera[i];
+    if (souls < r.souls) return (i + (souls - previo) / (r.souls - previo)) / escalera.length;
+    previo = r.souls;
+  }
+  return 1;
+}

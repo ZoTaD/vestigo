@@ -1,0 +1,419 @@
+/*
+ * Partidas de pros (2026-11-10), en la ficha del héroe. Mismo papel que las
+ * builds de los mejores (`.dl-tb`): ganó o perdió se lee por el tinte de la
+ * fila y la palabra, nunca por un filo de color.
+ */
+[data-theme="codex"][data-game="deadlock"] .dl-pm { margin-top: 1.2rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 17rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-main { min-width: 0; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-filters button,
+[data-theme="codex"][data-game="deadlock"] .dl-pm-more {
+  padding: 0.3rem 0.65rem;
+  border: 0;
+  background: rgba(30, 26, 20, 0.08);
+  color: inherit;
+  font: 700 0.82rem/1 var(--font-body);
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-filters button[aria-pressed="true"] {
+  background: #2b241b;
+  color: #f1e4cc;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-filters .dl-pm-clear { background: #c2512a; color: #f1e4cc; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-count {
+  margin-left: auto;
+  font: 600 0.8rem/1 var(--font-body);
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-list {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-row {
+  display: grid;
+  grid-template-columns: 9.5rem 7.5rem minmax(0, 1fr) auto auto;
+  grid-template-areas: "who score items path open";
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.5rem 0.65rem;
+  background: rgba(30, 26, 20, 0.06);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-row[data-won="yes"] { background: rgba(74, 110, 52, 0.13); }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-row[data-won="no"] { background: rgba(160, 60, 40, 0.1); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-who { grid-area: who; display: grid; gap: 0.2rem; min-width: 0; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-name {
+  display: block;
+  justify-self: start;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 700 0.95rem/1.15 var(--font-display);
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-name:hover { text-decoration: underline; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font: 600 0.76rem/1 var(--font-body);
+  color: var(--text-dim);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-score { grid-area: score; display: grid; gap: 0.1rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-result {
+  font: 700 0.72rem/1 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-row[data-won="yes"] .dl-pm-result { color: #3f6a2a; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-row[data-won="no"] .dl-pm-result { color: #9a3a22; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-kda {
+  font: 700 1.05rem/1.1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-sub {
+  font: 600 0.74rem/1.2 var(--font-body);
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-items { grid-area: items; display: flex; flex-wrap: wrap; gap: 3px; min-width: 0; }
+/* Cada objeto sobre el color de su categoría, como en la tienda del juego: el ícono es claro y sobre el papel se pierde. */
+[data-theme="codex"][data-game="deadlock"] .dl-pm-item {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  background: #4a4034;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-pm-item.is-big { width: 36px; height: 36px; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-item[data-slot="weapon"] { background: #b8692a; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-item[data-slot="vitality"] { background: #4f7f2c; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-item[data-slot="spirit"] { background: #6e45a0; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-item img { width: 80%; height: 80%; object-fit: contain; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-path { grid-area: path; display: flex; gap: 4px; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-abi { position: relative; display: inline-block; width: 24px; height: 24px; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-abi.is-big { width: 30px; height: 30px; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-abi img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #2b241b;
+  border-radius: 50%;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-abi-n {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 2px;
+  border-radius: 7px;
+  background: #f1e4cc;
+  color: #2b241b;
+  font: 700 0.62rem/14px var(--font-body);
+  text-align: center;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-open {
+  grid-area: open;
+  padding: 0.3rem 0.55rem;
+  background: #2b241b;
+  color: #f1e4cc;
+  font: 700 0.78rem/1 var(--font-body);
+  text-decoration: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-open:hover { background: #c2512a; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-more { margin-top: 0.5rem; }
+
+/* El resumen del costado. */
+[data-theme="codex"][data-game="deadlock"] .dl-pm-side {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  background: rgba(30, 26, 20, 0.07);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-big { display: grid; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-big-n {
+  font: 700 2.3rem/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-pm-big-l { font: 600 0.82rem/1.3 var(--font-body); color: var(--text-dim); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-h {
+  margin: 0.4rem 0 0;
+  font: 700 0.72rem/1.1 var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pros { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pros button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.3rem 0.4rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 600 0.84rem/1.2 var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pros button:hover,
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pros button[aria-pressed="true"] { background: rgba(30, 26, 20, 0.1); }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pro-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pro-n { color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-core {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-pm-core li { display: grid; justify-items: center; gap: 2px; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-core span { font: 700 0.76rem/1 var(--font-body); font-variant-numeric: tabular-nums; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-pm-order { display: flex; align-items: center; gap: 8px; margin: 0; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-order-n { margin-left: 4px; font: 600 0.8rem/1.2 var(--font-body); color: var(--text-dim); }
+
+@media (max-width: 960px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-pm-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-pm-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "who score"
+      "items items"
+      "path open";
+    gap: 0.45rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-pm-score { justify-items: end; text-align: right; }
+  [data-theme="codex"][data-game="deadlock"] .dl-pm-open { justify-self: end; }
+}
+
+/*
+ * Infravalorados y sobrevalorados (2026-11-10), vista de Objetos. El primero
+ * de cada lista va más grande; el signo y el color del número dicen de qué
+ * lado está, sin filos de color.
+ */
+[data-theme="codex"][data-game="deadlock"] .dl-iv-heroes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0.6rem 0 0.8rem;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-heroes button {
+  padding: 2px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.55;
+  filter: grayscale(0.6);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-heroes button:hover { opacity: 0.9; filter: none; }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-heroes button[aria-checked="true"] { opacity: 1; filter: none; background: #c2512a; outline: 2px solid #c2512a; }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-heroes img { display: block; width: 40px; height: 40px; object-fit: cover; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-sample {
+  margin: 0 0 0.6rem;
+  font: 700 0.9rem/1.3 var(--font-body);
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-list { display: grid; gap: 2px; margin: 0.5rem 0 0; padding: 0; list-style: none; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-item {
+  display: grid;
+  grid-template-columns: 1.4rem auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "rank icon name delta"
+    "rank icon buy delta";
+  column-gap: 0.6rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.35rem 0.4rem;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-iv-item:hover { background: rgba(30, 26, 20, 0.08); }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-item > :nth-child(2) { grid-area: icon; }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-rank { grid-area: rank; font: 700 0.85rem/1 var(--font-display); color: var(--text-dim); }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-name { grid-area: name; align-self: end; font: 700 0.95rem/1.15 var(--font-display); }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-buy { grid-area: buy; align-self: start; font: 600 0.78rem/1.2 var(--font-body); color: var(--text-dim); }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-delta {
+  grid-area: delta;
+  font: 700 1.1rem/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="codex"][data-game="deadlock"] [data-first] .dl-iv-name { font-size: 1.15rem; }
+[data-theme="codex"][data-game="deadlock"] [data-first] .dl-iv-delta { font-size: 1.5rem; }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-delta[data-dir="up"] { color: #3f6a2a; }
+[data-theme="codex"][data-game="deadlock"] .dl-iv-delta[data-dir="down"] { color: #9a3a22; }
+
+/*
+ * En vivo (2026-11-10). Tarjetas de papel como el resto de Deadlock; los dos
+ * equipos con el color que el juego les da (ámbar Hidden King, azul
+ * Archmother) sólo en la barra de almas y el nombre del equipo.
+ */
+[data-theme="codex"][data-game="deadlock"] .dl-live { display: grid; gap: 0.8rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font: 700 2rem/1.1 var(--font-display);
+  letter-spacing: 0.02em;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #d23b2a;
+  animation: dl-live-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes dl-live-pulse {
+  50% { opacity: 0.35; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="codex"][data-game="deadlock"] .dl-live-dot { animation: none; }
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-lead { margin: 0.3rem 0 0; max-width: 60rem; font: 500 0.95rem/1.45 var(--font-body); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-filters .dl-pm-filters { margin: 0; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-n { opacity: 0.65; font-variant-numeric: tabular-nums; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-region { font: 600 0.85rem/1 var(--font-body); }
+[data-theme="codex"][data-game="deadlock"] .dl-live-region select { font: inherit; padding: 0.25rem 0.4rem; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-card { display: grid; gap: 0.5rem; align-content: start; margin: 0; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-card-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-mode {
+  font: 700 0.75rem/1 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-live-meta { font: 600 0.78rem/1 var(--font-body); color: var(--text-dim, rgba(30, 26, 20, 0.65)); }
+[data-theme="codex"][data-game="deadlock"] .dl-live-clock {
+  margin-left: auto;
+  font: 700 1.15rem/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-souls { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.45rem; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-souls-n { font: 700 0.85rem/1 var(--font-body); font-variant-numeric: tabular-nums; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-bar { display: block; height: 8px; background: #3f6fb0; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-bar span { display: block; height: 100%; background: #d99a2b; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-lead-text { margin: -0.2rem 0 0; font: 600 0.8rem/1.2 var(--font-body); }
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-teams { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-team { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; min-width: 0; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-team li { display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-team img { flex: none; width: 26px; height: 26px; object-fit: cover; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-team-name {
+  font: 700 0.72rem/1.2 var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-live-team[data-team="0"] .dl-live-team-name { color: #a66a10; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-team[data-team="1"] .dl-live-team-name { color: #2f5a97; }
+[data-theme="codex"][data-game="deadlock"] .dl-live-player {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: inherit;
+  font: 600 0.84rem/1.2 var(--font-body);
+  text-decoration: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-live-player:hover { text-decoration: underline; }
+
+[data-theme="codex"][data-game="deadlock"] .dl-live-copy {
+  justify-self: start;
+  padding: 0.3rem 0.6rem;
+  border: 0;
+  background: #2b241b;
+  color: #f1e4cc;
+  font: 700 0.78rem/1 var(--font-body);
+  cursor: pointer;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-live-copy:hover { background: #c2512a; }

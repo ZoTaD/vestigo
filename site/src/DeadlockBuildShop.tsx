@@ -18,6 +18,7 @@ import {
 import { ConFicha } from "./DeadlockBuildCard";
 import { GameCard, ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
+import { rungFill } from "./deadlockInvestment";
 import { PopularHeroContext, bestPhases, usePopular, type PopularPhase } from "./deadlockPopularData";
 
 /**
@@ -35,7 +36,6 @@ import { PopularHeroContext, bestPhases, usePopular, type PopularPhase } from ".
 
 const PRECIOS = [800, 1600, 3200, 6400] as const;
 const COLUMNAS: readonly Slot[] = ["weapon", "spirit", "vitality"];
-const TOPE_ALMAS = 28_800;
 const ROMANO = ["", "I", "II", "III"];
 
 interface CatalogItem {
@@ -363,7 +363,8 @@ function Inversion({ build }: { build: BuildView }) {
     <aside className="dl-bshop-souls" aria-label={c.damageSplit}>
       <p className="dl-bshop-souls-title">{c.damageSplit}</p>
       <div className="dl-bshop-bars">
-        {(["weapon", "vitality", "spirit"] as const).map((k) => {
+        {/* En el orden de las columnas de la tienda de al lado (arma, espíritu, vitalidad). */}
+        {COLUMNAS.map((k) => {
           const v = build.damageSplit[k];
           return (
             <div key={k} className="dl-bshop-bar" data-cat={k} title={c.investment(v.souls.toLocaleString(locale))}>
@@ -371,7 +372,7 @@ function Inversion({ build }: { build: BuildView }) {
                 {v.bonus > 0 ? `+${v.bonus}${k === "spirit" ? "" : "%"}` : "—"}
               </span>
               <span className="dl-bshop-track">
-                <span style={{ "--fill": `${Math.min(100, (v.souls / TOPE_ALMAS) * 100)}%` } as CSSProperties} />
+                <span style={{ "--fill": `${rungFill(k, v.souls) * 100}%` } as CSSProperties} />
               </span>
               <span className="dl-bshop-souls-n">{(v.souls / 1000).toLocaleString(locale, { maximumFractionDigits: 1 })}k</span>
               <img src={`/deadlock/game/ui/cns/tab-${k}.webp`} alt={c.damage[k]} width={30} height={30} />
