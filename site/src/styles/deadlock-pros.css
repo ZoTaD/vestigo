@@ -7,7 +7,7 @@
 
 [data-theme="codex"][data-game="deadlock"] .dl-pm-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 17rem;
+  grid-template-columns: minmax(0, 1fr) 19rem;
   gap: 1rem;
   align-items: start;
 }
@@ -173,8 +173,16 @@
 [data-theme="codex"][data-game="deadlock"] .dl-pm-more { margin-top: 0.5rem; }
 
 /* El resumen del costado. */
+/*
+ * El costado no se sale de su columna (2026-11-11): en una grilla el contenido
+ * pide su ancho mínimo, y los nombres largos con "6 matches · 33 %" sin cortar
+ * pedían 331 px en una columna de 289. Con `minmax(0, 1fr)` cada fila se ajusta
+ * y el nombre se corta con "…".
+ */
 [data-theme="codex"][data-game="deadlock"] .dl-pm-side {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
   gap: 0.5rem;
   padding: 0.8rem;
   background: rgba(30, 26, 20, 0.07);
@@ -194,9 +202,11 @@
   text-transform: uppercase;
 }
 
-[data-theme="codex"][data-game="deadlock"] .dl-pm-pros { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pros { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; margin: 0; padding: 0; list-style: none; }
 [data-theme="codex"][data-game="deadlock"] .dl-pm-pros button {
   display: flex;
+  min-width: 0;
+  box-sizing: border-box;
   width: 100%;
   justify-content: space-between;
   gap: 0.5rem;
@@ -210,12 +220,12 @@
 }
 [data-theme="codex"][data-game="deadlock"] .dl-pm-pros button:hover,
 [data-theme="codex"][data-game="deadlock"] .dl-pm-pros button[aria-pressed="true"] { background: rgba(30, 26, 20, 0.1); }
-[data-theme="codex"][data-game="deadlock"] .dl-pm-pro-name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-theme="codex"][data-game="deadlock"] .dl-pm-pro-name { min-width: 0; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 [data-theme="codex"][data-game="deadlock"] .dl-pm-pro-n { color: var(--text-dim); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 [data-theme="codex"][data-game="deadlock"] .dl-pm-core {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.4rem;
   margin: 0;
   padding: 0;
