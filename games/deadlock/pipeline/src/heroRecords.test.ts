@@ -2,11 +2,17 @@ import { describe, expect, it } from "vitest";
 import { retryDelay, seasonsToBuild, uniqueIds, type RecordsFile } from "./heroRecords";
 
 describe("retryDelay", () => {
-  it("el 429 duplica la espera desde 30 s y corta a los 8 intentos", () => {
+  it("el 429 duplica la espera desde 30 s y corta a los 12 intentos", () => {
     expect(retryDelay(429, 0, null)).toBe(30_000);
     expect(retryDelay(429, 2, null)).toBe(120_000);
     expect(retryDelay(429, 6, null)).toBe(300_000);
-    expect(retryDelay(429, 8, null)).toBeNull();
+    expect(retryDelay(429, 11, "4")).toBe(5_000);
+    expect(retryDelay(429, 12, null)).toBeNull();
+  });
+
+  it("el 503/504 de la cola respeta su Retry-After", () => {
+    expect(retryDelay(503, 0, "40")).toBe(41_000);
+    expect(retryDelay(504, 1, "")).toBe(30_000);
   });
 
   it("el 429 respeta Retry-After", () => {

@@ -141,20 +141,23 @@ const MAX_WAIT_MS = 5 * 60_000;
 
 /**
  * Cuánto esperar antes del intento `intento + 1`, o `null` si no vale la pena
- * seguir. El 429 respeta `Retry-After` si viene y si no duplica la espera
- * desde 30 s (8 intentos, ~20 min en el peor caso); los 5xx y los cortes de
- * red (`status` 0) reintentan menos, porque suelen ser la API caída.
+ * seguir. Si viene `Retry-After` se respeta (la API lo manda en el 429 y
+ * también en el 503/504 de su cola); si no, la espera se duplica. El 429 llega
+ * a 12 intentos: el tope global de la API (2.000 por minuto entre todos sus
+ * usuarios) pide hasta 5 min seguidos, y el 12/11 una corrida se rindió con
+ * 4 s de espera por delante. Los 5xx y los cortes de red (`status` 0)
+ * reintentan menos, porque suelen ser la API caída.
  */
 export function retryDelay(status: number, intento: number, retryAfter: string | null): number | null {
+  const s = Number(retryAfter);
+  const pedida = retryAfter != null && retryAfter !== "" && Number.isFinite(s) && s >= 0 ? Math.min(s * 1000 + 1000, MAX_WAIT_MS) : null;
   if (status === 429) {
-    if (intento >= 8) return null;
-    const s = Number(retryAfter);
-    if (retryAfter != null && Number.isFinite(s) && s >= 0) return Math.min(s * 1000 + 1000, MAX_WAIT_MS);
-    return Math.min(30_000 * 2 ** intento, MAX_WAIT_MS);
+    if (intento >= 12) return null;
+    return pedida ?? Math.min(30_000 * 2 ** intento, MAX_WAIT_MS);
   }
   if (status === 0 || status >= 500) {
     if (intento >= 5) return null;
-    return Math.min(15_000 * 2 ** intento, MAX_WAIT_MS);
+    return pedida ?? Math.min(15_000 * 2 ** intento, MAX_WAIT_MS);
   }
   return null;
 }
