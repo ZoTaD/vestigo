@@ -66,24 +66,49 @@ interface RawSteam {
 }
 
 /**
- * Busca cuentas por nombre.
- *
- * Se ordena por partidas de los últimos treinta días y **no por parecido del
- * nombre**: quien busca "zota" quiere a alguien que juega, no a la cuenta que
- * escribió ese nombre en 2014 y no abrió nunca el juego.
+ * Qué tan parecido es un nombre a lo buscado: 0 idéntico, 1 igual sin mirar
+ * mayúsculas, 2 empieza igual, 3 lo contiene, 4 parecido (lo que la búsqueda
+ * difusa de la API trae igual, como "Lotad" para "ZoTaD").
  */
+export function nameMatch(name: string, query: string): number {
+  const q = query.trim();
+  if (name === q) return 0;
+  const n = name.toLocaleLowerCase();
+  const l = q.toLocaleLowerCase();
+  if (n === l) return 1;
+  if (n.startsWith(l)) return 2;
+  if (n.includes(l)) return 3;
+  return 4;
+}
+
+/**
+ * El orden de los resultados: **primero el parecido del nombre**, y dentro de
+ * cada nivel las partidas de los últimos treinta días, para que entre diez
+ * "Lotad" salga primero el que juega.
+ *
+ * Hasta el 12/11 se ordenaba sólo por partidas, y quien buscaba su nombre
+ * exacto con pocas partidas quedaba debajo de nombres parecidos y fuera de los
+ * diez que se muestran.
+ */
+export function rankAccounts(accounts: SteamAccount[], query: string): SteamAccount[] {
+  return accounts
+    .map((a, i) => ({ a, i, m: nameMatch(a.name, query) }))
+    .sort((x, y) => x.m - y.m || y.a.recent - x.a.recent || x.i - y.i)
+    .map((x) => x.a);
+}
+
+/** Busca cuentas por nombre, ordenadas con `rankAccounts`. */
 export async function searchAccounts(query: string): Promise<SteamAccount[]> {
   const raw = await get<RawSteam[]>(`players/steam-search?search_query=${encodeURIComponent(query)}`);
-  return raw
-    .map((r) => ({
-      accountId: r.account_id,
-      name: r.personaname,
-      avatar: r.avatarmedium ?? r.avatar ?? null,
-      country: r.countrycode ?? null,
-      recent: r.matches_played_last_30d ?? 0,
-      steamUrl: r.profileurl ?? null,
-    }))
-    .sort((a, b) => b.recent - a.recent);
+  const accounts = raw.map((r) => ({
+    accountId: r.account_id,
+    name: r.personaname,
+    avatar: r.avatarmedium ?? r.avatar ?? null,
+    country: r.countrycode ?? null,
+    recent: r.matches_played_last_30d ?? 0,
+    steamUrl: r.profileurl ?? null,
+  }));
+  return rankAccounts(accounts, query);
 }
 
 /** Una cuenta puntual, para poder dibujar el perfil de un link compartido. */
