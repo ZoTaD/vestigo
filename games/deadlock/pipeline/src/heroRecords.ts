@@ -48,8 +48,12 @@ const MIN_WORLD = 50;
 const FREEZE_AFTER_S = 2 * 86400;
 /** Una temporada que empezó hace menos que esto no tiene récords que valgan. */
 const MIN_AGE_S = 86400;
-/** Entre pedido y pedido: 200 por minuto es el tope, esto deja margen. */
-const PAUSE_MS = 340;
+/**
+ * Entre pedido y pedido: 200 por minuto es el tope. Con 340 ms (~176 por
+ * minuto) la API cortaba con 429 desde el 6/11 y no se publicaba nada; 450 ms
+ * son ~133 por minuto.
+ */
+const PAUSE_MS = 450;
 
 /**
  * Cuántos jugadores tienen cada logro de temporada, para decir "lo tiene el
@@ -132,6 +136,52 @@ export function uniqueIds(rows: { account_id: number }[]): number[] {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+/** El techo de una espera: más que esto y conviene reintentar en la próxima corrida. */
+const MAX_WAIT_MS = 5 * 60_000;
+
+/**
+ * Cuánto esperar antes del intento `intento + 1`, o `null` si no vale la pena
+ * seguir. El 429 respeta `Retry-After` si viene y si no duplica la espera
+ * desde 30 s (8 intentos, ~20 min en el peor caso); los 5xx y los cortes de
+ * red (`status` 0) reintentan menos, porque suelen ser la API caída.
+ */
+export function retryDelay(status: number, intento: number, retryAfter: string | null): number | null {
+  if (status === 429) {
+    if (intento >= 8) return null;
+    const s = Number(retryAfter);
+    if (retryAfter != null && Number.isFinite(s) && s >= 0) return Math.min(s * 1000 + 1000, MAX_WAIT_MS);
+    return Math.min(30_000 * 2 ** intento, MAX_WAIT_MS);
+  }
+  if (status === 0 || status >= 500) {
+    if (intento >= 5) return null;
+    return Math.min(15_000 * 2 ** intento, MAX_WAIT_MS);
+  }
+  return null;
+}
+
+/** Un pedido al scoreboard, con la pausa entre pedidos y los reintentos. */
+async function scoreboard<T>(q: URLSearchParams, what: string): Promise<T> {
+  for (let intento = 0; ; intento++) {
+    await sleep(PAUSE_MS);
+    let status = 0;
+    let retryAfter: string | null = null;
+    try {
+      const res = await fetch(`${API}/analytics/scoreboards/players?${q}`, {
+        headers: { "User-Agent": "vestigo.gg pipeline" },
+      });
+      if (res.ok) return (await res.json()) as T;
+      status = res.status;
+      retryAfter = res.headers.get("retry-after");
+    } catch {
+      // Corte de red: se trata como un 5xx.
+    }
+    const espera = retryDelay(status, intento, retryAfter);
+    if (espera == null) throw new Error(`HTTP ${status || "sin respuesta"} en ${what}`);
+    console.log(`  HTTP ${status || "sin respuesta"} en ${what}; reintento en ${Math.round(espera / 1000)} s`);
+    await sleep(espera);
+  }
+}
+
 async function top(metric: string, season: Season, heroId: number | null): Promise<number[]> {
   const q = new URLSearchParams({
     sort_by: metric,
@@ -142,16 +192,8 @@ async function top(metric: string, season: Season, heroId: number | null): Promi
     ...seasonParams(season),
   });
   if (heroId != null) q.set("hero_id", String(heroId));
-  for (let intento = 0; ; intento++) {
-    await sleep(PAUSE_MS);
-    const res = await fetch(`${API}/analytics/scoreboards/players?${q}`);
-    if (res.ok) return uniqueIds((await res.json()) as { account_id: number }[]);
-    if (res.status === 429 && intento < 4) {
-      await sleep(30_000);
-      continue;
-    }
-    throw new Error(`HTTP ${res.status} en ${metric} / héroe ${heroId ?? "mundo"}`);
-  }
+  const rows = await scoreboard<{ account_id: number }[]>(q, `${metric} / héroe ${heroId ?? "mundo"}`);
+  return uniqueIds(rows);
 }
 
 interface Row {
@@ -162,16 +204,7 @@ interface Row {
 
 async function board(params: Record<string, string>): Promise<Row[]> {
   const q = new URLSearchParams({ match_mode: "Ranked", sort_direction: "desc", ...params });
-  for (let intento = 0; ; intento++) {
-    await sleep(PAUSE_MS);
-    const res = await fetch(`${API}/analytics/scoreboards/players?${q}`);
-    if (res.ok) return (await res.json()) as Row[];
-    if (res.status === 429 && intento < 4) {
-      await sleep(30_000);
-      continue;
-    }
-    throw new Error(`HTTP ${res.status} en el scoreboard (${q.get("sort_by")})`);
-  }
+  return scoreboard<Row[]>(q, `el scoreboard (${q.get("sort_by")})`);
 }
 
 /**
@@ -251,28 +284,42 @@ async function main() {
   const catalog = JSON.parse(readFileSync(CATALOG, "utf8")) as { heroes: Record<string, unknown> };
   const heroIds = Object.keys(catalog.heroes).map(Number);
 
+  // `generatedAt` se adelanta sólo si salieron todas: la puerta de 20 h del
+  // workflow mira esa fecha, y una corrida que falló tiene que reintentarse en
+  // la siguiente, no al otro día.
   const out: RecordsFile = {
-    generatedAt: new Date().toISOString(),
+    generatedAt: prev?.generatedAt ?? new Date(0).toISOString(),
     metrics: [...METRICS],
     seasons: { ...(prev?.seasons ?? {}) },
   };
 
+  // Cada temporada se escribe apenas termina. Antes se escribía todo al final y
+  // un 429 en la Season 2 tiraba también la Season 1 ya bajada (6/11 al 12/11).
+  let fallas = 0;
   for (const { season, final } of seasonsToBuild(SEASONS, prev, now)) {
-    const rec: SeasonRecords = { final, heroes: {}, world: {} };
-    for (const m of METRICS) rec.world[m] = await top(m, season, null);
-    for (const h of heroIds) {
-      const porMetrica: Record<string, number[]> = {};
-      for (const m of METRICS) {
-        const ids = await top(m, season, h);
-        if (ids.length > 0) porMetrica[m] = ids;
+    try {
+      const rec: SeasonRecords = { final, heroes: {}, world: {} };
+      for (const m of METRICS) rec.world[m] = await top(m, season, null);
+      for (const h of heroIds) {
+        const porMetrica: Record<string, number[]> = {};
+        for (const m of METRICS) {
+          const ids = await top(m, season, h);
+          if (ids.length > 0) porMetrica[m] = ids;
+        }
+        if (Object.keys(porMetrica).length > 0) rec.heroes[String(h)] = porMetrica;
       }
-      if (Object.keys(porMetrica).length > 0) rec.heroes[String(h)] = porMetrica;
+      rec.rarity = await rarityOf(season, heroIds);
+      out.seasons[String(season.id)] = rec;
+      writeFileSync(OUT, JSON.stringify(out));
+      console.log(`temporada ${season.id}: ${Object.keys(rec.heroes).length} héroes${final ? " (congelada)" : ""}`);
+    } catch (e) {
+      fallas++;
+      console.error(`temporada ${season.id}: queda la versión anterior (${e instanceof Error ? e.message : e})`);
     }
-    rec.rarity = await rarityOf(season, heroIds);
-    out.seasons[String(season.id)] = rec;
-    console.log(`temporada ${season.id}: ${Object.keys(rec.heroes).length} héroes${final ? " (congelada)" : ""}`);
   }
 
+  if (fallas > 0) process.exit(1);
+  out.generatedAt = new Date().toISOString();
   writeFileSync(OUT, JSON.stringify(out));
 }
 

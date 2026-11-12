@@ -400,12 +400,14 @@ jobs:
           fi
 
       # Los récords del mundo para los logros del perfil (2026-11-05): top 10 por
-      # héroe y por métrica, más la rareza de cada logro (~3.000 pedidos, ~20 min), una vez por día. Una
-      # temporada cerrada queda congelada en el archivo y no se vuelve a pedir.
+      # héroe y por métrica, más la rareza de cada logro (~3.000 pedidos por
+      # temporada, ~25 min), una vez por día. Una temporada cerrada queda
+      # congelada en el archivo y no se vuelve a pedir. Cada temporada se escribe
+      # al terminar, así que un corte deja guardadas las que ya salieron.
       # **Perdona fallar**: queda lo commiteado.
       - name: build hero records
         continue-on-error: true
-        timeout-minutes: 45
+        timeout-minutes: 75
         run: |
           edad_h=$(node -e '
             const fs = require("fs");
