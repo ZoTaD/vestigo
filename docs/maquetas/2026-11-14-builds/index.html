@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Builds de Abrams · maqueta</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.hero-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.hero-row button { width: 46px; height: 46px; padding: 0; border-radius: 8px; border: 2px solid var(--line); background: #232819; overflow: hidden; }
+.hero-row button img { width: 100%; height: 100%; object-fit: cover; }
+.hero-row button.on { border-color: var(--accent); }
+.hero-row button:not(.on) { opacity: .55; }
+.layout { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; flex: 1 1 420px; max-width: 540px; }
+.card { width: 100%; text-align: left; padding: 14px; border-radius: 8px; background: var(--ink-2); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+.card:hover { border-color: var(--line-2); }
+.card.on { border-color: var(--accent); background: var(--ink-3); }
+.card .row { display: flex; gap: 12px; align-items: flex-start; justify-content: space-between; }
+.card .name { font-weight: 600; font-size: 15px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.card .by { font-size: 12px; color: var(--text-3); }
+.card .nums { display: flex; gap: 16px; align-items: center; font-size: 12px; color: var(--text-3); }
+.card .nums b { font-size: 15px; color: var(--text); }
+.card .nums .pill { margin-left: auto; border: 1px solid #3a4030; border-radius: 4px; padding: 2px 8px; }
+.prev { flex: 999 1 560px; min-width: 0; padding: 22px; display: flex; flex-direction: column; gap: 18px; position: sticky; top: 12px; }
+.cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+.cat { background: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.cat .hd { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; }
+.cat .hd b { font: 600 16px "Barlow Condensed"; letter-spacing: 1px; color: var(--gold-lit); text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cat .its { display: flex; flex-wrap: wrap; gap: 5px; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.kpi { background: var(--ink); border-radius: 8px; padding: 12px; }
+.kpi div:first-child { font-size: 12px; color: var(--text-3); }
+.kpi div:last-child { font-size: 22px; font-weight: 600; }
+.empty { padding: 24px; text-align: center; color: var(--text-3); }
+@media (max-width: 700px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .prev { position: static; } h1 { font-size: 34px; } }
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" style="padding-top: 26px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 18px">
+
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span class="muted" style="font-size: 12px; letter-spacing: 1px">DEADLOCK · BUILDS</span>
+      <h1>BUILDS DE ABRAMS</h1>
+      <p class="muted" style="margin: 0; max-width: 640px; color: var(--text-2)">Elegí una, copiá el ID y buscala en el juego (tienda → Explorar builds). O armá la tuya.</p>
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap">
+      <a class="btn pri" href="editor.html">Armar build</a>
+      <a class="btn" href="publicar.html">Subir desde el juego</a>
+    </div>
+  </div>
+
+  <div class="hero-row" id="heroes"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+    <label class="field" style="flex: 1 1 260px; max-width: 360px">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="#9c9581" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="#9c9581" stroke-width="1.6"/></svg>
+      <span class="sr">Buscar</span><input id="q" placeholder="Nombre o un objeto (ej.: Coloso)">
+    </label>
+    <div id="styles" style="display: flex; gap: 6px; flex-wrap: wrap"></div>
+    <span class="spacer"></span>
+    <label class="muted" style="display: flex; gap: 8px; align-items: center; font-size: 13px">Ordenar
+      <select class="sel" id="sort"><option value="pop">Más usadas</option><option value="new">Más nuevas</option><option value="wr">Mejor % de victoria</option></select>
+    </label>
+  </div>
+
+  <div class="layout">
+    <ul class="list" id="list"></ul>
+    <section class="panel prev" id="prev" aria-live="polite"></section>
+  </div>
+</main>
+<div id="map"></div>
+
+<script src="data.js"></script>
+<script src="comm.js"></script>
+<script src="common.js"></script>
+<script>
+$("#hdr").innerHTML = header();
+$("#map").innerHTML = mapnav("index.html");
+
+const B = allBuilds();
+const st = { tab: "vestigo", style: "Todas", sel: null, q: "", sort: "pop" };
+const TABS = [["vestigo", "Recomendadas"], ["top", "De los mejores"], ["comm", "Comunidad"], ["mias", "Mis builds"]];
+
+const heroIds = Object.entries(D.heroes).filter(([, h]) => h.card).slice(0, 18);
+$("#heroes").innerHTML = heroIds.map(([id, h]) => `<button type="button" class="${id === "6" ? "on" : ""}" title="${esc(h.n)}" aria-label="${esc(h.n)}"><img src="${h.img}" alt=""></button>`).join("") + `<span class="muted" style="align-self:center;font-size:13px;margin-left:6px">En la maqueta sólo Abrams tiene datos</span>`;
+
+function visible() {
+  let xs = B.filter((b) => b.src === st.tab);
+  if (st.style !== "Todas") xs = xs.filter((b) => b.style === st.style);
+  if (st.q) {
+    const q = st.q.toLowerCase();
+    xs = xs.filter((b) => b.name.toLowerCase().includes(q) || b.cats.some((c) => c.items.some((id) => item(id)?.n.toLowerCase().includes(q))));
+  }
+  const k = { pop: (b) => -(b.matches ?? b.fav ?? 0), new: (b) => -(b.upd ?? 0), wr: (b) => -(b.wr ?? 0) }[st.sort];
+  return xs.sort((a, b) => k(a) - k(b));
+}
+
+function render() {
+  $("#tabs").innerHTML = TABS.map(([k, l]) => `<button type="button" class="tab ${st.tab === k ? "on" : ""}" data-tab="${k}">${l}<small>${k === "mias" ? 0 : B.filter((b) => b.src === k).length}</small></button>`).join("");
+  $("#styles").innerHTML = ["Todas", "Arma", "Espíritu", "Híbrida", "Tanque"].map((s) => `<button type="button" class="chip ${st.style === s ? "on" : ""}" data-style="${s}">${s}</button>`).join("");
+
+  const xs = visible();
+  if (!xs.find((b) => b.key === st.sel)) st.sel = xs[0]?.key ?? null;
+
+  if (st.tab === "mias") {
+    $("#list").innerHTML = `<li class="panel empty">Todavía no guardaste builds.<br><br><a class="btn pri" href="editor.html">Armar una</a> <a class="btn" href="publicar.html">Traer del juego</a></li>`;
+    $("#prev").innerHTML = `<p class="muted" style="margin:0">Acá van tus builds: las que armes en Vestigo (privadas o públicas) y las que traigas del juego con tu cuenta de Steam.</p>`;
+    return;
+  }
+
+  $("#list").innerHTML = xs.length ? xs.map((b) => `<li><button type="button" class="card ${b.key === st.sel ? "on" : ""}" data-sel="${b.key}">
+      <div class="row">
+        <div style="min-width:0"><div class="name">${esc(b.name)}</div><div class="by">${esc(b.author)} <span class="badge ${b.badge[1]}">${b.badge[0]}</span></div></div>
+        <div style="display:flex;gap:4px">${b.key3.map((id) => itemTile(id, 36)).join("")}</div>
+      </div>
+      <div class="nums">
+        ${b.wr != null ? `<span><b style="color:${b.wr >= 52 ? "var(--souls)" : "var(--text)"}">${b.wr}%</b> victoria</span><span><b>${fmt(b.matches)}</b> partidas${b.small ? " (pocas)" : ""}</span>` : `<span><b>${fmt(b.fav)}</b> favoritos</span><span>hace <b>${daysAgo(b.upd)}</b> días</span>`}
+        <span class="pill">${b.style}</span>
+      </div></button></li>`).join("") : `<li class="panel empty">Nada con ese filtro.</li>`;
+
+  const b = xs.find((x) => x.key === st.sel);
+  if (!b) { $("#prev").innerHTML = ""; return; }
+  $("#prev").innerHTML = `
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:flex-start">
+      <div style="display:flex;gap:14px;align-items:center;min-width:0">
+        <img src="${D.heroes["6"].img}" alt="" width="64" height="64" style="border-radius:10px;background:#232819;object-fit:cover">
+        <div style="min-width:0"><h2 style="font-size:28px;overflow-wrap:anywhere">${esc(b.name)}</h2>
+        <div class="muted" style="font-size:13px">${esc(b.author)} <span class="badge ${b.badge[1]}">${b.badge[0]}</span>${b.upd ? ` · actualizada hace ${daysAgo(b.upd)} días` : ""}${b.ver ? ` · versión ${b.ver}` : ""}</div></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${b.gameId ? `<button type="button" class="btn pri" data-copy="${b.gameId}">Copiar ID · ${b.gameId}</button>` : `<button type="button" class="btn pri" data-copy="">Publicar en el juego</button>`}
+        <a class="btn" href="ficha.html?b=${b.key}">Ver ficha</a>
+        <a class="btn" href="editor.html?b=${b.key}">Editar copia</a>
+      </div>
+    </div>
+    ${b.desc ? `<p style="margin:0;color:var(--text-2);white-space:pre-line;max-height:4.5em;overflow:hidden">${esc(b.desc)}</p>` : ""}
+    <div class="kpis">
+      <div class="kpi"><div>Victoria</div><div style="color:${b.wr >= 52 ? "var(--souls)" : "inherit"}">${b.wr != null ? b.wr + "%" : "—"}</div></div>
+      <div class="kpi"><div>Partidas</div><div>${b.matches != null ? fmt(b.matches) : "—"}</div></div>
+      <div class="kpi"><div>Estilo</div><div>${b.style}</div></div>
+      <div class="kpi"><div>Almas (todo)</div><div style="color:var(--souls)">${fmt(b.souls)}</div></div>
+    </div>
+    <div class="cats">${b.cats.map((c) => `<div class="cat"><div class="hd"><b title="${esc(c.name)}">${esc(c.name) || "Sin nombre"}</b><span style="color:var(--souls)">${fmt(sumCost(c.items))}</span></div><div class="its">${c.items.map((id) => itemTile(id, 36)).join("")}</div></div>`).join("")}</div>
+    <div style="display:flex;flex-direction:column;gap:8px"><h3>PUNTOS DE HABILIDAD, EN ORDEN</h3>${abilityGrid(b.ao)}</div>
+    ${b.wr == null ? `<p class="muted" style="margin:0;font-size:12px">El % de victoria de las builds de la comunidad sale del historial de partidas (cada partida trae la build usada). Falta medir cuántas cubrimos.</p>` : ""}`;
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-tab],[data-style],[data-sel],[data-copy]");
+  if (!t) return;
+  if (t.dataset.tab) { st.tab = t.dataset.tab; st.sel = null; }
+  if (t.dataset.style) st.style = t.dataset.style;
+  if (t.dataset.sel) st.sel = t.dataset.sel;
+  if ("copy" in t.dataset) { if (t.dataset.copy) navigator.clipboard?.writeText(t.dataset.copy); toast(t.dataset.copy ? "ID copiado: buscalo en el juego" : "Maqueta: acá se explicaría cómo"); return; }
+  render();
+});
+$("#q").addEventListener("input", (e) => { st.q = e.target.value; render(); });
+$("#sort").addEventListener("change", (e) => { st.sort = e.target.value; render(); });
+render();
+</script>
+</body>
+</html>

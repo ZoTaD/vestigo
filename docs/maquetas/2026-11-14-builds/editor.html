@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor de builds · maqueta</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 12px; }
+.cols { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+.left { flex: 999 1 600px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+.right { flex: 1 1 380px; min-width: 0; padding: 14px; display: flex; flex-direction: column; gap: 10px; position: sticky; top: 12px; max-height: calc(100vh - 24px); }
+.stage { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; }
+.stage.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.stage.over { background: var(--ink-3); }
+.stage .hd { display: flex; gap: 10px; align-items: center; }
+.stage .hd input { flex: 1; min-width: 0; background: none; border: 0; border-bottom: 1px dashed transparent; font: 600 20px "Barlow Condensed"; letter-spacing: .5px; padding: 2px 0; outline: none; }
+.stage .hd input:focus { border-color: var(--line-2); }
+.stage .hd .souls { font-size: 12px; color: var(--souls); white-space: nowrap; }
+.stage .hd button { width: 32px; height: 32px; border-radius: 6px; border: 1px solid transparent; background: none; color: var(--text-3); }
+.stage .hd button:hover { border-color: var(--line-2); color: var(--text); }
+.stage .its { display: flex; flex-wrap: wrap; gap: 8px; min-height: 52px; align-items: center; }
+.stage .its .it { cursor: grab; border: 0; padding: 0; }
+.stage .its .it:hover::after { content: "×"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(16,19,13,.6); color: #fff; font-size: 22px; }
+.hint { font-size: 13px; color: #6f6a58; }
+.pool { list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1; min-height: 200px; }
+.pool button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 5px 8px; min-height: 44px; background: none; border: 0; border-radius: 6px; text-align: left; }
+.pool button:hover { background: var(--ink-3); }
+.pool button.has { opacity: .4; }
+.pool .n { flex: 1; min-width: 0; }
+.pool .c { font-size: 12px; color: var(--souls); width: 46px; text-align: right; }
+.pool .w { font-size: 12px; color: var(--text-3); width: 38px; text-align: right; }
+.pool .grp { font: 600 13px "Barlow Condensed"; letter-spacing: 1px; color: var(--text-3); padding: 10px 8px 4px; }
+.steps { display: flex; gap: 6px; }
+.steps button { height: 36px; padding: 0 14px; border-radius: 6px; border: 0; background: var(--ink-2); color: var(--text-2); font-weight: 600; }
+.steps button.on { background: var(--text); color: var(--ink); }
+.abil { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.abtn { display: flex; gap: 8px; flex-wrap: wrap; }
+.abtn button { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px 0 6px; border-radius: 22px; border: 1px solid var(--line-2); background: var(--ink); }
+.stats { padding: 14px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; font-size: 12px; }
+.stats b { display: block; font-size: 18px; }
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" style="padding-top: 22px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center">
+    <a href="index.html" style="font-size: 13px; text-decoration: none">← Builds</a>
+    <span class="spacer"></span>
+    <div class="steps" id="steps"></div>
+  </div>
+
+  <section class="panel bar">
+    <label class="muted" style="display: flex; gap: 8px; align-items: center; font-size: 13px">Héroe
+      <select class="sel"><option>Abrams</option></select>
+    </label>
+    <label class="field" style="flex: 1 1 260px"><span class="sr">Nombre</span><input id="name" value="Mi Abrams"></label>
+    <span class="muted" style="font-size: 13px">Total <b id="total" style="color: var(--souls); font-size: 17px">0</b> almas</span>
+    <button type="button" class="btn" id="priv">Privada</button>
+    <button type="button" class="btn pri" id="save">Guardar</button>
+  </section>
+
+  <div class="cols">
+    <div class="left" id="left"></div>
+    <aside class="panel right">
+      <label class="field"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="#9c9581" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="#9c9581" stroke-width="1.6"/></svg>
+        <span class="sr">Buscar objeto</span><input id="q" placeholder="Buscar objeto"></label>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap" id="slots"></div>
+      <div style="display: flex; gap: 6px; flex-wrap: wrap" id="tiers"></div>
+      <div class="muted" style="display: flex; font-size: 11px; padding: 0 8px; gap: 10px"><span style="flex: 1">Objeto</span><span>Almas</span><span title="% de victoria del objeto, todos los héroes, Fantasma o más">% vict.</span></div>
+      <ul class="pool" id="pool"></ul>
+    </aside>
+  </div>
+</main>
+<div id="map"></div>
+<script src="data.js"></script>
+<script src="comm.js"></script>
+<script src="common.js"></script>
+<script>
+$("#hdr").innerHTML = header();
+$("#map").innerHTML = mapnav("editor.html");
+
+const from = new URLSearchParams(location.search).get("b");
+const base = from && allBuilds().find((b) => b.key === from);
+const st = {
+  step: 0, active: 0, slot: "all", tier: 0, q: "", priv: true,
+  stages: base ? base.cats.map((c) => ({ name: c.name, items: c.items.filter(item) })) : [
+    { name: "Línea", items: [] }, { name: "Núcleo", items: [] }, { name: "Final", items: [] }, { name: "Según el rival", items: [] },
+  ],
+  ao: base ? base.ao.map((id) => ABIL_BY_ID[id]).filter(Boolean) : [],
+};
+if (base) $("#name").value = base.name + " (copia)";
+let drag = null;
+
+const SLOTS = [["all", "Todos"], ["weapon", "Arma"], ["vitality", "Vitalidad"], ["spirit", "Espíritu"]];
+const TIERS = [0, 1, 2, 3, 4];
+const TIER_COST = { 1: 800, 2: 1600, 3: 3200, 4: 6400 };
+
+function used() { return new Set(st.stages.flatMap((s) => s.items)); }
+
+function render() {
+  $("#steps").innerHTML = ["1 · Objetos", "2 · Habilidades", "3 · Descripción"].map((s, i) => `<button type="button" data-step="${i}" class="${st.step === i ? "on" : ""}">${s}</button>`).join("");
+  $("#priv").textContent = st.priv ? "🔒 Privada" : "Pública";
+  const u = used();
+  $("#total").textContent = fmt(sumCost([...u]));
+
+  if (st.step === 0) {
+    $("#left").innerHTML = `<p class="muted" style="margin:0;font-size:13px">Tocá una etapa y después objetos de la derecha. Tocá un objeto de la etapa para sacarlo. Arrastralos para cambiar de etapa.</p>` +
+      st.stages.map((s, i) => `<section class="panel stage ${i === st.active ? "on" : ""}" data-stage="${i}">
+        <div class="hd"><input value="${esc(s.name)}" data-rename="${i}" aria-label="Nombre de la etapa"><span class="souls">${fmt(sumCost(s.items))} almas</span>
+          <button type="button" data-up="${i}" aria-label="Subir" title="Subir">▲</button><button type="button" data-del="${i}" aria-label="Borrar etapa" title="Borrar etapa">✕</button></div>
+        <div class="its">${s.items.map((id) => `<button type="button" class="it ${item(id).slot} s48" draggable="true" data-rm="${i}:${id}" title="Sacar ${esc(item(id).n)}" aria-label="Sacar ${esc(item(id).n)}"><img src="${item(id).img}" alt=""></button>`).join("") || `<span class="hint">Vacía. ${i === st.active ? "Tocá objetos de la derecha." : "Tocala para llenarla."}</span>`}</div>
+      </section>`).join("") +
+      `<button type="button" class="btn" id="add" style="align-self:flex-start;border-style:dashed">+ Agregar etapa</button>
+      <section class="panel stats">
+        <div><span class="muted">Objetos</span><b>${u.size}</b></div>
+        <div><span class="muted">Arma</span><b style="color:var(--weapon)">${fmt(sumCost([...u].filter((id) => item(id).slot === "weapon")))}</b></div>
+        <div><span class="muted">Vitalidad</span><b style="color:var(--vitality)">${fmt(sumCost([...u].filter((id) => item(id).slot === "vitality")))}</b></div>
+        <div><span class="muted">Espíritu</span><b style="color:var(--spirit)">${fmt(sumCost([...u].filter((id) => item(id).slot === "spirit")))}</b></div>
+      </section>`;
+  } else if (st.step === 1) {
+    $("#left").innerHTML = `<section class="panel abil">
+      <h3>Puntos de habilidad</h3>
+      <p class="muted" style="margin:0;font-size:13px">Tocá las habilidades en el orden en que les ponés puntos.</p>
+      <div class="abtn">${[1, 2, 3, 4].map((s) => `<button type="button" data-ab="${s}"><span class="ab"><img src="${ABIL[s].img}" alt=""></span>${esc(ABIL[s].n)}</button>`).join("")}
+        <button type="button" class="btn ghost" data-undo="1">Deshacer</button><button type="button" class="btn ghost" data-clear="1">Borrar</button></div>
+      ${abilityGrid(st.ao.map((s) => D.abilities.find((a) => a.slot === s).id), 20)}
+    </section>`;
+  } else {
+    $("#left").innerHTML = `<section class="panel abil">
+      <h3>Para qué sirve</h3>
+      <label class="muted" style="display:flex;flex-direction:column;gap:6px;font-size:12px">Descripción corta (se ve en la lista)
+        <textarea rows="3" style="background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px;resize:vertical">Abrams de cerca que aguanta. Para partidas parejas.</textarea></label>
+      <div class="muted" style="font-size:12px">Estilo (lo calculamos solo: <b style="color:var(--text)">${styleOf(st.stages)}</b>). Podés sumar etiquetas:</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${["Principiantes", "Línea agresiva", "Contra espíritu", "Contra arma"].map((t) => `<button type="button" class="chip">${t}</button>`).join("")}</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><a class="btn pri" href="publicar.html">Publicar en Vestigo</a><span class="muted" style="font-size:12px;align-self:center">Para que esté en el juego, hay que publicarla allá (Valve no deja subirla desde afuera).</span></div>
+    </section>`;
+  }
+
+  const q = st.q.toLowerCase();
+  const xs = Object.entries(D.items).filter(([, it]) => (st.slot === "all" || it.slot === st.slot) && (!st.tier || it.tier === st.tier) && (!q || it.n.toLowerCase().includes(q)))
+    .sort((a, b) => a[1].cost - b[1].cost || a[1].n.localeCompare(b[1].n));
+  let last = null;
+  $("#pool").innerHTML = xs.map(([id, it]) => {
+    const g = it.cost !== last ? `<li class="grp">${fmt(it.cost)} ALMAS</li>` : ""; last = it.cost;
+    return g + `<li><button type="button" data-add="${id}" class="${u.has(Number(id)) ? "has" : ""}">${itemTile(id, 36)}<span class="n">${esc(it.n)}</span><span class="c">${fmt(it.cost)}</span><span class="w">${it.wr != null ? it.wr + "%" : "—"}</span></button></li>`;
+  }).join("") || `<li class="muted" style="padding:16px">Nada con ese nombre.</li>`;
+  $("#slots").innerHTML = SLOTS.map(([k, l]) => `<button type="button" class="chip ${st.slot === k ? "on" : ""}" data-slot="${k}">${l}</button>`).join("");
+  $("#tiers").innerHTML = TIERS.map((t) => `<button type="button" class="chip ${st.tier === t ? "on" : ""}" style="height:30px;font-size:12px" data-tier="${t}">${t ? fmt(TIER_COST[t]) : "Todos los precios"}</button>`).join("");
+}
+
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-step],[data-add],[data-rm],[data-del],[data-up],[data-slot],[data-tier],[data-ab],[data-undo],[data-clear],#add,#save,#priv,[data-stage]");
+  if (!t || e.target.matches("input")) return;
+  const d = t.dataset;
+  if (d.step) st.step = +d.step;
+  else if (d.add) {
+    const id = +d.add, s = st.stages[st.active];
+    if (!s) return;
+    if (used().has(id)) { toast("Ya está en la build"); return; }
+    // Si la build tiene un componente, la mejora lo reemplaza en su lugar (como el juego).
+    const comp = item(id).from.find((c) => used().has(c));
+    if (comp) st.stages.forEach((x) => { const k = x.items.indexOf(comp); if (k >= 0) x.items.splice(k, 1, id); });
+    else s.items.push(id);
+    if (comp) toast(`Mejora: reemplaza a ${item(comp).n}`);
+  }
+  else if (d.rm) { const [i, id] = d.rm.split(":"); st.stages[i].items = st.stages[i].items.filter((x) => x !== +id); }
+  else if (d.del) { st.stages.splice(+d.del, 1); st.active = Math.max(0, Math.min(st.active, st.stages.length - 1)); }
+  else if (d.up) { const i = +d.up; if (i > 0) [st.stages[i - 1], st.stages[i]] = [st.stages[i], st.stages[i - 1]]; }
+  else if (d.slot) st.slot = d.slot;
+  else if (d.tier) st.tier = +d.tier;
+  else if (d.ab) st.ao.push(+d.ab);
+  else if (d.undo) st.ao.pop();
+  else if (d.clear) st.ao = [];
+  else if (t.id === "add") { st.stages.push({ name: "Etapa " + (st.stages.length + 1), items: [] }); st.active = st.stages.length - 1; }
+  else if (t.id === "save") { toast("Maqueta: guardar pide entrar con Steam"); return; }
+  else if (t.id === "priv") st.priv = !st.priv;
+  else if (d.stage != null) { if (st.active === +d.stage) return; st.active = +d.stage; }
+  render();
+});
+document.addEventListener("input", (e) => {
+  if (e.target.dataset.rename != null) st.stages[e.target.dataset.rename].name = e.target.value;
+  if (e.target.id === "q") { st.q = e.target.value; render(); $("#q").focus(); }
+});
+document.addEventListener("dragstart", (e) => { const r = e.target.closest("[data-rm]"); if (r) drag = r.dataset.rm; });
+document.addEventListener("dragover", (e) => { const s = e.target.closest("[data-stage]"); if (s && drag) { e.preventDefault(); s.classList.add("over"); } });
+document.addEventListener("dragleave", (e) => e.target.closest?.("[data-stage]")?.classList.remove("over"));
+document.addEventListener("drop", (e) => {
+  const s = e.target.closest("[data-stage]"); if (!s || !drag) return;
+  e.preventDefault();
+  const [i, id] = drag.split(":"); drag = null;
+  st.stages[i].items = st.stages[i].items.filter((x) => x !== +id);
+  st.stages[+s.dataset.stage].items.push(+id);
+  render();
+});
+render();
+</script>
+</body>
+</html>

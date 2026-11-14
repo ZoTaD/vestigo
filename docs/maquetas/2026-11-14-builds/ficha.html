@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ficha de build · maqueta</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.hero { position: relative; overflow: hidden; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; padding: 22px; }
+.hero .bg { position: absolute; inset: 0; background-size: cover; background-position: center 30%; opacity: .18; }
+.hero > *:not(.bg) { position: relative; }
+.grid2 { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.main { flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
+.side { flex: 1 1 320px; display: flex; flex-direction: column; gap: 12px; }
+.sec { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.its { display: flex; flex-wrap: wrap; gap: 12px; }
+.it-l { width: 78px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; font-size: 11px; line-height: 1.2; color: var(--text-2); }
+.it-l .c { color: var(--souls); font-size: 10px; }
+.kv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.kv div div:first-child { font-size: 12px; color: var(--text-3); }
+.kv div div:last-child { font-size: 26px; font-weight: 600; }
+.bar { height: 8px; background: var(--ink); border-radius: 4px; overflow: hidden; flex: 1; }
+.bar span { display: block; height: 100%; background: var(--gold); }
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" style="padding-top: 22px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 18px" id="app"></main>
+<div id="map"></div>
+<script src="data.js"></script>
+<script src="comm.js"></script>
+<script src="common.js"></script>
+<script>
+$("#hdr").innerHTML = header();
+$("#map").innerHTML = mapnav("ficha.html");
+const B = allBuilds();
+const key = new URLSearchParams(location.search).get("b") || B.find((b) => b.src === "comm")?.key;
+const b = B.find((x) => x.key === key) || B[0];
+const ref = B.find((x) => x.src === "vestigo");
+const mine = new Set(b.cats.flatMap((c) => c.items));
+const refIds = new Set(ref.cats.flatMap((c) => c.items));
+const shared = [...refIds].filter((id) => mine.has(id));
+const missing = [...refIds].filter((id) => !mine.has(id) && item(id)).sort((x, y) => item(y).cost - item(x).cost).slice(0, 4);
+
+$("#app").innerHTML = `
+  <a href="index.html" style="font-size:13px;text-decoration:none">← Builds de Abrams</a>
+  <section class="panel hero">
+    <div class="bg" style="background-image:url(${D.art.background})"></div>
+    <img src="${D.heroes["6"].img}" alt="" width="96" height="96" style="border-radius:12px;background:#232819;object-fit:cover">
+    <div style="flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:6px">
+      <span class="muted" style="font-size:12px;letter-spacing:1px">ABRAMS · ${b.style.toUpperCase()}</span>
+      <h1 style="overflow-wrap:anywhere">${esc(b.name)}</h1>
+      <span class="muted" style="font-size:13px">${esc(b.author)} <span class="badge ${b.badge[1]}">${b.badge[0]}</span>${b.upd ? ` · actualizada hace ${daysAgo(b.upd)} días` : ""}${b.gameId ? ` · ID del juego <b style="color:var(--text)">${b.gameId}</b>` : ""}</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${b.gameId ? `<button type="button" class="btn pri" id="copy">Copiar ID para el juego</button>` : ""}
+      <button type="button" class="btn" id="fav">♥ ${b.fav != null ? fmt(b.fav) : "Guardar"}</button>
+      <a class="btn" href="editor.html?b=${b.key}">Editar copia</a>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <div class="main">
+      ${b.desc ? `<section class="panel sec"><p style="margin:0;white-space:pre-line;color:var(--text-2)">${esc(b.desc)}</p></section>` : ""}
+      <h2 style="color:var(--gold-lit)">QUÉ COMPRAR Y CUÁNDO</h2>
+      ${b.cats.map((c) => `<section class="panel sec">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><h3>${esc(c.name) || "Sin nombre"}</h3><span style="font-size:12px;color:var(--souls)">${fmt(sumCost(c.items))} almas</span></div>
+        ${c.desc ? `<p style="margin:0;font-size:13px;color:var(--text-2)">${esc(c.desc)}</p>` : ""}
+        <div class="its">${c.items.filter(item).map((id) => `<div class="it-l">${itemTile(id, 60)}<span>${esc(item(id).n)}</span><span class="c">${fmt(item(id).cost)}</span></div>`).join("")}</div>
+      </section>`).join("")}
+      <section class="panel sec"><h3>Puntos de habilidad, en orden</h3>${abilityGrid(b.ao, 20)}</section>
+    </div>
+
+    <aside class="side">
+      <section class="panel sec">
+        <div class="kv">
+          <div><div>Victoria</div><div style="color:${b.wr >= 52 ? "var(--souls)" : "inherit"}">${b.wr != null ? b.wr + "%" : "—"}</div></div>
+          <div><div>Partidas</div><div>${b.matches != null ? fmt(b.matches) : "—"}</div></div>
+          <div><div>Almas (todo)</div><div style="color:var(--souls)">${fmt(b.souls)}</div></div>
+          <div><div>Objetos</div><div>${mine.size}</div></div>
+        </div>
+        ${b.wr == null ? `<p class="muted" style="margin:0;font-size:12px">Sin % todavía: se calcularía con las partidas en que se usó esta build.</p>` : ""}
+      </section>
+
+      <section class="panel sec">
+        <h3>Parecido con la que más gana</h3>
+        <div style="display:flex;align-items:center;gap:10px"><div class="bar"><span style="width:${Math.round((shared.length / refIds.size) * 100)}%"></span></div><b>${shared.length} / ${refIds.size}</b></div>
+        <p class="muted" style="margin:0;font-size:12px">Objetos de la build medida de Abrams (Fantasma o más) que esta también tiene.</p>
+        ${missing.length ? `<div style="font-size:12px;color:var(--text-2)">Le faltan:</div><div style="display:flex;gap:6px;flex-wrap:wrap">${missing.map((id) => itemTile(id, 36)).join("")}</div>` : ""}
+      </section>
+
+      <section class="panel sec">
+        <h3>Stats con la build final</h3>
+        <p class="muted" style="margin:0;font-size:13px">Acá va el panel de stats que ya calcula el armador actual (vida, DPS, resistencias), pero chico y plegable.</p>
+      </section>
+    </aside>
+  </div>`;
+
+$("#copy")?.addEventListener("click", () => { navigator.clipboard?.writeText(String(b.gameId)); toast("ID copiado: buscalo en el juego"); });
+$("#fav").addEventListener("click", () => toast("Maqueta: guardar pide entrar con Steam"));
+</script>
+</body>
+</html>
