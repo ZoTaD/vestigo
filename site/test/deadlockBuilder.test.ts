@@ -8,6 +8,7 @@ import {
   decodeBuild,
   upgradesOwned,
   ownedWithComponents,
+  finalBuild,
   BUILD_SLOTS,
   type BuilderItem,
 } from "../src/deadlockBuilder";
@@ -127,5 +128,30 @@ describe("encodeBuild / decodeBuild", () => {
     const d = decodeBuild(s)!;
     expect(d.items).toHaveLength(BUILD_SLOTS);
     expect(new Set(d.items).size).toBe(BUILD_SLOTS);
+  });
+});
+
+describe("finalBuild", () => {
+  it("un componente cuya mejora está en la build no ocupa casilla, en cualquier escalón", () => {
+    expect(finalBuild([1, 10, 2], look)).toEqual([10, 2]);
+    expect(finalBuild([1, 3, 20], look)).toEqual([3, 20]);
+  });
+
+  it("no repite y saca lo que no existe", () => {
+    expect(finalBuild([10, 10, 999, 11], look)).toEqual([10, 11]);
+  });
+
+  it("con más de 12 se queda con las 12 más caras, en el orden de las etapas", () => {
+    const cat: Record<number, BuilderItem> = {};
+    for (let i = 1; i <= 15; i++) cat[i] = { itemId: i, cost: i <= 3 ? 800 : 3200, slot: "weapon", upgradesFrom: [], upgradesTo: [] };
+    const out = finalBuild(Array.from({ length: 15 }, (_, i) => i + 1), (id) => cat[id]);
+    expect(out).toHaveLength(BUILD_SLOTS);
+    expect(out).toEqual([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+  });
+
+  it("a igual precio se queda con la que aparece antes", () => {
+    const cat: Record<number, BuilderItem> = {};
+    for (let i = 1; i <= 14; i++) cat[i] = { itemId: i, cost: 800, slot: "weapon", upgradesFrom: [], upgradesTo: [] };
+    expect(finalBuild(Array.from({ length: 14 }, (_, i) => i + 1), (id) => cat[id])).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   });
 });

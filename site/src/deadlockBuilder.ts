@@ -152,3 +152,29 @@ export function decodeBuild(s: string): { heroId: number; items: number[] } | nu
   }
   return { heroId, items };
 }
+
+/**
+ * Cómo termina una build armada por etapas (2026-11-15): las 12 casillas que
+ * se compran al final. El Editor nuevo ya no pide elegirlas aparte: salen de
+ * las etapas, como en el juego.
+ *
+ * - Un componente cuya mejora también está en la build se consume (el juego lo
+ *   reemplaza en su casilla), así que no ocupa lugar.
+ * - Si quedan más de 12, se quedan las 12 más caras: las baratas son las que
+ *   se venden para hacer lugar. A igual precio, la que aparece antes.
+ * - El orden es el de las etapas.
+ */
+export function finalBuild(guideItems: number[], lookup: Lookup): number[] {
+  const todos = [...new Set(guideItems)].filter((id) => lookup(id));
+  const set = new Set(todos);
+  const vivos = todos.filter((id) => !upgradesOf(id, lookup).some((u) => set.has(u)));
+  if (vivos.length <= BUILD_SLOTS) return vivos;
+  const quedan = new Set(
+    [...vivos]
+      .map((id, i) => ({ id, i, cost: lookup(id)!.cost }))
+      .sort((a, b) => b.cost - a.cost || a.i - b.i)
+      .slice(0, BUILD_SLOTS)
+      .map((x) => x.id),
+  );
+  return vivos.filter((id) => quedan.has(id));
+}

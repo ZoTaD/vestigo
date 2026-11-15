@@ -113,6 +113,17 @@ function readSitemapData(): { data: OgData } {
   // anterior al 2026-09-17; en ese caso simplemente no hay páginas de edición.
   const news = readDlMaybe("news.json") as { editions: SitemapData["dlNews"] } | null;
   const dlNews = news?.editions ?? [];
+  // Builds (2026-11-15): cada build publicada de cada héroe tiene su ficha prerenderizada (la biblioteca enlaza a
+  // todas). Sale de los archivos por héroe; sin el índice, no hay fichas de builds.
+  const buildsIndex = readDlMaybe("community-builds/index.json") as { heroes: Record<string, unknown> } | null;
+  const dlBuilds: SitemapData["dlBuilds"] = buildsIndex
+    ? Object.fromEntries(
+        Object.keys(buildsIndex.heroes).flatMap((id) => {
+          const f = readDlMaybe(`community-builds/${id}.json`) as { builds: { id: number; name: string }[] } | null;
+          return f ? [[id, f.builds.map((b) => ({ id: b.id, name: b.name }))]] : [];
+        }),
+      )
+    : undefined;
   const dlEditions: OgData["dlEditions"] = {};
   for (const e of dlNews) {
     const ed = readDlMaybe(`news/${e.slug}.json`);
@@ -416,6 +427,7 @@ function readSitemapData(): { data: OgData } {
       dlHeroIds: dlHeroesFile.heroes.map((h: { heroId: number }) => String(h.heroId)),
       dlItemIds: dlItemsFile.items.map((i: { itemId: number }) => String(i.itemId)),
       dlNews,
+      dlBuilds,
       dlHeroStats: { band: dlHeroesFile.band, heroes: dlHeroesFile.heroes },
       dlEditions,
     },
