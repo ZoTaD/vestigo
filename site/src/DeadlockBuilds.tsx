@@ -773,6 +773,7 @@ function BuildDetail({
     };
   }, [row.build, row.id, hero.heroId, catalog]);
   const b = row.build ?? viva ?? null;
+  const autorId = b?.author ?? row.pub?.author;
   const pub = row.pub;
 
   const name = b ? displayName(b, c) : pub?.name || c.buildN(row.id);
@@ -812,7 +813,16 @@ function BuildDetail({
           <Heading className="dl-bl-name">{name}</Heading>
           <span className="dl-bl-by">
             <Avatar src={b?.authorAvatar || pub?.authorAvatar || ""} size={20} />
-            {c.by} <b>{b ? authorOf(b, c) : pub?.authorName || c.player}</b>
+            {c.by}{" "}
+            {/* El nombre lleva al perfil del jugador. Si el nombre se ocultó (insultos o
+                propaganda, ver `communityBuildsCore.ts`) no hay link: el perfil lo mostraría. */}
+            {autorId && (b ? b.authorName : pub?.authorName) ? (
+              <RouteLink className="dl-bl-author" to={{ ...route, dlSection: "player", detail: String(autorId) }} onNavigate={navigate}>
+                <b>{b ? authorOf(b, c) : pub?.authorName}</b>
+              </RouteLink>
+            ) : (
+              <b>{b ? authorOf(b, c) : pub?.authorName || c.player}</b>
+            )}
             <Badges b={{ official: b?.official, verified: b?.verified ?? (pub ? true : undefined) }} c={c} byData={byData} />
             {b && (
               <span className="dl-bl-dim">
