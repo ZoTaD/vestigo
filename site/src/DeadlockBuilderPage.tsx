@@ -1,21 +1,30 @@
 // `DeadlockBuilderPage` y no `DeadlockBuilder`: la lógica vive en `deadlockBuilder.ts`, y en
 // Windows dos archivos que sólo difieren en mayúsculas son el mismo (ver DeadlockVsBandCard).
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLang, useLocale } from "./i18n";
 import { useCopy } from "./deadlockCopy";
 import { PUBLISHED_BAND, useHeroes } from "./deadlockData";
 import { useItems, SLOTS, type Item, type Slot } from "./deadlockItemsData";
 import { useHeroBuilds, bySlot, byPhase } from "./deadlockBuildsData";
 import { useHeroKit } from "./deadlockHeroKitData";
-import ShopCard, { SHOP } from "./DeadlockShopCard";
-import DeadlockShopTree from "./DeadlockShopTree";
-import { GuideEditor, AbilityOrderEditor, StatsPanel, empezarArrastre } from "./DeadlockBuilderEditor";
+import { AbilityOrderEditor, StatsPanel } from "./DeadlockBuilderEditor";
+import { ItemIcon } from "./DeadlockItemTip";
 import { buildStats } from "./deadlockBuildStats";
+import SectionHead from "./SectionHead";
+import RouteLink from "./RouteLink";
 import GameImg from "./GameImg";
+import { heroes as heroSlugs } from "./deadlockSlugs";
+import { BUILDS_COPY } from "./deadlockBuildsCopy";
+import { copyText } from "./deadlockBuildLinks";
+import type { Route } from "./route";
 import {
   addCategory,
   addToCategory,
+  removeFromCategory,
   moveItem,
+  moveCategory,
+  removeCategory,
+  updateCategory,
   addAbilityPoint,
   encodeGuide,
   decodeGuide,
@@ -23,48 +32,39 @@ import {
   decodeAbilityPath,
   newCategoryId,
   GUIDE_DEFAULT_HEIGHT,
+  GUIDE_MAX_CATEGORIES,
+  GUIDE_MAX_ITEMS,
+  GUIDE_NAME_MAX,
+  GUIDE_DESC_MAX,
   type GuideCategory,
 } from "./deadlockBuildGuide";
-import {
-  addItem,
-  removeItem,
-  investment,
-  overlap,
-  encodeBuild,
-  decodeBuild,
-  upgradesOwned,
-  ownedWithComponents,
-  BUILD_SLOTS,
-  type BuilderItem,
-  type AddResult,
-} from "./deadlockBuilder";
+import { investment, overlap, encodeBuild, decodeBuild, finalBuild, BUILD_SLOTS, type BuilderItem } from "./deadlockBuilder";
+import "./styles/deadlock-builds.css";
 
 /**
- * El armador de builds: la tienda del juego, copiada, y a la derecha tu build.
+ * El Armador de builds (`/deadlock/builder`), rehecho el 2026-11-15.
  *
- * **La tienda se dibuja con las texturas del propio juego** —el fondo de papel
- * de cada categoría, las pestañas, el reverso de tarjeta por escalón y los
- * sellos de "comprado" y "MEJORA"—, sacadas del bucket de deadlock-api y
- * achicadas a `public/deadlock/shop/` (el fondo original pesa 1,6 MB; acá 35 KB).
- * Es lo que ZoTaD pidió el 2026-09-22: que se sienta la tienda del juego.
+ * El de antes era la tienda del juego copiada entera: 5.400 px de alto, la
+ * build en una cajita al costado y dos modos ("build final" y "guía") que no
+ * se explicaban solos. Pedido de ZoTaD: algo que se arme fácil y se entienda.
+ * Plan: `docs/plans/2026-11-15-builds-comunidad-plan.md`.
  *
- * Lo que agrega Vestigo encima: el valor medido de cada objeto (opcional, para
- * no ensuciar la tienda), la inversión de almas con la escalera del juego y el
- * parecido con las builds que se miden en la tier list.
+ * Ahora es como el editor del juego, pero compacto:
+ * - **Etapas** (las categorías del juego) a la izquierda: se toca una y se le
+ *   suman objetos.
+ * - **Un buscador de objetos en lista** a la derecha, con filtros de categoría
+ *   y precio y el tier de cada objeto, en vez de la tienda gigante.
+ * - **Las 12 casillas finales salen solas** de las etapas (`finalBuild`), y de
+ *   ahí las stats, la inversión y el parecido con las builds medidas.
+ * - Debajo, el orden de habilidades (el mismo editor de antes).
  *
- * Dos modos (pedido de ZoTaD, 2026-09-22): en "Build final" el clic en la
- * tienda llena las 12 casillas, de las que salen las stats; en "Guía de compra"
- * llena la categoría elegida del editor de builds, que copia el del juego.
- * Debajo va el orden de los puntos de habilidad, también como la grilla del
- * juego.
- *
- * Todo vive en el link, sin cuentas: `b=` la build, `g=` la guía y `a=` el
- * orden de habilidades.
+ * Todo vive en el link, como antes: `g` las etapas, `b` las 12 casillas
+ * (también lleva el héroe), `a` el orden de habilidades y `n` el nombre. Un
+ * link viejo con sólo `b` abre esas casillas como una etapa.
  */
 
 const PRECIOS = [800, 1600, 3200, 6400] as const;
-
-type Modo = "build" | "guide";
+type SlotFilter = Slot | "all";
 
 /** Lee el link sin romper en el prerender, donde no hay `window`. */
 function paramsDelLink(): URLSearchParams | null {
@@ -72,70 +72,87 @@ function paramsDelLink(): URLSearchParams | null {
   return new URLSearchParams(window.location.search);
 }
 
-export default function DeadlockBuilder() {
+const nueva = (name: string): GuideCategory => ({ id: newCategoryId(), name, desc: "", width: 12, height: GUIDE_DEFAULT_HEIGHT, items: [] });
+
+export default function DeadlockBuilder({ route, navigate }: { route: Route; navigate: (r: Route) => void }) {
   const copy = useCopy();
   const { lang } = useLang();
   const locale = useLocale();
-  const c = copy.deadlock.builder;
+  const old = copy.deadlock.builder;
+  const bc = BUILDS_COPY[lang];
+  const c = bc.editor;
 
   const heroesMeta = useHeroes(PUBLISHED_BAND);
   const itemsMeta = useItems(PUBLISHED_BAND);
 
   const [heroId, setHeroId] = useState<number | null>(null);
-  const [items, setItems] = useState<number[]>([]);
-  const [verValor, setVerValor] = useState(false);
-  const [aviso, setAviso] = useState("");
-  const [copiado, setCopiado] = useState(false);
-  const [modo, setModo] = useState<Modo>("build");
+  const [name, setName] = useState("");
   const [guia, setGuia] = useState<GuideCategory[]>([]);
   const [activa, setActiva] = useState<string | null>(null);
   const [senda, setSenda] = useState<number[]>([]);
   /** El `a=` del link, hasta que se sepa qué habilidades tiene el héroe. */
   const [sendaPendiente, setSendaPendiente] = useState<string | null>(null);
+  const [aviso, setAviso] = useState("");
+  const avisoT = useRef<number>();
+  const decir = (m: string) => {
+    setAviso(m);
+    window.clearTimeout(avisoT.current);
+    avisoT.current = window.setTimeout(() => setAviso(""), 2600);
+  };
+  useEffect(() => () => window.clearTimeout(avisoT.current), []);
 
   // El link manda al entrar. Se lee después de montar para que el HTML del
   // prerender (sin build) y el primer dibujo del cliente sean el mismo.
   useEffect(() => {
     const q = paramsDelLink();
     if (!q) return;
-    const b = q.get("b");
-    const d = b ? decodeBuild(b) : null;
-    if (d) {
-      setHeroId(d.heroId);
-      setItems(d.items);
-    }
+    const d = decodeBuild(q.get("b") ?? "");
+    if (d) setHeroId(d.heroId);
     const g = decodeGuide(q.get("g") ?? "");
     if (g.length > 0) {
       setGuia(g);
       setActiva(g[0].id);
-      setModo("guide");
+    } else if (d && d.items.length > 0) {
+      // Un link del Armador viejo: las 12 casillas, como una etapa.
+      const una = { ...nueva(BUILDS_COPY[lang].editor.defaultStages[2]), items: d.items.slice(0, GUIDE_MAX_ITEMS) };
+      setGuia([una]);
+      setActiva(una.id);
     }
+    setName((q.get("n") ?? "").slice(0, 80));
     // Sólo si viene: en desarrollo React corre este efecto dos veces, y la
-    // segunda lee el link después de que la sincronización borró `a` (todavía
-    // no había senda). Pisar con null perdía el orden del link.
+    // segunda lee el link después de que la sincronización borró `a`.
     const a = q.get("a");
     if (a) setSendaPendiente(a);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const medidas = useHeroBuilds(heroId);
   const kit = useHeroKit();
-  /** Las cuatro habilidades del héroe, en el orden de las casillas del juego. */
   const habilidades = useMemo(() => bySlot(medidas?.builds[0]?.abilities ?? []), [medidas]);
 
-  // El orden de habilidades del link se resuelve cuando llegan las habilidades.
   useEffect(() => {
     if (sendaPendiente === null || habilidades.length === 0) return;
     setSenda(decodeAbilityPath(sendaPendiente, (slot) => habilidades[slot - 1]?.id));
     setSendaPendiente(null);
   }, [sendaPendiente, habilidades]);
 
+  const porId = useMemo(() => new Map((itemsMeta?.items ?? []).map((i) => [i.itemId, i])), [itemsMeta]);
+  const lookup = (id: number): BuilderItem | undefined => {
+    const i = porId.get(id);
+    return i ? { itemId: i.itemId, cost: i.cost, slot: i.slot, upgradesFrom: i.upgradesFrom.map((u) => u.itemId), upgradesTo: i.upgradesTo.map((u) => u.itemId) } : undefined;
+  };
+  const todos = useMemo(() => guia.flatMap((g) => g.items), [guia]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const final = useMemo(() => finalBuild(todos, lookup), [todos, porId]);
+
   // Y todo vuelve al link en cada cambio, sin sumar entradas al historial.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
     const poner = (k: string, v: string | null) => (v ? url.searchParams.set(k, v) : url.searchParams.delete(k));
-    poner("b", heroId === null ? null : encodeBuild(heroId, items));
-    poner("g", guia.length > 0 ? encodeGuide(guia) : null);
+    poner("b", heroId === null ? null : encodeBuild(heroId, final));
+    poner("g", guia.length > 0 && todos.length > 0 ? encodeGuide(guia) : null);
+    poner("n", name.trim() || null);
     if (sendaPendiente === null) {
       const casilla = (id: number) => {
         const i = habilidades.findIndex((h) => h.id === id);
@@ -144,354 +161,493 @@ export default function DeadlockBuilder() {
       poner("a", senda.length > 0 ? encodeAbilityPath(senda, casilla) : null);
     }
     window.history.replaceState(window.history.state, "", url);
-  }, [heroId, items, guia, senda, habilidades, sendaPendiente]);
+  }, [heroId, final, guia, todos, name, senda, habilidades, sendaPendiente]);
 
-  const porId = useMemo(() => new Map((itemsMeta?.items ?? []).map((i) => [i.itemId, i])), [itemsMeta]);
-  const lookup = (id: number): BuilderItem | undefined => {
-    const i = porId.get(id);
-    return i
-      ? {
-          itemId: i.itemId,
-          cost: i.cost,
-          slot: i.slot,
-          upgradesFrom: i.upgradesFrom.map((u) => u.itemId),
-          upgradesTo: i.upgradesTo.map((u) => u.itemId),
-        }
-      : undefined;
-  };
-
-  const heroes = useMemo(
-    () => [...(heroesMeta?.heroes ?? [])].sort((a, b) => a.name.localeCompare(b.name, lang)),
-    [heroesMeta, lang]
-  );
+  const heroes = useMemo(() => [...(heroesMeta?.heroes ?? [])].sort((a, b) => a.name.localeCompare(b.name, lang)), [heroesMeta, lang]);
   const heroe = heroes.find((h) => h.heroId === heroId) ?? null;
 
   if (!itemsMeta || !heroesMeta) return <p className="detail-note">{copy.deadlock.loading}</p>;
 
   const nombre = (id: number) => porId.get(id)?.name ?? `#${id}`;
+  const stageName = (g: GuideCategory, i: number) => g.name || c.newStage(i + 1);
 
-  const agregar = (id: number) => {
-    const r: AddResult = addItem(items, id, lookup);
-    setItems(r.items);
-    const s = c.status;
-    setAviso(
-      r.result === "added"
-        ? s.added(nombre(id))
-        : r.result === "upgraded"
-          ? s.upgraded(nombre(id), nombre(r.replaced))
-          : r.result === "duplicate" || r.result === "has-upgrade"
-            ? s[r.result](nombre(id))
-            : s[r.result]
-    );
+  const elegirHeroe = (id: number) => {
+    if (id === heroId) return;
+    setHeroId(id);
+    setSenda([]);
+    if (guia.length === 0) {
+      const g = c.defaultStages.map(nueva);
+      setGuia(g);
+      setActiva(g[0].id);
+    }
   };
 
-  const quitar = (id: number) => setItems(removeItem(items, id));
-
-  /** En modo guía, el clic va a la categoría elegida; sin ninguna, crea una. */
-  const agregarAGuia = (id: number) => {
+  const agregar = (id: number) => {
     let g = guia;
     let destino = activa && g.some((x) => x.id === activa) ? activa : null;
     if (!destino) {
-      g = addCategory(g, c.editor.newCategory);
-      destino = g[g.length - 1].id;
+      g = g.length > 0 ? g : c.defaultStages.map(nueva);
+      destino = g[0].id;
       setActiva(destino);
     }
+    const donde = g.find((x) => x.items.includes(id));
+    if (donde) {
+      decir(c.already(nombre(id), stageName(donde, g.indexOf(donde))));
+      return;
+    }
+    const dest = g.find((x) => x.id === destino)!;
+    if (dest.items.length >= GUIDE_MAX_ITEMS) return;
     setGuia(addToCategory(g, destino, id));
-    const cat = g.find((x) => x.id === destino);
-    setAviso(c.addedTo(nombre(id), cat?.name || c.editor.newCategory));
+    decir(c.added(nombre(id), stageName(dest, g.indexOf(dest))));
   };
-
-  const alClicTienda = (id: number) => {
-    if (modo === "guide") agregarAGuia(id);
-    else if (items.includes(id)) quitar(id);
-    else agregar(id);
+  const sacar = (catId: string, id: number) => {
+    setGuia(removeFromCategory(guia, catId, id));
+    decir(c.removed(nombre(id)));
   };
-
-  const nuevaCategoria = () => {
-    const g = addCategory(guia, c.editor.newCategory);
+  const nuevaEtapa = () => {
+    if (guia.length >= GUIDE_MAX_CATEGORIES) return;
+    const g = addCategory(guia, c.newStage(guia.length + 1));
     setGuia(g);
     setActiva(g[g.length - 1].id);
-    setModo("guide");
   };
 
-  /** Inicio / Medio / Final con el orden de compra real de la build más jugada. */
+  /** Las compras de la build más jugada del héroe, partidas en inicio, mitad y final. */
   const masJugada = medidas?.builds[0];
-  const sembrar = masJugada
-    ? () => {
-        // Inicio y medio juego lado a lado, el final a todo el ancho: se ve la
-        // compra entera sin bajar, como un editor del juego bien acomodado.
-        const g: GuideCategory[] = byPhase(masJugada.buys).map(({ phase, buys }, i, todas) => ({
-          id: newCategoryId(),
-          name: copy.deadlock.buildCard.phase[phase],
-          desc: copy.deadlock.buildCard.phaseRange[phase],
-          width: i === todas.length - 1 && todas.length % 2 === 1 ? 12 : 6,
-          height: GUIDE_DEFAULT_HEIGHT,
-          items: [...new Set(buys.map((b) => b.itemId))],
-        }));
-        setGuia(g);
-        setActiva(g[0]?.id ?? null);
-        setModo("guide");
-      }
-    : undefined;
-
-  const soltarDesdeTienda = (catId: string, itemId: number, index: number) => {
-    const g = addToCategory(guia, catId, itemId);
-    setGuia(moveItem(g, catId, itemId, catId, index));
-    setActiva(catId);
+  const sembrar = () => {
+    if (!masJugada) return;
+    const g: GuideCategory[] = byPhase(masJugada.buys).map(({ phase, buys }) => ({
+      ...nueva(copy.deadlock.buildCard.phase[phase]),
+      desc: copy.deadlock.buildCard.phaseRange[phase].slice(0, GUIDE_DESC_MAX),
+      items: [...new Set(buys.map((b) => b.itemId))].slice(0, GUIDE_MAX_ITEMS),
+    }));
+    setGuia(g);
+    setActiva(g[0]?.id ?? null);
+    if (masJugada.path.length > 0) setSenda(masJugada.path.slice(0, 16));
   };
+  const limpiar = () => {
+    if (todos.length > 0 && !window.confirm(c.confirmClear)) return;
+    const g = c.defaultStages.map(nueva);
+    setGuia(g);
+    setActiva(g[0].id);
+    setSenda([]);
+    setName("");
+  };
+  const copiarLink = async () => decir((await copyText(window.location.href)) ? c.copied : bc.copyFail);
 
-  const inv = investment(items, lookup);
-  // Lo que la tienda apaga: la build y los componentes que consumió cada objeto.
-  const adquiridos = ownedWithComponents(items, lookup);
+  const inv = investment(final, lookup);
   const base = heroId !== null ? kit?.heroes[String(heroId)]?.stats : undefined;
-  const stats = base ? buildStats(base, items.map((id) => porId.get(id)?.mods ?? {}), inv) : [];
+  const stats = base ? buildStats(base, final.map((id) => porId.get(id)?.mods ?? {}), inv) : [];
   const parecidas = (medidas?.builds ?? [])
-    .map((b) => ({ b, n: overlap(items, b.items.map((i) => i.itemId)) }))
+    .map((b) => ({ b, n: overlap(final, b.items.map((i) => i.itemId)) }))
     .sort((a, b) => b.n - a.n || b.b.matches - a.b.matches);
-
-  const copiarLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopiado(true);
-      window.setTimeout(() => setCopiado(false), 1800);
-    } catch {
-      /* Sin permiso de portapapeles el link sigue en la barra de direcciones. */
-    }
-  };
-
-  // La estrella azul del juego marca los objetos de la build elegida; acá, los
-  // de la build más jugada del héroe según la tier list.
-  const estrella = new Set((medidas?.builds[0]?.items ?? []).map((i) => i.itemId));
+  const almasTotal = final.reduce((s, id) => s + (porId.get(id)?.cost ?? 0), 0);
+  const heroSlug = heroe ? heroSlugs.toSlug.get(String(heroe.heroId)) : undefined;
 
   return (
-    <section className="deadlock dl-builder">
-      <header className="dl-bd-head">
-        <div className="dl-bd-intro">
-          <span className="dl-bd-kicker">{c.kicker}</span>
-          <h1 className="dl-bd-title">{c.title}</h1>
-          <p className="dl-bd-lead">{c.lead}</p>
-        </div>
-        <div className="dl-bd-heroes" role="group" aria-label={c.pickHero}>
-          {heroes.map((h) => (
-            <button
-              key={h.heroId}
-              type="button"
-              className="dl-bd-hero"
-              aria-pressed={h.heroId === heroId}
-              title={h.name}
-              onClick={() => {
-                if (h.heroId !== heroId) {
-                  setHeroId(h.heroId);
-                  setItems([]);
-                  setSenda([]);
-                  setAviso("");
-                }
-              }}
-            >
-              <GameImg src={h.img} alt={h.name} width={40} height={40} loading="lazy" decoding="async" />
-            </button>
-          ))}
-        </div>
-      </header>
-
-      <div className="dl-bd-body">
-        {/* ── La tienda ─────────────────────────────────────────── */}
-        <div className="dl-bd-shop">
-          <div className="dl-bd-toolbar">
-            <div className="dl-bd-modes" role="group" aria-label={c.modes.build}>
-              {(["build", "guide"] as const).map((m) => (
-                <button key={m} type="button" aria-pressed={modo === m} onClick={() => setModo(m)}>
-                  {c.modes[m]}
+    <section className="deadlock dl-builds dl-ed">
+      <SectionHead
+        eyebrow={c.kicker}
+        title={c.title}
+        lead={c.lead}
+        controls={
+          heroe && (
+            <div className="dl-bl-ctas">
+              <button type="button" className="dl-bl-btn is-primary" onClick={copiarLink} disabled={todos.length === 0}>
+                {c.copyLink}
+              </button>
+              {masJugada && (
+                <button type="button" className="dl-bl-btn" onClick={sembrar}>
+                  {c.seed}
                 </button>
-              ))}
+              )}
+              <button type="button" className="dl-bl-btn is-ghost" onClick={limpiar}>
+                {c.clear}
+              </button>
             </div>
-            <span className="dl-bd-modehint">{c.modeHint[modo]}</span>
-            <label className="dl-bd-valuetoggle">
-              <input type="checkbox" checked={verValor} onChange={(e) => setVerValor(e.target.checked)} />
-              {c.showValue}
+          )
+        }
+      />
+
+      {!heroe ? (
+        <section aria-labelledby="dl-ed-pick">
+          <h2 className="dl-bl-h2" id="dl-ed-pick">
+            {c.pickHero}
+          </h2>
+          <ul className="dl-bl-heroes dl-ed-heroes">
+            {heroes.map((h) => (
+              <li key={h.heroId}>
+                <button type="button" className="dl-bl-herocard" onClick={() => elegirHeroe(h.heroId)} style={h.color ? { ["--hero" as string]: h.color } : undefined}>
+                  <GameImg src={h.card || h.img} alt="" width={96} height={128} loading="lazy" decoding="async" />
+                  <span className="dl-bl-herocard-name">{h.name}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : (
+        <>
+          <div className="dl-ed-bar">
+            <label className="dl-ed-hero">
+              <GameImg src={heroe.img} alt="" width={44} height={44} />
+              <span className="visually-hidden">{c.changeHero}</span>
+              <select value={heroe.heroId} onChange={(e) => elegirHeroe(Number(e.target.value))} aria-label={c.changeHero}>
+                {heroes.map((h) => (
+                  <option key={h.heroId} value={h.heroId}>
+                    {h.name}
+                  </option>
+                ))}
+              </select>
             </label>
-          </div>
-
-          {/* La tienda nueva del juego (City Never Sleeps): las tres columnas
-              juntas, la barra lateral y los filtros; la misma que Objetos. */}
-          <DeadlockShopTree
-            items={itemsMeta.items}
-            renderCard={(it) => (
-              <ShopCard
-                item={it}
-                owned={adquiridos.has(it.itemId)}
-                // Un componente apagado por su mejora no se saca con un clic:
-                // lo dice el nombre accesible en vez de prometer "Quitar".
-                label={!items.includes(it.itemId) && adquiridos.has(it.itemId) ? `${it.name} — ${c.owned}` : undefined}
-                upgrade={upgradesOwned(lookup(it.itemId)!, items)}
-                starred={estrella.has(it.itemId) ? c.starred(heroe?.name ?? "") : undefined}
-                showValue={verValor}
-                onPick={() => alClicTienda(it.itemId)}
-                upgradeOf={it.upgradesFrom.find((u) => items.includes(u.itemId))?.name}
-                liProps={{
-                  draggable: true,
-                  onDragStart: (e) => empezarArrastre(e, { from: "shop", itemId: it.itemId }),
-                }}
-              />
+            <label className="dl-bl-search dl-ed-name">
+              <span className="visually-hidden">{c.name}</span>
+              <input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder={c.namePlaceholder} aria-label={c.name} />
+            </label>
+            <span className="dl-ed-total">
+              {c.totalSouls} <b className="dl-bl-souls">{almasTotal.toLocaleString(locale)}</b>
+            </span>
+            {heroSlug && (
+              <RouteLink className="dl-bl-btn is-ghost" to={{ ...route, dlSection: "builds", detail: heroSlug }} onNavigate={navigate}>
+                {c.openLibrary(heroe.name)}
+              </RouteLink>
             )}
-          />
-          {verValor && <p className="detail-note dl-bd-valuenote">{c.valueNote}</p>}
-        </div>
-
-        {/* ── Tu build y sus números ─────────────────────────────
-            Al costado de la tienda y pegado mientras se scrollea: ZoTaD quiere
-            ver la tienda y cómo va quedando la build a la vez, sin tener que
-            bajar. La tienda se achica con la altura de la pantalla para
-            entrar entera (ver `.dl-bd-paper` en el CSS). */}
-        <aside className="dl-bd-side" aria-label={c.yourBuild}>
-          <div className="dl-bd-build-head">
-            {heroe && <GameImg src={heroe.img} alt="" width={44} height={44} className="dl-bd-build-hero" />}
-            <h2 className="dl-bd-build-title">
-              {c.yourBuild}
-              {heroe && <span className="dl-bd-build-heroname">{heroe.name}</span>}
-            </h2>
-            <span className="dl-bd-count">{c.slotsUsed(items.length, BUILD_SLOTS)}</span>
           </div>
 
-          {heroId === null ? (
-            <p className="detail-note dl-bd-bar-empty">{c.pickHero}</p>
-          ) : (
-            <>
-              <ol className="dl-bd-slots">
+          <div className="dl-ed-cols">
+            <div className="dl-ed-left">
+              <div className="dl-bl-step-head">
+                <h2 className="dl-bl-h3">{c.stages}</h2>
+              </div>
+              <p className="dl-bl-dim dl-ed-hint">{c.stagesLead}</p>
+              <ol className="dl-ed-stages">
+                {guia.map((g, i) => (
+                  <Etapa
+                    key={g.id}
+                    g={g}
+                    i={i}
+                    total={guia.length}
+                    activa={g.id === activa}
+                    c={c}
+                    nombre={nombre}
+                    quitarLabel={old.remove}
+                    onSelect={() => setActiva(g.id)}
+                    onRename={(v) => setGuia(updateCategory(guia, g.id, { name: v.slice(0, GUIDE_NAME_MAX) }))}
+                    onDesc={(v) => setGuia(updateCategory(guia, g.id, { desc: v.slice(0, GUIDE_DESC_MAX) }))}
+                    onMove={(dir) => setGuia(moveCategory(guia, g.id, dir))}
+                    onRemove={() => {
+                      const resto = removeCategory(guia, g.id);
+                      setGuia(resto);
+                      if (activa === g.id) setActiva(resto[0]?.id ?? null);
+                    }}
+                    onRemoveItem={(id) => sacar(g.id, id)}
+                    onDrop={(from, id, index) => setGuia(moveItem(guia, from, id, g.id, index))}
+                  />
+                ))}
+              </ol>
+              {guia.length < GUIDE_MAX_CATEGORIES && (
+                <button type="button" className="dl-bl-btn dl-ed-add" onClick={nuevaEtapa}>
+                  + {c.addStage}
+                </button>
+              )}
+            </div>
+
+            <aside className="dl-ed-right" aria-label={c.items}>
+              <Picker items={itemsMeta.items} enBuild={new Set(todos)} onPick={agregar} c={c} />
+            </aside>
+          </div>
+
+          <p className="dl-bl-status dl-ed-aviso" role="status" aria-live="polite">
+            {aviso}
+          </p>
+
+          <div className="dl-ed-below">
+            <section className="dl-ed-panel" aria-labelledby="dl-ed-final">
+              <h2 className="dl-bl-h3" id="dl-ed-final">
+                {c.final}
+              </h2>
+              <p className="dl-bl-dim dl-bl-fine">{c.finalLead}</p>
+              <ol className="dl-ed-slots">
                 {Array.from({ length: BUILD_SLOTS }, (_, n) => {
-                  const it = items[n] !== undefined ? porId.get(items[n]) : undefined;
-                  return it ? (
-                    <ShopCard key={it.itemId} item={it} compact onPick={() => quitar(it.itemId)} label={c.remove(it.name)} />
-                  ) : (
-                    <li key={`vacia-${n}`} className="dl-bd-empty" aria-label={c.emptySlot} />
-                  );
+                  const id = final[n];
+                  return <li key={id ?? `v${n}`}>{id !== undefined ? <ItemIcon itemId={id} size={56} /> : <span className="dl-ed-slot-empty">
+                        <span className="visually-hidden">{old.emptySlot}</span>
+                      </span>}</li>;
                 })}
               </ol>
-
-              {/* Como abajo a la izquierda en la tienda del juego: el valor de lo
-                  comprado y las tres barras de inversión en vertical. */}
-              <div className="dl-bd-gamebar">
-                <div className="dl-bd-vbars" aria-hidden="true">
-                  {SLOTS.map((s) => (
-                    <span key={s} className="dl-bd-vbar" data-cat={s}>
-                      <span className="dl-bd-vbar-track">
-                        <span style={{ height: `${Math.min(100, (inv[s].souls / 28800) * 100)}%` }} />
-                      </span>
-                      <img src={`${SHOP}/tabicon_${s}.webp`} alt="" width={18} height={18} />
-                    </span>
-                  ))}
-                </div>
-                <div className="dl-bd-total">
-                  <span className="dl-bd-total-n">
-                    <img src={`${SHOP}/currency.webp`} alt="" width={16} height={30} />
-                    {inv.total.toLocaleString(locale)}
-                  </span>
-                  <span className="dl-bd-total-label">{c.itemValue}</span>
-                </div>
-              </div>
-
-              <div className="dl-bd-actions">
-                <button type="button" className="dl-bd-primary" onClick={copiarLink} disabled={items.length === 0}>
-                  {copiado ? c.copied : c.copyLink}
-                </button>
-                {medidas?.builds[0] && (
-                  <button
-                    type="button"
-                    className="dl-bd-secondary"
-                    onClick={() => setItems(medidas.builds[0].items.map((i) => i.itemId).slice(0, BUILD_SLOTS))}
-                  >
-                    {c.loadMostPlayed}
-                  </button>
-                )}
-                <button type="button" className="dl-bd-secondary" onClick={() => setItems([])} disabled={items.length === 0}>
-                  {c.clear}
-                </button>
-              </div>
-            </>
-          )}
-          <p className="dl-bd-aviso" aria-live="polite">{aviso}</p>
-          {heroId !== null && (
-            <>
-              {stats.length > 0 && <StatsPanel rows={stats} />}
-
-              <div className="dl-bd-inv">
-                <h3 className="dl-bd-sub">{c.investment}</h3>
+              <div className="dl-ed-inv">
+                <h3 className="dl-bl-h3">{old.investment}</h3>
                 {SLOTS.map((s) => {
                   const v = inv[s];
                   const signo = (b: number) => (s === "spirit" ? `+${b}` : `+${b}%`);
                   return (
-                    <div className="dl-bd-inv-row" key={s} data-cat={s}>
-                      <span className="dl-bd-inv-name">{c.damage[s]}</span>
-                      <span className="dl-bd-inv-souls">{v.souls.toLocaleString(locale)}</span>
-                      <span className="dl-bd-inv-bonus">{signo(v.bonus)}</span>
-                      <span className="dl-bd-inv-next">
-                        {v.next ? c.next(v.next.souls.toLocaleString(locale), signo(v.next.bonus)) : c.maxed}
-                      </span>
+                    <div className="dl-ed-inv-row" key={s} data-cat={s}>
+                      <span className="dl-ed-inv-name">{old.damage[s]}</span>
+                      <span className="dl-bl-souls">{v.souls.toLocaleString(locale)}</span>
+                      <b>{signo(v.bonus)}</b>
+                      <span className="dl-bl-dim">{v.next ? old.next(v.next.souls.toLocaleString(locale), signo(v.next.bonus)) : old.maxed}</span>
                     </div>
                   );
                 })}
               </div>
+            </section>
 
-              <div className="dl-bd-similar">
-                <h3 className="dl-bd-sub">{c.similar}</h3>
-                {items.length === 0 ? (
-                  <p className="detail-note">{c.noSimilar}</p>
-                ) : (
-                  <ul>
-                    {parecidas.slice(0, 3).map(({ b, n }) => (
-                      <li key={b.id} className="dl-bd-sim">
-                        <span className="dl-bd-sim-n">
-                          {n}/{BUILD_SLOTS}
+            {stats.length > 0 && (
+              <section className="dl-ed-panel dl-ed-stats">
+                <StatsPanel rows={stats} />
+              </section>
+            )}
+
+            <section className="dl-ed-panel" aria-labelledby="dl-ed-sim">
+              <h2 className="dl-bl-h3" id="dl-ed-sim">
+                {old.similar}
+              </h2>
+              {final.length === 0 ? (
+                <p className="dl-bl-dim">{old.noSimilar}</p>
+              ) : (
+                <ul className="dl-ed-sim">
+                  {parecidas.slice(0, 3).map(({ b, n }) => (
+                    <li key={b.id}>
+                      <b>
+                        {n}/{BUILD_SLOTS}
+                      </b>
+                      <span>
+                        {copy.deadlock.buildCard.name(copy.deadlock.buildCard.damage[b.damage], copy.deadlock.buildCard.trait[b.trait])}
+                        <span className="dl-bl-dim">
+                          {" · "}
+                          {old.similarRow(b.matches.toLocaleString(locale), `${(b.winRate * 100).toLocaleString(locale, { maximumFractionDigits: 1 })}%`)}
                         </span>
-                        <span className="dl-bd-sim-text">
-                          <span className="dl-bd-sim-name">
-                            {copy.deadlock.buildCard.name(
-                              copy.deadlock.buildCard.damage[b.damage],
-                              copy.deadlock.buildCard.trait[b.trait]
-                            )}
-                          </span>
-                          <span className="dl-bd-sim-meta">
-                            {c.similarRow(b.matches.toLocaleString(locale), `${(b.winRate * 100).toLocaleString(locale, { maximumFractionDigits: 1 })}%`)}
-                          </span>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
 
-            </>
-          )}
-        </aside>
-      </div>
-
-      {/* ── Debajo: el orden de habilidades y el editor de la guía ── */}
-      {heroId !== null && (
-        <div className="dl-bd-below">
           {habilidades.length > 0 && (
-            <AbilityOrderEditor
-              abilities={habilidades}
-              path={senda}
-              onChange={setSenda}
-              onAdd={(id) => setSenda(addAbilityPoint(senda, id))}
-              measured={masJugada?.path}
-            />
+            <div className="dl-ed-abil">
+              <AbilityOrderEditor abilities={habilidades} path={senda} onChange={setSenda} onAdd={(id) => setSenda(addAbilityPoint(senda, id))} measured={masJugada?.path} />
+            </div>
           )}
-          <GuideEditor
-            guide={guia}
-            active={modo === "guide" ? activa : null}
-            porId={porId}
-            onChange={setGuia}
-            onSelect={(id) => {
-              setActiva(id);
-              setModo("guide");
-            }}
-            onAddCategory={nuevaCategoria}
-            onSeed={sembrar}
-            onDropFromShop={soltarDesdeTienda}
-          />
-        </div>
+
+          <section className="dl-ed-panel dl-ed-game">
+            <h2 className="dl-bl-h3">{c.toGame}</h2>
+            <p className="dl-bl-dim">{c.toGameText}</p>
+            {heroSlug && (
+              <RouteLink className="dl-bl-btn" to={{ ...route, dlSection: "builds", detail: heroSlug }} onNavigate={navigate} search="?t=mine">
+                {c.upload}
+              </RouteLink>
+            )}
+          </section>
+        </>
       )}
     </section>
+  );
+}
+
+type EdCopy = (typeof BUILDS_COPY)["en"]["editor"];
+const TIPO = "application/x-vestigo-item";
+
+function Etapa({
+  g,
+  i,
+  total,
+  activa,
+  c,
+  nombre,
+  quitarLabel,
+  onSelect,
+  onRename,
+  onDesc,
+  onMove,
+  onRemove,
+  onRemoveItem,
+  onDrop,
+}: {
+  g: GuideCategory;
+  i: number;
+  total: number;
+  activa: boolean;
+  c: EdCopy;
+  nombre: (id: number) => string;
+  quitarLabel: (item: string) => string;
+  onSelect: () => void;
+  onRename: (v: string) => void;
+  onDesc: (v: string) => void;
+  onMove: (dir: -1 | 1) => void;
+  onRemove: () => void;
+  onRemoveItem: (id: number) => void;
+  onDrop: (from: string, id: number, index: number) => void;
+}) {
+  const [sobre, setSobre] = useState(false);
+  const leer = (e: React.DragEvent): { from: string; id: number } | null => {
+    try {
+      const v = JSON.parse(e.dataTransfer.getData(TIPO)) as { from: string; id: number };
+      return typeof v.from === "string" && Number.isInteger(v.id) ? v : null;
+    } catch {
+      return null;
+    }
+  };
+  return (
+    <li
+      className="dl-ed-stage"
+      data-active={activa || undefined}
+      data-over={sobre || undefined}
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("input,button")) return;
+        onSelect();
+      }}
+      onDragOver={(e) => {
+        if (!e.dataTransfer.types.includes(TIPO)) return;
+        e.preventDefault();
+        setSobre(true);
+      }}
+      onDragLeave={() => setSobre(false)}
+      onDrop={(e) => {
+        setSobre(false);
+        const d = leer(e);
+        if (!d) return;
+        e.preventDefault();
+        onDrop(d.from, d.id, g.items.length);
+      }}
+    >
+      <div className="dl-ed-stage-head">
+        <button type="button" className="dl-ed-stage-pick" aria-pressed={activa} onClick={onSelect} title={c.active}>
+          <span className="dl-ed-stage-n">{i + 1}</span>
+        </button>
+        <input className="dl-ed-stage-name" value={g.name} maxLength={40} onChange={(e) => onRename(e.target.value)} onFocus={onSelect} placeholder={c.newStage(i + 1)} aria-label={c.stageName} />
+        {activa && <span className="dl-ed-stage-active">{c.active}</span>}
+        <span className="dl-ed-stage-tools">
+          <button type="button" aria-label={c.moveUp} title={c.moveUp} disabled={i === 0} onClick={() => onMove(-1)}>
+            ▲
+          </button>
+          <button type="button" aria-label={c.moveDown} title={c.moveDown} disabled={i === total - 1} onClick={() => onMove(1)}>
+            ▼
+          </button>
+          <button type="button" aria-label={c.removeStage} title={c.removeStage} onClick={onRemove}>
+            ✕
+          </button>
+        </span>
+      </div>
+      <input className="dl-ed-stage-desc" value={g.desc} maxLength={80} onChange={(e) => onDesc(e.target.value)} onFocus={onSelect} placeholder={c.stageNote} aria-label={c.stageNote} />
+      <ul className="dl-ed-stage-items">
+        {g.items.map((id, k) => (
+          <li
+            key={id}
+            draggable
+            onDragStart={(e) => {
+              e.dataTransfer.setData(TIPO, JSON.stringify({ from: g.id, id }));
+              e.dataTransfer.effectAllowed = "move";
+            }}
+            onDragOver={(e) => {
+              if (e.dataTransfer.types.includes(TIPO)) e.preventDefault();
+            }}
+            onDrop={(e) => {
+              e.stopPropagation();
+              setSobre(false);
+              try {
+                const d = JSON.parse(e.dataTransfer.getData(TIPO)) as { from: string; id: number };
+                e.preventDefault();
+                onDrop(d.from, d.id, k);
+              } catch {
+                /* no era un objeto */
+              }
+            }}
+          >
+            <button type="button" className="dl-ed-item" onClick={() => onRemoveItem(id)} aria-label={quitarLabel(nombre(id))} title={quitarLabel(nombre(id))}>
+              <ItemIcon itemId={id} size={52} tip={false} />
+              <span className="dl-ed-item-x" aria-hidden="true">
+                ✕
+              </span>
+            </button>
+          </li>
+        ))}
+        {g.items.length === 0 && <li className="dl-bl-dim dl-ed-stage-empty">{activa ? c.emptyStage : c.emptyStageIdle}</li>}
+      </ul>
+    </li>
+  );
+}
+
+function Picker({ items, enBuild, onPick, c }: { items: Item[]; enBuild: Set<number>; onPick: (id: number) => void; c: EdCopy }) {
+  const { lang } = useLang();
+  const locale = useLocale();
+  const [q, setQ] = useState("");
+  const [slot, setSlot] = useState<SlotFilter>("all");
+  const [precio, setPrecio] = useState<number>(0);
+  const cats = useCopy().deadlock.builder.cats;
+  const lista = useMemo(() => {
+    const t = q.trim().toLowerCase();
+    return items
+      .filter((i) => (slot === "all" || i.slot === slot) && (!precio || i.cost === precio) && (!t || i.name.toLowerCase().includes(t)))
+      .sort((a, b) => a.cost - b.cost || a.name.localeCompare(b.name, lang));
+  }, [items, q, slot, precio, lang]);
+  let ultimo = -1;
+  return (
+    <>
+      <label className="dl-bl-search dl-ed-search">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M11 11l3.5 3.5" stroke="currentColor" strokeWidth="1.6" />
+        </svg>
+        <span className="visually-hidden">{c.search}</span>
+        <input
+          type="search"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder={c.search}
+          aria-describedby="dl-ed-search-hint"
+          onKeyDown={(e) => {
+            // Enter suma el primero de la lista: con el teclado no hay que cruzar los filtros.
+            if (e.key === "Enter" && q.trim() && lista[0]) {
+              e.preventDefault();
+              onPick(lista[0].itemId);
+              setQ("");
+            }
+          }}
+        />
+      </label>
+      <span className="visually-hidden" id="dl-ed-search-hint">
+        {c.searchHint}
+      </span>
+      <div className="dl-bl-chips" role="group" aria-label={c.items}>
+        {(["all", ...SLOTS] as SlotFilter[]).map((s) => (
+          <button key={s} type="button" className="dl-bl-chip" data-slot={s} aria-pressed={slot === s} onClick={() => setSlot(s)}>
+            {s === "all" ? c.all : cats[s]}
+          </button>
+        ))}
+      </div>
+      <div className="dl-bl-chips dl-ed-prices" role="group" aria-label={c.allPrices}>
+        {[0, ...PRECIOS].map((p) => (
+          <button key={p} type="button" className="dl-bl-chip" aria-pressed={precio === p} onClick={() => setPrecio(p)}>
+            {p ? p.toLocaleString(locale) : c.allPrices}
+          </button>
+        ))}
+      </div>
+      <ul className="dl-ed-pool">
+        {lista.length === 0 && <li className="dl-bl-dim dl-ed-pool-empty">{c.noItems}</li>}
+        {lista.map((i) => {
+          const grupo = i.cost !== ultimo;
+          ultimo = i.cost;
+          const ya = enBuild.has(i.itemId);
+          return (
+            <li key={i.itemId}>
+              {grupo && <span className="dl-ed-pool-group">{i.cost.toLocaleString(locale)}</span>}
+              <span className="dl-ed-pool-row" data-has={ya || undefined}>
+                <ItemIcon itemId={i.itemId} size={36} />
+                <button type="button" className="dl-ed-pool-btn" onClick={() => onPick(i.itemId)} aria-pressed={ya}>
+                  <span className="dl-ed-pool-name">{i.name}</span>
+                  {ya && <span className="dl-ed-pool-in">{c.inBuild}</span>}
+                  <span className="dl-ed-pool-tier" data-tier={i.tier} title={c.delta}>
+                    {i.tier}
+                  </span>
+                  <span className="dl-ed-pool-plus" aria-hidden="true">
+                    +
+                  </span>
+                </button>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }

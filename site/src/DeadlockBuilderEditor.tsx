@@ -355,15 +355,17 @@ export function AbilityOrderEditor({
       <div className="dl-bd-abil-grid" role="table">
         {abilities.map((a) => (
           <div className="dl-bd-abil-row" role="row" key={a.id}>
-            <button
-              type="button"
-              className="dl-bd-abil-btn"
-              aria-label={c.add(a.name)}
-              title={c.add(a.name)}
-              onClick={() => onAdd(a.id)}
-            >
-              <GameImg src={a.img} alt="" width={30} height={30} />
-            </button>
+            <span role="rowheader">
+              <button
+                type="button"
+                className="dl-bd-abil-btn"
+                aria-label={c.add(a.name)}
+                title={c.add(a.name)}
+                onClick={() => onAdd(a.id)}
+              >
+                <GameImg src={a.img} alt="" width={30} height={30} />
+              </button>
+            </span>
             <div className="dl-bd-abil-steps" role="cell">
               {Array.from({ length: ABILITY_PATH_MAX }, (_, n) => {
                 const suya = path[n] === a.id;
@@ -372,9 +374,9 @@ export function AbilityOrderEditor({
                   <span key={n} className="dl-bd-abil-step" data-on={suya || undefined}>
                     {suya &&
                       (r === null ? (
-                        <span className="dl-bd-abil-unlock" title={c.unlock} aria-label={c.unlock} />
+                        <span className="dl-bd-abil-unlock" title={c.unlock} role="img" aria-label={c.unlock} />
                       ) : (
-                        <span className="dl-bd-abil-up" title={c.upgrade(r)} aria-label={c.upgrade(r)}>
+                        <span className="dl-bd-abil-up" title={c.upgrade(r)} role="img" aria-label={c.upgrade(r)}>
                           <span aria-hidden="true">◆</span>
                           {r}
                         </span>
@@ -430,7 +432,8 @@ export function StatsPanel({ rows }: { rows: StatRow[] }) {
           </button>
         ))}
       </div>
-      <ul className="dl-bd-stats-list" role="tabpanel">
+      <div role="tabpanel">
+      <ul className="dl-bd-stats-list">
         {rows
           .filter((r) => r.group === grupo)
           .map((r) => {
@@ -451,6 +454,7 @@ export function StatsPanel({ rows }: { rows: StatRow[] }) {
             );
           })}
       </ul>
+      </div>
       <p className="detail-note dl-bd-stats-note">{c.stats.note}</p>
     </div>
   );

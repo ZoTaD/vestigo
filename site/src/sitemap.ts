@@ -215,6 +215,11 @@ export interface SitemapData {
    * porque el índice puede no existir todavía en un checkout viejo.
    */
   dlNews?: NewsEntry[];
+  /**
+   * Builds (2026-11-15): por héroe, todas sus builds publicadas (`community-builds/<id>.json`), cada una con su ficha
+   * prerenderizada. Opcional: un checkout sin el pipeline corrido no tiene fichas de builds.
+   */
+  dlBuilds?: Record<string, { id: number; name: string }[]>;
   /** Path of Exile 2. Opcional por lo mismo que `dlNews`. */
   p2?: Poe2SitemapData;
   /** Valheim. Opcional por lo mismo. */
@@ -438,6 +443,13 @@ export function sitemapPaths(data: SitemapData): string[] {
     for (const slug of deadlockDetailSlugs(data).items) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "items", detail: slug }));
     }
+    // Builds (2026-11-15): la biblioteca de cada héroe y las fichas de sus builds del índice.
+    deadlockDetailSlugs(data).heroes.forEach((slug, i) => {
+      const builds = data.dlBuilds?.[data.dlHeroIds[i]];
+      if (!builds) return;
+      paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: slug }));
+      for (const b of builds) paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: `${slug}/${b.id}` }));
+    });
     // Una página por edición de Vestigo News (2026-09-18). Son las notas de
     // parche, que es lo que más se busca con fecha de vencimiento: si no están
     // indexadas la primera semana, no cuentan.

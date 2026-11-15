@@ -120,10 +120,16 @@ const EN = {
           "Which Deadlock items are actually worth their souls. Every item measured against " +
           "what its own price is worth, so a 6400 item is not called good just for being late.",
       },
+      builds: {
+        title: () => "Deadlock Builds: Best Builds for Every Hero by Win Rate | Vestigo",
+        description: () =>
+          "Every Deadlock build that gets played, for all heroes, with its real win rate and matches this month. " +
+          "Copy the build ID and paste it in the game, or upload yours with Steam.",
+      },
       builder: {
         title: () => "Deadlock Build Maker and Planner: Plan Your Items | Vestigo",
         description: () =>
-          "Build a Deadlock item build in a copy of the game's shop: souls, investment bonus, upgrades, " +
+          "Make a Deadlock build by stages: items, ability order, souls, investment bonus and stats, " +
           "and how close it is to the builds that win. Share it with a link.",
       },
       draft: {
@@ -216,6 +222,19 @@ const EN = {
             : `How to play ${name} in Deadlock: win rate, pick rate, the recommended build ` +
               "order, and the matchups that change it.",
       },
+      /** Builds (2026-11-15): la biblioteca de un héroe y la ficha de una build. */
+      buildsHero: (hero: string) => ({
+        title: `${hero} Builds – Best Deadlock ${hero} Builds by Win Rate | Vestigo`,
+        description:
+          `The most played ${hero} builds in Deadlock this month, with their real win rate, matches and items. ` +
+          "Copy the build ID and paste it in the game.",
+      }),
+      buildsOne: (build: string, hero: string) => ({
+        title: `${build} – ${hero} Build for Deadlock: Items and Win Rate | Vestigo`,
+        description:
+          `${build}, a ${hero} build for Deadlock: what to buy and when, the ability order, its win rate and matches ` +
+          "this month. Copy the ID and paste it in the game.",
+      }),
     },
     privacy: {
       title: () => "Privacy Policy | Vestigo",
@@ -322,11 +341,17 @@ const ES: typeof EN = {
           "Qué objetos de Deadlock valen de verdad sus almas. Cada uno medido contra lo que " +
           "rinde su propio precio, para que uno de 6400 no parezca bueno sólo por ser tardío.",
       },
+      builds: {
+        title: () => "Builds de Deadlock: las mejores de cada héroe por % de victoria | Vestigo",
+        description: () =>
+          "Todas las builds de Deadlock que se juegan, de cada héroe, con su % de victoria real y sus partidas del mes. " +
+          "Copiá el ID y pegalo en el juego, o subí la tuya con Steam.",
+      },
       builder: {
         title: () => "Armador de builds de Deadlock — planeá tus objetos | Vestigo",
         description: () =>
-          "Armá una build de Deadlock en una copia de la tienda del juego: almas, bonificación de inversión, " +
-          "mejoras y cuánto se parece a las builds que ganan. Compartila con un link.",
+          "Armá una build de Deadlock por etapas: objetos, orden de habilidades, almas, bonificación de inversión y stats, " +
+          "y cuánto se parece a las builds que ganan. Compartila con un link.",
       },
       draft: {
         title: () => "Predictor de draft de Deadlock — Armador de equipo y chance de ganar | Vestigo",
@@ -409,6 +434,18 @@ const ES: typeof EN = {
             : `Cómo jugar ${name} en Deadlock: victorias, uso, el orden de compra recomendado ` +
               "y los enfrentamientos que lo cambian.",
       },
+      buildsHero: (hero: string) => ({
+        title: `Builds de ${hero} – las mejores de Deadlock por % de victoria | Vestigo`,
+        description:
+          `Las builds de ${hero} más jugadas de Deadlock este mes, con su % de victoria real, partidas y objetos. ` +
+          "Copiá el ID y pegalo en el juego.",
+      }),
+      buildsOne: (build: string, hero: string) => ({
+        title: `${build} – build de ${hero} para Deadlock: objetos y % de victoria | Vestigo`,
+        description:
+          `${build}, una build de ${hero} para Deadlock: qué comprar y cuándo, el orden de habilidades, su % de victoria ` +
+          "y sus partidas del mes. Copiá el ID y pegalo en el juego.",
+      }),
     },
     privacy: {
       title: () => "Política de Privacidad | Vestigo",

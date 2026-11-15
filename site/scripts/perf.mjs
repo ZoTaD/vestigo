@@ -40,6 +40,12 @@ export const PAGES = [
   "/en/deadlock/dle",
   "/en/deadlock/dle/ranking",
   "/en/deadlock/heroes/infernus",
+  // Builds (2026-11-15): la portada, la biblioteca de un héroe, una ficha y el Editor (vacío y con una build).
+  "/en/deadlock/builds",
+  "/en/deadlock/builds/abrams",
+  "/en/deadlock/builds/abrams/697756",
+  "/en/deadlock/builder",
+  "/es/deadlock/builder?b=6.mooubd.d8ayd5.13tj3yn.1lqlbms.1e2xkjv.koefiz.13zcvf5.15w8ect.rhp3m2.wcghbv.if5ene.1jit4ls&g=12x4.lg0lm5.mooubd.koefiz.1e2xkjv.d8ayd5.13zcvf5.wcghbv.13tj3yn_Core%20L-R_~12x4.rhp3m2.15w8ect_Lane_&a=3214122224433311",
   "/en/deadlock/graves",
   "/en/poe2/economy",
   "/en/poe2/encyclopedia",

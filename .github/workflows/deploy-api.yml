@@ -11,6 +11,8 @@ on:
     branches: [main]
     paths:
       - api/**
+      # El filtro de textos de las builds, compartido con el pipeline.
+      - games/deadlock/pipeline/src/communityBuildsCore.ts
       - .github/workflows/deploy-api.yml
   workflow_dispatch:
 

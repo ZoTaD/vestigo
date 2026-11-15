@@ -45,6 +45,12 @@ const copyOf = (lang: Lang) => ({ ...deadlockCopyFor(lang), seo: SEO_COPY[lang].
  * reales.
  */
 
+/**
+ * Separa el nombre de una build del de su héroe en el `detailName` de su ficha (`/deadlock/builds/<héroe>/<id>`): el
+ * título lleva los dos, y un nombre de build puede tener cualquier otro carácter.
+ */
+export const BUILD_NAME_SEP = "\u241f";
+
 /** Un nombre que puede estar traducido. `en` siempre existe. */
 type Localized = { en: string; [lang: string]: string | undefined };
 
@@ -84,6 +90,11 @@ export function metaFor(
   const copy = copyOf(lang);
   const seo = copy.seo;
 
+  // Builds (2026-11-15): la biblioteca de un héroe ("Abrams") o una build ("<build>␟<héroe>").
+  if (detailName && route.view === "deadlock" && route.dlSection === "builds") {
+    const [build, hero] = detailName.split(BUILD_NAME_SEP);
+    return hero === undefined ? seo.deadlock.buildsHero(build) : seo.deadlock.buildsOne(build, hero);
+  }
   if (detailName && route.view === "deadlock") {
     return {
       title: seo.deadlock.detail.title(detailName, route.dlSection),
@@ -252,6 +263,14 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   dlSlugs.items.forEach((slug, i) => {
     const id = data.dlItemIds[i];
     out[`dl-items/${slug}`] = say(data.dlItems[id]?.name as Localized, lang, slug);
+  });
+  dlSlugs.heroes.forEach((slug, i) => {
+    const id = data.dlHeroIds[i];
+    const builds = data.dlBuilds?.[id];
+    if (!builds) return;
+    const hero = say(data.dlHeroes[id]?.name as Localized, lang, slug);
+    out[`dl-builds/${slug}`] = hero;
+    for (const b of builds) out[`dl-builds/${slug}/${b.id}`] = `${b.name || `Build #${b.id}`}${BUILD_NAME_SEP}${hero}`;
   });
   for (const e of data.dlNews ?? []) out[`dl-patches/${e.slug}`] = e.title;
   for (const l of data.p2?.leagues ?? []) out[`p2-economy/${l.slug}`] = l.name;

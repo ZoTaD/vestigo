@@ -247,6 +247,16 @@
   from = "/es/deadlock/match/*"
   to = "/shell.html"
   status = 200
+# Builds (2026-11-15): la ficha de una build recién subida a Vestigo, que todavía
+# no está en los datos del día (se prerenderizan todas las que sí están).
+[[redirects]]
+  from = "/en/deadlock/builds/*"
+  to = "/shell.html"
+  status = 200
+[[redirects]]
+  from = "/es/deadlock/builds/*"
+  to = "/shell.html"
+  status = 200
 [[redirects]]
   from = "/en/valheim/planner/route"
   to = "/shell.html"

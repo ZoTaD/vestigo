@@ -25,6 +25,7 @@ export type DeadlockSection =
   | "heroes"
   | "items"
   | "builder"
+  | "builds"
   | "draft"
   | "ranks"
   | "ladder"
@@ -252,7 +253,7 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = [
   "meta",
   "heroes",
   "items",
-  "builder",
+  "builds",
   "draft",
   "ranks",
   "ladder",
@@ -270,7 +271,7 @@ export const DEADLOCK_SECTIONS: DeadlockSection[] = [
  * una pestaña que no se puede apretar sin haber buscado antes no es una pestaña.
  * Por eso la lista de parseo y la de dibujo son dos.
  */
-export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match", "street-brawl", "dle"];
+export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match", "street-brawl", "dle", "builder"];
 /**
  * La tier list de Street Brawl (2026-09-24) tiene dirección propia
  * (`/deadlock/street-brawl`) pero no pestaña: es la misma pestaña Tier list en
@@ -282,7 +283,11 @@ export const DEADLOCK_ROUTES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "match"
  * El Deadlockdle (2026-11-04) tiene páginas pero no pestaña: es un juego aparte, y su botón va en la barra de arriba,
  * al lado de "Deadlock" (`Nav.tsx`), pedido de ZoTaD para liberar la barra de pestañas.
  */
-export const DEADLOCK_PAGES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "street-brawl", "dle"];
+/**
+ * El Armador (`/deadlock/builder`) dejó de ser pestaña el 2026-11-15: la pestaña es Builds (la biblioteca), y el editor
+ * se abre desde ahí. La dirección sigue igual, con sus links compartidos (`?b=…&g=…&a=…`).
+ */
+export const DEADLOCK_PAGES: DeadlockSection[] = [...DEADLOCK_SECTIONS, "street-brawl", "dle", "builder"];
 /** En el orden en que se dibujan las pestañas de PoE2. */
 export const POE2_SECTIONS: Poe2Section[] = ["economy", "encyclopedia", "patches", "tree", "regex"];
 /**
@@ -302,7 +307,7 @@ export const DL_DETAIL_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items"]
  * (`/deadlock/patches/2026-09-16`). No está en `DL_DETAIL_SECTIONS` porque las
  * ediciones salen del índice de noticias, no de los slugs de héroes e ítems.
  */
-const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "dle", "player", "match"];
+const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "dle", "player", "match", "builds"];
 
 export const DEFAULT_LANG: Lang = "en";
 const DEFAULT_DL_SECTION: DeadlockSection = "meta";
@@ -663,9 +668,9 @@ export function parseRoute(pathname: string): Route {
     if (maybeSection && isDlSection(maybeSection)) {
       const dlSection = maybeSection;
       // El perfil y la partida llevan además su pestaña: /player/123/achievements,
-      // /match/456/lanes.
+      // /match/456/lanes. Builds lleva el héroe y la build: /builds/abrams/748747.
       const detail =
-        (dlSection === "player" || dlSection === "match") && rest[2] && rest[3]
+        (dlSection === "player" || dlSection === "match" || dlSection === "builds") && rest[2] && rest[3]
           ? `${rest[2]}/${rest[3]}`
           : DL_WITH_DETAIL.includes(dlSection) && rest[2]
             ? rest[2]

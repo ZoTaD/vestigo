@@ -42,6 +42,7 @@ import "./styles/news.css";
 const DeadlockItems = lazyWithPreload(() => import("./DeadlockItems"));
 const DeadlockHeroes = lazyWithPreload(() => import("./DeadlockHeroes"));
 const DeadlockBuilder = lazyWithPreload(() => import("./DeadlockBuilderPage"));
+const DeadlockBuilds = lazyWithPreload(() => import("./DeadlockBuilds"));
 const DeadlockTeamBuilder = lazyWithPreload(() => import("./DeadlockTeamBuilder"));
 const DeadlockNews = lazyWithPreload(() => import("./DeadlockNews"));
 const DeadlockRanks = lazyWithPreload(() => import("./DeadlockRanks"));
@@ -60,6 +61,7 @@ const TABS: Partial<Record<DeadlockSection, { preload: () => Promise<void> }>> =
   items: DeadlockItems,
   heroes: DeadlockHeroes,
   builder: DeadlockBuilder,
+  builds: DeadlockBuilds,
   draft: DeadlockTeamBuilder,
   patches: DeadlockNews,
   ranks: DeadlockRanks,
@@ -130,8 +132,8 @@ export default function DeadlockArea({
               className="subnav-item"
               key={id}
               to={{ ...route, view: "deadlock", dlSection: id, detail: undefined }}
-              // Street Brawl es la Tier list en otro modo: la pestaña sigue encendida.
-              active={route.dlSection === id || (id === "meta" && route.dlSection === "street-brawl")}
+              // Street Brawl es la Tier list en otro modo, y el Armador vive dentro de Builds: la pestaña sigue encendida.
+              active={route.dlSection === id || (id === "meta" && route.dlSection === "street-brawl") || (id === "builds" && route.dlSection === "builder")}
               onNavigate={navigate}
             >
               {copy.deadlock.tabs[id]}
@@ -166,7 +168,9 @@ export default function DeadlockArea({
       ) : route.dlSection === "heroes" ? (
         <DeadlockHeroes route={route} navigate={navigate} band={band} all={allRanks} picker={picker} tablePicker={heroesPicker} open={route.detail} />
       ) : route.dlSection === "builder" ? (
-        <DeadlockBuilder />
+        <DeadlockBuilder route={route} navigate={navigate} />
+      ) : route.dlSection === "builds" ? (
+        <DeadlockBuilds route={route} navigate={navigate} />
       ) : route.dlSection === "draft" ? (
         <DeadlockTeamBuilder band={band} picker={picker} />
       ) : route.dlSection === "ranks" ? (

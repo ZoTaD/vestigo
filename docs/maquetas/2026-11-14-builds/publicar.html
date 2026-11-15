@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subir una build · maqueta</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.sec { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.mine { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mine button { width: 100%; display: flex; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--ink); border: 1px solid var(--line); text-align: left; }
+.mine button.on { border-color: var(--accent); background: var(--ink-3); }
+.mine .st { font-size: 12px; color: var(--souls); white-space: nowrap; }
+.mine .st.done { color: var(--text-3); }
+textarea { background: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 10px; resize: vertical; }
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.how div { background: var(--ink); border-radius: 8px; padding: 12px; font-size: 13px; color: var(--text-2); }
+.how b { display: block; font: 600 26px "Barlow Condensed"; color: var(--accent); }
+@media (max-width: 640px) { .how { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="hdr"></div>
+<main class="wrap" style="max-width: 920px; padding-top: 26px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 18px" id="app"></main>
+<div id="map"></div>
+<script src="data.js"></script>
+<script src="comm.js"></script>
+<script src="common.js"></script>
+<script>
+$("#hdr").innerHTML = header();
+$("#map").innerHTML = mapnav("publicar.html");
+// Simulamos que la cuenta logueada es la autora de tres builds reales del juego.
+const MINE = COMM.slice(3, 6).map((c, i) => ({ ...c, done: i === 2 }));
+const st = { logged: false, pick: 0, tags: new Set() };
+
+function render() {
+  const head = `<a href="index.html" style="font-size:13px;text-decoration:none">← Builds</a>
+    <div style="display:flex;flex-direction:column;gap:6px"><h1>SUBÍ TU BUILD</h1>
+    <p style="margin:0;color:var(--text-2);max-width:640px">Traemos las builds que publicaste en el juego. Como salen de tu cuenta de Steam, queda probado que son tuyas.</p></div>
+    <div class="how"><div><b>1</b>Entrás con Steam.</div><div><b>2</b>Elegís una de tus builds del juego.</div><div><b>3</b>Le sumás etiquetas y una línea. Listo.</div></div>`;
+  if (!st.logged) {
+    $("#app").innerHTML = head + `<section class="panel sec" style="align-items:flex-start">
+      <h2>Primero entrá con Steam</h2>
+      <p style="margin:0;color:var(--text-2)">Sin cuenta podés ver y copiar builds. Para subir necesitamos saber quién sos. Sólo guardamos tu ID, nombre y foto.</p>
+      <button type="button" class="btn" id="login" style="background:var(--text);color:var(--ink);font-weight:600;height:48px">Entrar con Steam</button>
+    </section>`;
+    return;
+  }
+  const b = MINE[st.pick];
+  $("#app").innerHTML = head + `
+    <section class="panel sec">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><h2>1 · Elegí una de tus builds del juego</h2><span class="muted" style="font-size:12px">${MINE.length} publicadas por tu cuenta</span></div>
+      <ul class="mine">${MINE.map((m, i) => `<li><button type="button" data-pick="${i}" class="${i === st.pick ? "on" : ""}">
+        <img src="${D.heroes["6"].img}" alt="" width="40" height="40" style="border-radius:8px;object-fit:cover">
+        <span style="flex:1;min-width:0"><b style="font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(m.name)}</b><span class="muted" style="font-size:12px">Abrams · ID ${m.id} · versión ${m.ver} · cambiada hace ${daysAgo(m.upd)} días</span></span>
+        <span style="display:flex;gap:4px">${keyItems(m.cats).map((id) => itemTile(id, 28)).join("")}</span>
+        <span class="st ${m.done ? "done" : ""}">${m.done ? "Ya subida" : "Nueva"}</span></button></li>`).join("")}</ul>
+      <details class="muted" style="font-size:13px"><summary style="cursor:pointer">¿No aparece? Pegá el ID</summary>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><label class="field" style="max-width:200px"><span class="sr">ID</span><input placeholder="ej.: ${COMM[0].id}"></label><button type="button" class="btn">Buscar</button></div>
+        <p style="margin:8px 0 0">Si la build es de otra cuenta, podés guardarla en tus builds pero no publicarla a tu nombre.</p></details>
+    </section>
+
+    <section class="panel sec">
+      <h2>2 · Lo que el juego no tiene</h2>
+      <div class="muted" style="font-size:12px">Estilo calculado: <b style="color:var(--text)">${styleOf(b.cats)}</b> · ${fmt(sumCost([...new Set(b.cats.flatMap((c) => c.items))]))} almas · ${b.cats.length} categorías</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${["Principiantes", "Línea agresiva", "Contra espíritu", "Contra arma", "Tanque"].map((t) => `<button type="button" class="chip ${st.tags.has(t) ? "on" : ""}" data-tag="${t}" aria-pressed="${st.tags.has(t)}">${t}</button>`).join("")}</div>
+      <label class="muted" style="display:flex;flex-direction:column;gap:6px;font-size:12px">Para qué sirve (una o dos líneas)<textarea rows="3">${esc(b.desc.slice(0, 200))}</textarea></label>
+      <label style="display:flex;gap:10px;align-items:center;font-size:13px;color:var(--text-2)"><input type="checkbox" checked style="width:18px;height:18px"> Mantenerla al día: si la cambiás en el juego, se actualiza acá</label>
+    </section>
+
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <a class="btn pri" href="ficha.html?b=c-${b.id}" style="height:48px">Publicar en Vestigo</a>
+      <button type="button" class="btn ghost" id="logout">Ver sin sesión</button>
+      <span class="muted" style="font-size:12px">El % de victoria aparece cuando junta partidas suficientes.</span>
+    </div>`;
+}
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("#login,#logout,[data-pick],[data-tag]");
+  if (!t) return;
+  if (t.id === "login") st.logged = true;
+  if (t.id === "logout") st.logged = false;
+  if (t.dataset.pick) st.pick = +t.dataset.pick;
+  if (t.dataset.tag) st.tags.has(t.dataset.tag) ? st.tags.delete(t.dataset.tag) : st.tags.add(t.dataset.tag);
+  render();
+});
+render();
+</script>
+</body>
+</html>

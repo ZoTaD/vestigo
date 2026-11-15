@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useCopy, useLang } from "./i18n";
 import { LANGS, routeUrl, type PzTab, type Route } from "./route";
-import { metaFor, ogImageUrl } from "./prerender";
+import { BUILD_NAME_SEP, metaFor, ogImageUrl } from "./prerender";
 import { editions } from "./deadlockNewsData";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { buildHeroes, PUBLISHED_BAND as DL_PUBLISHED_BAND } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
+import { loadHeroCommunityBuilds, peekHeroCommunityBuilds } from "./deadlockCommunityBuilds";
 import { LEAGUES } from "./poe2EconomyData";
 import { EDITIONS as P2_EDITIONS } from "./poe2PatchesData";
 import { loadIndex as loadP2Index, peekIndex as peekP2Index } from "./poe2EncyclopediaData";
@@ -115,6 +116,16 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
       return item?.name ?? null;
     }
     if (route.dlSection === "patches") return editions.find((e) => e.slug === route.detail)?.title ?? null;
+    // Builds (2026-11-15): el héroe de la biblioteca, o "<build>␟<héroe>" en la ficha (ver `metaFor`).
+    if (route.dlSection === "builds") {
+      const [slug, buildId] = route.detail.split("/");
+      const id = dlHeroSlugs.toId.get(slug);
+      const hero = id ? buildHeroes(DL_PUBLISHED_BAND, lang).find((h) => String(h.heroId) === id)?.name : undefined;
+      if (!hero) return null;
+      if (!buildId) return hero;
+      const b = peekHeroCommunityBuilds(Number(id))?.builds.find((x) => String(x.id) === buildId);
+      return `${b?.name || `Build #${buildId}`}${BUILD_NAME_SEP}${hero}`;
+    }
     return null;
   }
   if (route.view === "poe2") {
@@ -304,6 +315,15 @@ export default function PageMeta({ route }: { route: Route }) {
       let vivo = true;
       loadVhIndex().then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
       return () => { vivo = false; };
+    }
+    // Y para la ficha de una build, con las builds de su héroe.
+    if (route.view === "deadlock" && route.dlSection === "builds" && route.detail?.includes("/")) {
+      const heroId = Number(dlHeroSlugs.toId.get(route.detail.split("/")[0]));
+      if (Number.isFinite(heroId) && peekHeroCommunityBuilds(heroId) === undefined) {
+        let vivo = true;
+        loadHeroCommunityBuilds(heroId).then(() => vivo && apply(dlDetailName(route, lang)), () => undefined);
+        return () => { vivo = false; };
+      }
     }
     // Y para una ficha de Diablo II, con el índice de su wiki.
     if (route.view === "d2r" && route.detail && !peekD2Index()) {

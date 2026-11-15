@@ -1,10 +1,13 @@
+import { deadlockApiGameBuilds, handleBuilds } from "./builds/routes";
+import { d1Store as d1BuildStore } from "./builds/store";
 import { d1PoolBackup, loadPool } from "./dle/pool";
 import { handleDle, runDaily } from "./dle/routes";
 import { d1Store } from "./dle/store";
 import { accountIdOf, checkAuthBody, claimedSteamId, isValidResponse, loginUrl, safeReturn, STEAM_OPENID } from "./steam";
 
 /**
- * La API de vestigo.gg: el login con Steam y el Deadlockdle (`dle/`).
+ * La API de vestigo.gg: el login con Steam, el Deadlockdle (`dle/`) y las
+ * builds subidas a Vestigo (`builds/`).
  *
  * Netlify le reenvía `vestigo.gg/api/*` (ver `netlify.toml`), así que para el
  * navegador todo pasa en nuestro dominio: la cookie es nuestra y no hay CORS.
@@ -21,6 +24,7 @@ export interface Env {
   /** El pozo del Deadlockdle, publicado con el sitio. */
   POOL_URL: string;
   DLE_LIMIT?: RateLimit;
+  BUILDS_LIMIT?: RateLimit;
 }
 
 const SESSION_COOKIE = "vg_session";
@@ -49,6 +53,18 @@ export default {
           limit: env.DLE_LIMIT ? async (key) => (await env.DLE_LIMIT!.limit({ key })).success : undefined,
         });
         if (dle) return dle;
+      }
+      if (url.pathname === "/api/builds" || url.pathname.startsWith("/api/builds/")) {
+        const steamId = await sessionSteamId(req, env);
+        const builds = await handleBuilds(req, url, {
+          store: d1BuildStore(env.DB),
+          accountId: steamId ? accountIdOf(steamId) : null,
+          gameBuilds: deadlockApiGameBuilds(),
+          now: Date.now(),
+          siteOrigin: env.SITE_ORIGIN,
+          limit: env.BUILDS_LIMIT ? async (key) => (await env.BUILDS_LIMIT!.limit({ key })).success : undefined,
+        });
+        if (builds) return builds;
       }
       return json({ error: "not_found" }, 404);
     } catch (err) {

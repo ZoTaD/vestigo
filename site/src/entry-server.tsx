@@ -4,6 +4,7 @@ import * as allAreas from "./areas";
 import { provideAreas } from "./areasRegistry";
 import { VALHEIM_TABS, type Route } from "./route";
 import { loadBuilds } from "./deadlockBuildsData";
+import { loadBuildsIndex, loadHeroCommunityBuilds } from "./deadlockCommunityBuilds";
 import { loadMastery } from "./deadlockMasteryData";
 import { loadDetail } from "./deadlockItemsData";
 import { loadRanks } from "./deadlockRanksData";
@@ -110,6 +111,12 @@ async function preload(route: Route): Promise<void> {
     ]);
   }
   if (route.dlSection === "heroes") await quiet(loadHeroKit());
+  // Builds (2026-11-15): la portada lleva el índice; la biblioteca y la ficha, las builds del héroe y sus
+  // habilidades (de las builds medidas), así el HTML sale con la lista entera.
+  if (route.dlSection === "builds") {
+    const id = Number(heroSlugs.toId.get((route.detail ?? "").split("/")[0]));
+    await Promise.all([quiet(loadBuildsIndex()), ...(Number.isFinite(id) ? [quiet(loadHeroCommunityBuilds(id)), quiet(loadBuilds())] : [])]);
+  }
   if (route.dlSection === "ranks") await quiet(loadRanks());
   if (route.dlSection === "street-brawl") await quiet(loadBand(BRAWL));
   if (route.dlSection === "items" && route.detail) await quiet(loadDetail());
