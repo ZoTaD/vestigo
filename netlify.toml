@@ -202,6 +202,20 @@
   status = 200
   force = true
 
+# Las builds de la comunidad (2026-11-15), del mismo Worker. Dos reglas: la
+# del comodín no toma `/api/builds` a secas (`GET ?hero=` y `POST`).
+[[redirects]]
+  from = "/api/builds"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/builds"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/builds/*"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/builds/:splat"
+  status = 200
+  force = true
+
 [[redirects]]
   from = "/assets/*"
   to = "/404.html"
