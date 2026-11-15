@@ -757,6 +757,16 @@
   color: var(--text-dim);
   font-size: 0.9rem;
 }
+.dl-bl-author {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+}
+.dl-bl-author:hover,
+.dl-bl-author:focus-visible {
+  text-decoration-color: currentColor;
+}
 .dl-bl-by b {
   color: var(--text);
 }
