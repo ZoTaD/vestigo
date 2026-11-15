@@ -94,8 +94,13 @@ lado (~0,6 GB contados en el pico):
 | con Builds | 214–232 | ~5,0–5,5 GB | 59.376 |
 
 El pico varió entre corridas por lo que corría al lado (la API local en la
-segunda). El sitio ya estaba en ~4,4 GB sin este cambio, lejos de los 2,3 GB de
-referencia del 2026-10-06: conviene mirarlo aparte, el tope es 6 GB.
+segunda). Esas cifras son RAM del proceso, no heap.
+
+Medición del heap (2026-11-15, con `main` mezclado, `NODE_OPTIONS` igual a
+`deploy.yml`): `vite build` llega a **2,8 GB de heap** (tope
+`--max-old-space-size=6144`) y **4,2 GB de RAM** (el runner `ubuntu-latest`
+de un repo público tiene 16 GB). 304 s en total, 59.374 rutas prerenderizadas
+en 175 s, `check-links` sin enlaces rotos. Hay margen.
 
 `npm run perf` (presupuesto: 250 pedidos, 200 imágenes, 3.000 nodos):
 
