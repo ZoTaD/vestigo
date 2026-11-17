@@ -1,308 +1,145 @@
 import { CONTACT_EMAIL, LegalPage, Section } from "./Legal";
 
 /**
- * Every claim here was checked against the code before it was written
- * (rewritten 2026-09-25, when TFT left the repo and with it the Riot API, the
- * Supabase database and the Cloudflare Worker this policy used to describe).
+ * Rewritten 2026-11-17: shorter, in plain words, and true to what the site does
+ * today. The earlier version still said "no accounts and no database" after
+ * Steam sign-in, the Deadlockdle ranking and uploaded builds shipped.
  *
- * The site is static: Netlify serves files and nothing else. There is no
- * server of ours that receives a search, and no database. What reaches a third
- * party does so from the visitor's own browser:
+ * What the code actually does, so this stays checkable:
  *
- * - the Deadlock player pages call api.deadlock-api.com directly
- *   (`deadlockMatch.ts` and friends), including the Steam name typed into the
- *   search (`players/steam-search`);
- * - Steam avatars load from the URLs those API responses carry; PoE2 item
- *   icons from web.poecdn.com (the URLs in games/poe2/data); hero ability
- *   clips and the Vestigo News fonts from deadlock-api's bucket. Country flags
- *   and every other Deadlock image are served by the site itself (2026-09-25);
- * - Google Analytics loads only after acceptance (`analytics.ts`).
+ * - The site itself is static files. The player search on the Deadlock pages
+ *   goes from the visitor's browser straight to api.deadlock-api.com; we never
+ *   see it. Images load from Steam (avatars), Grinding Gear Games (PoE2 icons)
+ *   and deadlock-api's bucket (ability clips, News fonts).
+ * - Our API (`api/`, a Worker with a database) stores, for people who sign in
+ *   with Steam: the Steam ID, public name and avatar (`users`), a hash of the
+ *   session token that lasts 30 days and is deleted when it expires or on sign
+ *   out (`sessions`), Deadlockdle plays and guesses with their times
+ *   (`dle_plays`, `dle_guesses`), and the builds a player uploads (`builds`:
+ *   account, name, tags, note — public, deletable by their owner).
+ * - Google Analytics loads only after consent (`analytics.ts`).
+ * - Valheim and Stardew save files are read in the browser and never uploaded.
+ * - localStorage keys are checked by `test/privacyStorage.test.ts`.
  *
- * Valheim save files are read in the browser (`SaveLoader.tsx`, a Worker) and
- * never uploaded.
- *
- * The browser keeps keys of its own in localStorage — vestigo.lang,
- * vestigo.consent, vestigo.lastProfile, vestigo.dlItemsView, the Valheim
- * Planner's two, Stardew's sdv-cc-v1 (checklist) and sdv-save-v1 (the save
- * reader, only what the page shows) and the other game tools' progress — and
- * two in sessionStorage. The policy no longer states a count (2026-10-23): the
- * game tools kept adding keys and the number drifted. `test/privacyStorage.test.ts`
- * still lists the site-wide keys and checks the policy names the Stardew ones.
- * If any of the above changes, this document changes in the same commit.
+ * If any of this changes, this page changes in the same commit.
  */
 export default function Privacy() {
   return (
-    <LegalPage
-      title="Privacy Policy"
-      intro="What Vestigo collects, why, and what it never touches."
-    >
-      <Section heading="In short">
+    <LegalPage title="Privacy Policy" intro="What we collect, why, and what you can do about it.">
+      <Section heading="Who we are">
         <p>
-          Vestigo has no user accounts and never asks for a password or a payment method. It
-          has no database and no server of its own that receives what you type: the site is a
-          set of files, and the statistics on it are built in advance from public game data.
-        </p>
-        <p>
-          When you look up a Deadlock player, your browser asks deadlock-api.com, an
-          independent public service, for that account's public match data. We do not receive
-          the search or its results.
-        </p>
-        <p>
-          We use Google Analytics to count visits, and only if you accept it. Until you do, no
-          analytics script is loaded and no cookie is set — declining and not answering amount
-          to the same thing. You can change that decision whenever you like from the link in
-          the footer.
+          Vestigo is made by a small team of players who build stats, guides and tools for the
+          games we play. We are not affiliated with any game publisher. If you have a question
+          about this policy, write to us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
       </Section>
 
-      <Section heading="Who we are">
-        <p>
-          Vestigo is an independent statistics, reference and post-match analysis site for
-          video games. It is operated by an individual developer and is not affiliated with,
-          endorsed by, or connected to the companies that make the games it covers. For
-          anything in this policy, write to{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
-        </p>
+      <Section heading="The short version">
+        <ul>
+          <li>You can use the whole site without an account.</li>
+          <li>
+            If you sign in with Steam, we keep your public Steam ID, name and avatar, and what you
+            do on the features that need an account.
+          </li>
+          <li>Analytics only runs if you say yes.</li>
+          <li>We don&apos;t sell your data, and there are no ads on Vestigo today.</li>
+        </ul>
       </Section>
 
       <Section heading="What we collect">
-        <h3 className="legal-subheading">Searches and files you use on the site</h3>
+        <h3 className="legal-subheading">When you browse</h3>
         <p>
-          On the Deadlock player pages you can type a Steam name or open an account. Your
-          browser sends that name, or the account's public identifier, straight to
-          deadlock-api.com to find the account and load its public profile, rank and match
-          history. We never see it.
+          Like any website, our hosting providers receive basic request data (IP address, time,
+          browser) to deliver pages and stop abuse. We don't use it to build profiles.
         </p>
         <p>
-          On the Valheim map you can open your own world and character files to see your
-          explored map. They are read inside your browser and are never uploaded anywhere.
+          Player searches on the Deadlock pages go from your browser straight to deadlock-api.com,
+          an independent community service that publishes public match data. We never see what
+          you search for.
         </p>
         <p>
-          On the Stardew Valley save reader you can open your own save file. It is read inside
-          your browser and is never uploaded anywhere; your browser keeps only what the page
-          shows, until you choose to forget it.
+          Save files you open on the Valheim map or the Stardew Valley save reader are read in
+          your browser and never uploaded.
         </p>
 
-        <h3 className="legal-subheading">Signing in with Steam</h3>
+        <h3 className="legal-subheading">If you sign in with Steam</h3>
         <p>
-          Signing in is optional. When you choose &ldquo;Sign in&rdquo;, Steam asks you to confirm
-          on its own site and sends us back only your public Steam account number; we never see
-          your Steam password or email. We then ask Steam for your public name and profile picture
-          and keep those three things, plus two cookies that keep you signed in for 30 days. We
-          store only a fingerprint of the session code, not the code itself. Signing out deletes
-          the session.
+          Signing in is optional. Steam confirms who you are on its own site and sends us your
+          public Steam ID; we never see your password or email. We then keep:
         </p>
-        <p>
-          If you play Deadlockdle while signed in, we keep each guess with the time it was made, so
-          the daily ranking can show who solved it in the fewest guesses and fastest, and can spot
-          unfair play. Your name and picture appear in that ranking.
-        </p>
-
-        <h3 className="legal-subheading">Information stored in your browser</h3>
-        <p>
-          Items of local storage, each one there for something you use: your language choice, so
-          the site opens in the language you picked; your answer to the analytics question, so we
-          stop asking; the last Deadlock profile you opened (its public account number and name),
-          so the home page can offer it again; whether you prefer the Deadlock items page as a shop
-          or as a list; the list you build in the Valheim Planner, with the items you marked as
-          already owned; on Stardew Valley, the Community Center bundles you tick and, if you open
-          a save file in the save reader, what the page shows of it (never the file itself), until
-          you choose to forget it; after you sign in, your Steam name and picture, so the top bar
-          shows them right away; your Deadlockdle games when you play without signing in; and the
-          progress you keep in the other game tools, such as
-          checklists and planners. None of them is sent to us, and clearing your browser data
-          removes all of them.
-        </p>
-        <p>
-          The site also keeps two short-lived values in session storage, which your browser
-          deletes when you close the tab: a search typed in the top bar, carried to the page
-          that answers it, and a note that stops the page from reloading itself twice in a row
-          after we publish an update.
-        </p>
-        <p>
-          Cookies are set only if you accept analytics. In that case Google Analytics sets its
-          own cookies (named <code>_ga</code> and similar) to recognise a returning browser and
-          to keep a visit together as one session. If you decline, or have not answered, no
-          cookie is set at all.
-        </p>
-
-        <h3 className="legal-subheading">Analytics, if you accept it</h3>
-        <p>
-          When you accept, we load Google Analytics 4. It reports which pages are opened, in
-          what order, for how long, roughly where in the world the visit came from, and what
-          kind of device and browser it used. Your IP address reaches Google as part of that
-          request; Google states that it truncates IP addresses in the EU before storing them,
-          and we do not receive yours. We never send Google the names or accounts you search
-          for.
-        </p>
-        <p>
-          We use it for one thing: to see which parts of the site people actually use, so we
-          know what to build next. It does not personalise anything you see, and we do not run
-          advertising on Vestigo today. If that ever changes, this page changes first.
-        </p>
-
-        <h3 className="legal-subheading">Technical information</h3>
-        <p>
-          Our hosting provider processes standard request metadata — IP address, timestamp,
-          and user agent — as any web server does, for delivery and abuse prevention. We do not
-          build profiles from it.
-        </p>
-
-        <h3 className="legal-subheading">What we do not collect</h3>
-        <p>
-          No accounts, passwords, or authentication tokens. No payment or financial data. No
-          email address, name or date of birth. We do not buy data about you, and we run no
-          advertising or cross-site tracking identifiers of our own.
-        </p>
-      </Section>
-
-      <Section heading="Why we use it">
         <ul>
+          <li>your Steam ID, public name and profile picture;</li>
+          <li>a session that keeps you signed in for 30 days (we store a hash of it, not the session itself);</li>
           <li>
-            To show the statistics, tier lists, encyclopedias and maps on the site, which are
-            built from public game data and contain no information about you.
+            your Deadlockdle games and guesses, with their times, for the daily ranking (your
+            name and picture appear there);
           </li>
-          <li>
-            To remember the few preferences listed above, on your own device, so the site
-            behaves the way you left it.
-          </li>
-          <li>
-            If you accepted analytics: to count visits and see which pages get used, so we know
-            what to work on.
-          </li>
+          <li>the builds you upload, with their name, tags and note. These are public.</li>
         </ul>
+
+        <h3 className="legal-subheading">Analytics, if you accept</h3>
         <p>
-          We do not use any of this to advertise to you, and we do not sell or rent it to
-          anyone.
+          With your consent we use Google Analytics to see which pages get used. Google sets its
+          own cookies (<code>_ga</code> and similar). If you decline or don't answer, the script
+          never loads and no cookie is set. You can change your answer any time from the link in
+          the footer.
+        </p>
+
+        <h3 className="legal-subheading">Stored on your device</h3>
+        <p>
+          Some features remember things in your browser&apos;s local storage: your language, your
+          analytics answer, the last Deadlock profile you opened, how you like the items page, your
+          Valheim Planner list, the Stardew Valley Community Center bundles you tick and, if you
+          use the save reader, what the page shows of it (never the file itself), your Deadlockdle
+          games when you play without signing in, and progress in the other game tools. None of
+          them is sent to us, and clearing your browser data removes them.
         </p>
       </Section>
 
-      <Section heading="Legal bases">
+      <Section heading="How we use it">
         <p>
-          Where the GDPR or the UK GDPR applies, the request metadata our hosting provider
-          handles rests on our legitimate interest (Article 6(1)(f)) in delivering the site
-          and keeping it safe. The preferences stored in your browser are there because the
-          feature you used needs them, and they never leave your device.
-        </p>
-        <p>
-          For analytics and the cookies it sets, the basis is your consent
-          (Article 6(1)(a)), asked for before anything loads. You can withdraw it at any time
-          from the footer, as easily as you gave it; withdrawing stops further collection and
-          clears the cookies, though it cannot undo what was already counted.
-        </p>
-      </Section>
-
-      <Section heading="What we store, and for how long">
-        <p>
-          Nothing about you on our side: Vestigo has no database, and no search or file you
-          use on the site reaches us. What your browser stores stays there until you clear it.
-        </p>
-        <p>
-          Analytics data, where you consented to it, is held by Google under the retention
-          period set on our property and is deleted by Google when that period elapses. We keep
-          no copy of it ourselves: we read the reports in Google's interface and nothing is
-          exported.
+          To run the features you use, keep you signed in, show the Deadlockdle ranking and the
+          builds people share, and, with analytics, to know what to improve. That&apos;s all.
         </p>
       </Section>
 
       <Section heading="Who else is involved">
         <ul>
-          <li>
-            <strong>deadlock-api.com</strong> — an independent community service that publishes
-            public Deadlock match data. Your browser contacts it directly on the Deadlock pages
-            that show live figures, hero ability clips or Vestigo News, and on the player pages
-            it receives the name or account you look up. Its handling of that request is
-            governed by its own policies.
-          </li>
-          <li>
-            <strong>Image servers</strong> — your browser loads profile pictures from Steam on
-            the Deadlock player and ladder pages, and item icons from Grinding Gear Games'
-            servers on the Path of Exile 2 pages. As with any image, the request carries your IP
-            address; nothing about your search is sent there.
-          </li>
-          <li>
-            <strong>Our hosting provider</strong> — an infrastructure company that serves the
-            site's files on our behalf. We name providers by category here rather than
-            individually; if you need to know which company it is, ask us and we will tell you.
-          </li>
-          <li>
-            <strong>Google (Google Analytics)</strong> — only if you accepted analytics. Your
-            browser then loads Google's script and reports the pages you open, as described
-            above. If you declined, or have not answered, your browser never contacts Google
-            and this entry does not apply to you. Google's handling of that data is governed by
-            its own privacy policy.
-          </li>
+          <li>Our hosting and infrastructure providers, which serve the site and run our database.</li>
+          <li>Steam, for signing in and for profile pictures.</li>
+          <li>deadlock-api.com, for public Deadlock match data.</li>
+          <li>Google, only if you accept analytics.</li>
         </ul>
         <p>
-          We do not sell your data, and we do not share it with advertisers or data brokers.
-          Apart from the parties named above, no one receives it.
+          Each handles its part under its own policy. Some of these servers are outside your
+          country, including in the United States.
         </p>
       </Section>
 
-      <Section heading="Where data is processed">
+      <Section heading="How long we keep it">
         <p>
-          Our hosting provider serves the site from data centres in several countries, and the
-          third parties above run their own servers, so a request may be processed outside the
-          country you are in — including outside the European Economic Area. If you accepted
-          analytics, Google processes that data in the United States under its own transfer
-          safeguards; declining keeps your visit out of it entirely.
-        </p>
-      </Section>
-
-      <Section heading="Security">
-        <p>
-          Vestigo holds no passwords, payment data or database of visitors, which leaves very
-          little that a breach could expose. All traffic is served over HTTPS. No system is
-          perfectly secure, and we cannot guarantee absolute security.
+          Sessions expire after 30 days, or when you sign out. Your account, Deadlockdle history
+          and builds stay until you delete them or ask us to. You can delete your builds yourself;
+          for everything else, email us. Analytics data follows Google&apos;s retention settings.
         </p>
       </Section>
 
       <Section heading="Your rights">
         <p>
-          Depending on where you live, you may have the right to access the personal data we
-          hold about you, to receive a copy of it, to have it corrected or deleted, to object to
-          or restrict our processing of it, and to complain to your local data protection
-          authority.
+          You can ask us for a copy of your data, or to correct or delete it, by emailing{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Depending on where you live
+          (for example under the GDPR or California&apos;s privacy laws), you may have further
+          rights, including complaining to your local data protection authority. We don&apos;t
+          sell personal information.
         </p>
         <p>
-          If you are a California resident, the CCPA as amended gives you the right to know what
-          personal information we collect, use, and disclose, the right to delete it, the right
-          to correct it, and the right not to be discriminated against for exercising those
-          rights. We do not sell personal information, and we do not share it for cross-context
-          behavioural advertising as that term is defined by the CCPA; we have not done either
-          in the preceding twelve months. Analytics runs only with your consent and is not used
-          to advertise to you — and in any case, declining it in the footer stops the collection
-          entirely.
-        </p>
-        <p>
-          To exercise any of these, write to{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Because we keep no accounts
-          and no database, the data stored in your browser is in your hands: clearing it
-          removes it. For the public match data deadlock-api.com publishes about a Deadlock
-          account, contact that service directly. We will respond within the period the
-          applicable law requires.
+          Vestigo is made for a general gaming audience and isn&apos;t meant for children under 13.
         </p>
       </Section>
 
-      <Section heading="Children">
+      <Section heading="Changes">
         <p>
-          Vestigo is not directed at children under 13, and we do not knowingly collect
-          personal data from them. If you believe a child's data has reached us, write to us
-          and we will remove it.
-        </p>
-      </Section>
-
-      <Section heading="Changes to this policy">
-        <p>
-          If what we collect or how we use it changes, this page changes with it and the date at
-          the top is updated. Material changes will be summarised here rather than made quietly.
-        </p>
-      </Section>
-
-      <Section heading="Contact">
-        <p>
-          Questions, requests, or complaints:{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+          When we change how we handle data, we update this page and the date at the top.
         </p>
       </Section>
     </LegalPage>

@@ -13,10 +13,10 @@ import SectionHead from "./SectionHead";
 /** One address, named once. Change it here and both documents follow. */
 export const CONTACT_EMAIL = "zeitristech@gmail.com";
 
-/** The jurisdiction the operator is based in. */
+/** The jurisdiction we are based in. */
 export const GOVERNING_LAW = "Argentina";
 
-export const LAST_UPDATED = "25 September 2026";
+export const LAST_UPDATED = "17 November 2026";
 
 export function LegalPage({
   title,

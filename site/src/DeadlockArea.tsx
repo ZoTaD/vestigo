@@ -25,6 +25,8 @@ import "./styles/deadlock-cns.css";
 // El estilo "Cartel" (2026-09-30), el que eligió ZoTaD: papel crema, cartas con cinta.
 import "./styles/deadlock-cartel.css";
 import "./styles/deadlock-mixto.css";
+import "./styles/deadlock-fondo.css";
+import DeadlockFondo from "./DeadlockFondo";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
 
@@ -144,6 +146,8 @@ export default function DeadlockArea({
           ))}
         </nav>
       </div>
+      {/* La capa de fondo va justo debajo de las pestañas: las barras quedan negras. */}
+      <DeadlockFondo route={route} />
       {/* Saltar a una pestaña que todavía no se bajó muestra esto medio segundo;
           la barra de pestañas de arriba queda donde está. */}
       <Suspense fallback={<div className="area-loading" aria-busy="true" />}>
@@ -208,6 +212,8 @@ export default function DeadlockArea({
         />
       )}
       </Suspense>
+      {/* El skyline que cierra la página: va siempre. */}
+      <div className="dl-horizonte" aria-hidden="true" />
     </>
   );
 }

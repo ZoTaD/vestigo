@@ -1,143 +1,87 @@
 import { CONTACT_EMAIL, GOVERNING_LAW, LegalPage, Section } from "./Legal";
 
+/**
+ * Rewritten 2026-11-17: shorter and in plain words. Covers what the site has
+ * today — Steam sign-in, uploaded builds, live data — which the earlier text
+ * predated (it even said the site never shows live games).
+ */
 export default function Terms() {
   return (
-    <LegalPage
-      title="Terms of Service"
-      intro="The rules for using Vestigo, and the limits of what it promises."
-    >
-      <Section heading="Accepting these terms">
+    <LegalPage title="Terms of Service" intro="The rules for using Vestigo.">
+      <Section heading="About Vestigo">
         <p>
-          By using Vestigo you agree to these terms. If you do not agree with them, please do
-          not use the service. They apply to the website and to any companion application we
-          publish under the same name.
+          Vestigo is a fan-made site with stats, guides and tools for video games, run by a small
+          team. By using it you agree to these terms. If you don&apos;t, please don&apos;t use the
+          site.
         </p>
       </Section>
 
-      <Section heading="What Vestigo is">
+      <Section heading="Not affiliated with game publishers">
         <p>
-          Vestigo is an independent statistics, reference and analysis service for video games.
-          It reads match data that has already been played and presents it back — aggregate
-          reports about what is working in the current meta, and analysis of an individual
-          account's past matches — alongside reference material built from each game's own
-          files, such as encyclopedias, maps and planners.
-        </p>
-        <p>
-          Everything Vestigo produces is retrospective. It does not read live game state, does
-          not track or predict opponents during a match, and does not tell you what to do while
-          a game is running. It is a study tool for between games.
+          Vestigo isn&apos;t affiliated with, endorsed by or sponsored by Valve or any other company
+          whose games it covers. Game names, artwork and other game content belong to their
+          owners. Some images come from community wikis under Creative Commons licences and are
+          credited where they appear. Using Vestigo doesn&apos;t change your obligations under each
+          game&apos;s own terms.
         </p>
       </Section>
 
-      <Section heading="Not affiliated with the game publishers">
+      <Section heading="Your account">
         <p>
-          Vestigo is not affiliated with, endorsed by, or sponsored by Valve Corporation,
-          Grinding Gear Games, Iron Gate AB, Coffee Stain Publishing, or any other company whose
-          games it covers. All game names, logos, and images belong to their respective owners.
+          Signing in with Steam is optional. You&apos;re responsible for what happens under your
+          account, and we may suspend or remove accounts that break these terms.
         </p>
       </Section>
 
-      <Section heading="The game publishers' terms also apply">
+      <Section heading="What you share">
         <p>
-          Using Vestigo does not release you from the terms of service of the games it covers.
-          Nothing here permits anything those terms forbid, and where they conflict with these,
-          theirs govern your conduct in their games.
+          When you upload a build or appear in a ranking, that content is public. You keep the
+          rights to what you upload and let us show it on Vestigo. Don&apos;t upload anything
+          offensive, misleading or that isn&apos;t yours to share; we may remove content that
+          breaks these rules.
         </p>
       </Section>
 
       <Section heading="Acceptable use">
-        <p>You agree not to:</p>
+        <p>Please don&apos;t:</p>
         <ul>
-          <li>
-            Use the service to harass, dox, or target another player, or to compile information
-            about a specific person for any purpose other than reviewing your own play.
-          </li>
-          <li>
-            Scrape, mirror, or bulk-download the site, or place automated load on it beyond
-            ordinary use.
-          </li>
-          <li>
-            Attempt to gain access to parts of the service, its database, or its credentials
-            that are not made public.
-          </li>
-          <li>
-            Resell or redistribute the data or analysis as your own product, or present it as
-            coming from a game publisher.
-          </li>
-          <li>Use the service for anything unlawful, or in a way that breaks these terms.</li>
+          <li>use the site to harass or target other players;</li>
+          <li>scrape it or put unusual automated load on it;</li>
+          <li>try to access parts of the service that aren&apos;t public;</li>
+          <li>cheat the Deadlockdle or any other ranking;</li>
+          <li>resell our data or analysis as your own.</li>
         </ul>
+      </Section>
+
+      <Section heading="The data on the site">
         <p>
-          We may restrict or withdraw access where use breaks these rules or threatens the
-          service's stability.
+          Our numbers come from real matches and public game data, and we work to keep them
+          right, but they can be incomplete or out of date. They describe what has happened, not
+          what will. Some features depend on third-party services and may change or stop working
+          for reasons outside our control.
         </p>
       </Section>
 
-      <Section heading="Availability">
+      <Section heading="No warranty and limits of liability">
         <p>
-          Vestigo depends on data provided by third parties, such as the public deadlock-api.com
-          service, and on each game's own files. That dependency means features can change or stop working for reasons outside our
-          control — a rate limit, a policy change, or a game update. We may add, change, or
-          remove features at any time, and we do not guarantee uninterrupted availability.
+          Vestigo is provided &ldquo;as is&rdquo;, without warranties of any kind. To the extent
+          the law allows, we aren&apos;t liable for indirect or consequential damages from using
+          it. If you&apos;re a consumer, your statutory rights are not affected.
         </p>
       </Section>
 
-      <Section heading="Accuracy">
+      <Section heading="Changes">
         <p>
-          Every figure on this site is measured from real matches, and where a number rests on a
-          thin sample the site says so rather than dressing it up. Even so, statistics describe
-          what has happened; they do not promise what will. Nothing here is a guarantee of a
-          result in any game.
+          We may update these terms as the site changes. The date at the top shows the latest
+          version; using the site after a change means you accept it.
         </p>
       </Section>
 
-      <Section heading="Intellectual property">
+      <Section heading="Governing law and contact">
         <p>
-          The site's code, its written analysis, and the way it presents data are ours. Game
-          content — names, portraits, item icons, artwork, and the underlying match data —
-          belongs to the respective game publishers and is used to describe their games. Some
-          Valheim pictures come from the Valheim Wiki under the Creative Commons BY-SA licence,
-          and are credited where they appear.
-        </p>
-      </Section>
-
-      <Section heading="No warranty">
-        <p>
-          The service is provided "as is" and "as available", without warranties of any kind,
-          whether express or implied, including any implied warranty of merchantability, fitness
-          for a particular purpose, or non-infringement. We do not warrant that the service will
-          be uninterrupted, error-free, or that any figure it shows is complete.
-        </p>
-      </Section>
-
-      <Section heading="Limitation of liability">
-        <p>
-          To the fullest extent permitted by law, we are not liable for any indirect, incidental,
-          special, or consequential damages arising from your use of the service, nor for any
-          loss of data, profits, or rank. Nothing in these terms limits liability that cannot be
-          limited by law, including liability for fraud or for death or personal injury caused by
-          negligence. Where you are a consumer, your statutory rights are unaffected.
-        </p>
-      </Section>
-
-      <Section heading="Changes to these terms">
-        <p>
-          We may update these terms as the service changes. The date at the top of this page
-          shows when they were last revised, and continuing to use Vestigo after a change means
-          you accept the revised terms.
-        </p>
-      </Section>
-
-      <Section heading="Governing law">
-        <p>
-          These terms are governed by the laws of {GOVERNING_LAW}, where the operator is based,
-          without regard to conflict-of-law rules. If you are a consumer resident elsewhere, you
-          keep the protection of the mandatory consumer laws of your country of residence.
-        </p>
-      </Section>
-
-      <Section heading="Contact">
-        <p>
-          Questions about these terms: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+          These terms are governed by the laws of {GOVERNING_LAW}. If you live elsewhere as a
+          consumer, you keep the protections of your local law. Questions:{" "}
+          <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
       </Section>
     </LegalPage>
