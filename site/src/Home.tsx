@@ -1,38 +1,29 @@
+import type { CSSProperties, ReactNode } from "react";
 import heroesJson from "@deadlock/heroes.json";
 import { buildHeroes, patchMovers, PUBLISHED_BAND, type Hero } from "./deadlockData";
 import { buildItems as buildDlItems } from "./deadlockItemsData";
 import { heroes as heroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
-import { DL_BAND_NAMES } from "./deadlockBandNames";
 import { useCopy, useLang, useLocale } from "./i18n";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
-import vhMeta from "@valheim/meta.json";
+import type { Game } from "./Nav";
+import { GAME_LOGOS, logoFile } from "./gameGroups";
 import pzMeta from "@zomboid/meta.json";
-import sdMeta from "@stardew/meta.json";
 import c2Meta from "@cs2/meta.json";
 import c3Meta from "@coh3/meta.json";
 
-/** Las fichas de la enciclopedia de Valheim (sin biomas ni jefes, que son guías). */
-const VH_ENTRIES = Object.entries(vhMeta.counts).reduce((n, [k, v]) => (k === "biomes" || k === "bosses" ? n : n + v), 0);
-
 /**
- * La portada, desde el rediseño del 2026-09-06.
+ * La portada, desde el 2026-11-17: **oscura y para elegir juego** (maqueta A, elegida por ZoTaD).
  *
- * **Deja de ser un folleto y pasa a ser una puerta.** Antes: eslogan, párrafo,
- * dos cifras de vanidad y dos bloques con "Entrar". Nadie tenía nada para
- * hacer en el primer pantallazo. Ahora, en orden de lectura:
+ * Antes era papel claro con el lema "Every game leaves a trace", "Hoy en el meta", las herramientas y un panel por
+ * juego. Ahora, en orden de lectura:
  *
- * 1. El eslogan, a un tercio del tamaño.
- * 2. **"Hoy en el meta"**: cinco datos que cambian todos los días y enlazan a
- *    la página que los explica. Es el motivo de volver que la portada no tenía.
- * 3. Los juegos, con un botón que dice a dónde va.
+ * 1. "Pick a game" y una línea que dice qué hay.
+ * 2. Un mosaico con el arte de cada juego: Deadlock grande (el que más cambia día a día, con el mejor héroe del
+ *    momento y su color), el resto alrededor. Cada cuadro entero es el enlace.
+ * 3. "Hoy en Deadlock": los cuatro datos del día, cada uno a su ficha.
  *
- * El buscador de perfiles salió de la portada el 2026-10-12: sólo servía para
- * Deadlock y el sitio ya tiene seis juegos. Sigue en la barra y en Deadlock.
- *
- * Todo lo que muestra sale de los archivos que ya viajan en el bundle, así que
- * está en el HTML prerenderizado y no puede desviarse de las tier lists que
- * anuncia. Ver docs/design/2026-09-06-como-presentamos-los-datos-diseno.md §4.1.
+ * Todo lo que muestra sale de los archivos que ya viajan en el bundle, así que está en el HTML prerenderizado.
  */
 export default function Home({
   route,
@@ -44,34 +35,23 @@ export default function Home({
   const copy = useCopy();
   const { lang } = useLang();
   const locale = useLocale();
+  const p = copy.home.pick;
 
   const num = (x: number) => x.toLocaleString(locale);
   const pct = (x: number) =>
     `${(x * 100).toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
   const pts = (x: number) => x.toLocaleString(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-  /* --- Hoy en el meta: Deadlock ---------------------------------------- */
+  /* --- Deadlock: los datos del día --------------------------------------- */
   const heroes = buildHeroes(PUBLISHED_BAND, lang);
   const bestHero = heroes.reduce<Hero | null>((b, h) => (!b || h.winRate > b.winRate ? h : b), null);
-  const rising = patchMovers(heroes, 1).up[0] ?? null;
-  const mostPlayed = heroes.reduce<Hero | null>(
-    (b, h) => (!b || h.pickRate > b.pickRate ? h : b),
-    null
-  );
+  const movers = patchMovers(heroes, 2).up;
+  const mostPlayed = heroes.reduce<Hero | null>((b, h) => (!b || h.pickRate > b.pickRate ? h : b), null);
   const dlItems = buildDlItems(PUBLISHED_BAND, lang);
-  const bestValue = dlItems.reduce<(typeof dlItems)[number] | null>(
-    (b, i) => (!b || i.delta > b.delta ? i : b),
-    null
-  );
+  const bestValue = dlItems.reduce<(typeof dlItems)[number] | null>((b, i) => (!b || i.delta > b.delta ? i : b), null);
 
-  const bandName = DL_BAND_NAMES[lang][PUBLISHED_BAND];
-
-  /* --- Cifras del pie ---------------------------------------------------- */
-  const matchesRead = heroesJson.matches;
   const measuredAt = Date.parse(heroesJson.generatedAt);
-  const days = Number.isNaN(measuredAt)
-    ? null
-    : Math.max(0, Math.floor((Date.now() - measuredAt) / 86_400_000));
+  const days = Number.isNaN(measuredAt) ? null : Math.max(0, Math.floor((Date.now() - measuredAt) / 86_400_000));
   const freshness =
     days === null
       ? "—"
@@ -87,334 +67,196 @@ export default function Home({
     dlSection: "meta",
     detail: heroSlugs.toSlug.get(String(h.heroId)),
   });
+  const go = (to: Partial<Route>): Route => ({ ...route, detail: undefined, ...to }) as Route;
 
   return (
     <main className="home">
-      {/* Cabecera: el eslogan ------------------------------------------ */}
-      <section className="home-hero">
-        <div className="home-hero-text">
-          <p className="home-eyebrow">{copy.home.eyebrow}</p>
-          <h1 className="home-title">
-            {copy.home.title} <span className="home-title-break">{copy.home.titleBreak}</span>
-          </h1>
-          <p className="home-lead">{copy.home.lead}</p>
-        </div>
+      <section className="home-head">
+        <h1 className="home-title">{p.title}</h1>
+        <p className="home-lead">{p.lead}</p>
       </section>
 
-      {/* Hoy en el meta ------------------------------------------------- */}
+      <section className="home-grid" aria-label={copy.games.menu}>
+        <Tile
+          game="deadlock"
+          name={copy.games.deadlock}
+          to={go({ view: "deadlock", dlSection: "meta" })}
+          navigate={navigate}
+          note={p.notes.deadlock(num(heroesJson.matches))}
+          tag={p.updated(freshness)}
+          style={bestHero?.color ? ({ "--hero": bestHero.color } as CSSProperties) : undefined}
+          art={bestHero?.card ? <img className="home-tile-hero" src={bestHero.card} alt="" width={280} height={380} decoding="async" /> : null}
+          figures={[
+            bestHero && [pct(bestHero.winRate), p.winRateOf(bestHero.name)],
+            [num(heroesJson.matches), p.matches],
+          ]}
+        />
+        <Tile
+          game="valheim"
+          name={copy.games.valheim}
+          to={go({ view: "valheim", vhSection: "home" })}
+          navigate={navigate}
+          note={p.notes.valheim}
+          art={<img className="home-tile-emblem" src="/valheim/art/boss_eikthyr.webp" alt="" width={92} height={92} loading="lazy" decoding="async" />}
+        />
+        <Tile
+          game="zomboid"
+          name={copy.games.zomboid}
+          to={go({ view: "zomboid", pzSection: "home" })}
+          navigate={navigate}
+          note={p.notes.zomboid}
+          figures={[
+            [num(pzMeta.counts.items), copy.home.games.zomboidItems],
+            [num(pzMeta.counts.recipes + pzMeta.counts.buildRecipes), copy.home.games.zomboidRecipes],
+          ]}
+        />
+        <Tile
+          game="stardew"
+          name={copy.games.stardew}
+          to={go({ view: "stardew", sdSection: "home" })}
+          navigate={navigate}
+          note={p.notes.stardew}
+        />
+        <Tile
+          game="cs2"
+          name={copy.games.cs2}
+          to={go({ view: "cs2", c2Section: "cases" })}
+          navigate={navigate}
+          note={p.notes.cs2}
+          figures={[
+            [num(c2Meta.counts.skins), copy.home.games.cs2Skins],
+            [num(c2Meta.counts.cases), copy.home.games.cs2Cases],
+          ]}
+        />
+        <Tile
+          game="coh3"
+          name={copy.games.coh3}
+          to={go({ view: "coh3", c3Section: "home" })}
+          navigate={navigate}
+          note={p.notes.coh3}
+          figures={[
+            [num(c3Meta.counts.units), copy.home.games.coh3Units],
+            [num(c3Meta.counts.weapons), copy.home.games.coh3Weapons],
+          ]}
+        />
+      </section>
+
       <section className="home-today">
         <h2 className="home-h2">
-          {copy.home.today.heading}
+          {p.today(copy.games.deadlock)}
           <span className="home-h2-note">{copy.shell.measuredAt(freshness)}</span>
         </h2>
-
-        <ul className="today-cards">
+        <ul className="home-facts">
           {bestHero && (
-            <li className="today-card" data-game="deadlock">
-              <RouteLink className="today-link" to={toHero(bestHero)} onNavigate={navigate}>
-                <span className="today-kicker">
-                  {copy.games.deadlock} · {copy.home.today.bestHero}
-                </span>
-                <span className="today-body">
-                  {bestHero.img && <img src={bestHero.img} alt="" width={48} height={48} loading="lazy" decoding="async" />}
-                  <span className="today-name">{bestHero.name}</span>
-                </span>
-                <span className="today-figure">
-                  <b>{pct(bestHero.winRate)}</b>
-                  <small>
-                    {copy.home.today.wins} · {copy.home.today.band(bandName)}
-                  </small>
-                </span>
-              </RouteLink>
-            </li>
+            <Fact to={toHero(bestHero)} navigate={navigate} img={bestHero.card} kicker={copy.home.today.bestHero} name={bestHero.name} value={pct(bestHero.winRate)} />
           )}
-
-          {(rising ?? mostPlayed) && (
-            <li className="today-card" data-game="deadlock">
-              <RouteLink className="today-link" to={toHero((rising ?? mostPlayed)!)} onNavigate={navigate}>
-                <span className="today-kicker">
-                  {copy.games.deadlock} · {rising ? copy.home.today.rising : copy.home.today.mostPlayed}
-                </span>
-                <span className="today-body">
-                  {(rising ?? mostPlayed)!.img && (
-                    <img src={(rising ?? mostPlayed)!.img} alt="" width={48} height={48} loading="lazy" decoding="async" />
-                  )}
-                  <span className="today-name">{(rising ?? mostPlayed)!.name}</span>
-                </span>
-                <span className="today-figure">
-                  {rising ? (
-                    <>
-                      <b className="delta is-up">▲ {pts(rising.trend ?? 0)}</b>
-                      <small>{copy.home.today.wins}</small>
-                    </>
-                  ) : (
-                    <>
-                      <b>{pct(mostPlayed!.pickRate)}</b>
-                      <small>
-                        {copy.home.today.use} · {copy.home.today.band(bandName)}
-                      </small>
-                    </>
-                  )}
-                </span>
-              </RouteLink>
-            </li>
+          {movers[0] && (
+            <Fact to={toHero(movers[0])} navigate={navigate} img={movers[0].card} kicker={copy.home.today.rising} name={movers[0].name} value={`+${pts(movers[0].trend ?? 0)}`} />
           )}
-
-          {bestValue && (
-            <li className="today-card" data-game="deadlock">
-              <RouteLink
-                className="today-link"
-                to={{
-                  ...route,
-                  view: "deadlock",
-                  dlSection: "items",
-                  detail: dlItemSlugs.toSlug.get(String(bestValue.itemId)),
-                }}
-                onNavigate={navigate}
-              >
-                <span className="today-kicker">
-                  {copy.games.deadlock} · {copy.home.today.bestValue}
-                </span>
-                <span className="today-body">
-                  {bestValue.img && <img src={bestValue.img} alt="" width={48} height={48} loading="lazy" decoding="async" />}
-                  <span className="today-name">{bestValue.name}</span>
-                </span>
-                <span className="today-figure">
-                  <b>{pct(bestValue.winRateRaw)}</b>
-                  <small>{copy.home.today.over(pts(bestValue.delta))}</small>
-                </span>
-              </RouteLink>
-            </li>
+          {mostPlayed && (
+            <Fact to={toHero(mostPlayed)} navigate={navigate} img={mostPlayed.card} kicker={copy.home.today.mostPlayed} name={mostPlayed.name} value={pct(mostPlayed.pickRate)} />
+          )}
+          {bestValue ? (
+            <Fact
+              to={{ ...route, view: "deadlock", dlSection: "items", detail: dlItemSlugs.toSlug.get(String(bestValue.itemId)) }}
+              navigate={navigate}
+              img={bestValue.img}
+              square
+              kicker={copy.home.today.bestValue}
+              name={bestValue.name}
+              value={pct(bestValue.winRateRaw)}
+            />
+          ) : (
+            movers[1] && (
+              <Fact to={toHero(movers[1])} navigate={navigate} img={movers[1].card} kicker={p.climbing} name={movers[1].name} value={`+${pts(movers[1].trend ?? 0)}`} />
+            )
           )}
         </ul>
       </section>
-
-      {/* Las herramientas, a un clic (2026-10-11). Antes quedaban a dos: había que entrar al juego y encontrar la
-          pestaña, y son lo que más se comparte y lo que alguien llega buscando. */}
-      <section className="home-tools">
-        <h2 className="home-h2">{copy.home.tools.heading}</h2>
-        <ul className="today-cards">
-          {(
-            [
-              ["valheim", copy.games.valheim, copy.home.tools.vhMap, { view: "valheim", vhSection: "map" }],
-              ["valheim", copy.games.valheim, copy.home.tools.vhPlanner, { view: "valheim", vhSection: "planner" }],
-              ["deadlock", copy.games.deadlock, copy.home.tools.dlBuilder, { view: "deadlock", dlSection: "builder" }],
-              ["zomboid", copy.games.zomboid, copy.home.tools.pzMap, { view: "zomboid", pzSection: "map" }],
-            ] as const
-          ).map(([game, nombre, tool, to]) => (
-            <li className="today-card" data-game={game} key={`${game}-${tool.name}`}>
-              <RouteLink className="today-link" to={{ ...route, detail: undefined, ...to }} onNavigate={navigate}>
-                <span className="today-kicker">{nombre}</span>
-                <span className="today-name">{tool.name}</span>
-                <span className="tool-note">{tool.note}</span>
-              </RouteLink>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Los juegos ------------------------------------------------------ */}
-      <section className="home-games">
-        <h2 className="home-h2">{copy.home.games.heading}</h2>
-
-        {/* Agrupados por categoría desde el 2026-10-12, en el mismo orden que el menú de la barra (`gameGroups.ts`). */}
-        <h3 className="home-group">{copy.games.groups.survival}</h3>
-        <ul className="game-list">
-          {/* Valheim salió de "Pronto" el 2026-09-24: la enciclopedia y la Crónica. */}
-          <li className="game-panel" data-panel="valheim">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.valheim}</h4>
-              <p className="game-panel-note">{copy.home.games.valheimLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "valheim", vhSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.valheimCta(num(VH_ENTRIES))}
-                  <Arrow />
-                </RouteLink>
-                <RouteLink className="game-cta is-ghost" to={{ ...route, view: "valheim", vhSection: "patches", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.valheimPatches}
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(VH_ENTRIES)}</b>
-                <span>{copy.home.games.valheimEntries}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{vhMeta.counts.biomes}</b>
-                <span>{copy.home.games.valheimBiomes}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Project Zomboid entra el 2026-09-30, con la portada de la libreta. */}
-          <li className="game-panel" data-panel="zomboid">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.zomboid}</h4>
-              <p className="game-panel-note">{copy.home.games.zomboidLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "zomboid", pzSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.zomboidCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(pzMeta.counts.items)}</b>
-                <span>{copy.home.games.zomboidItems}</span>
-              </p>
-              <p className="game-figure is-second">
-                {/* Las de fabricar y las de construir: las 1.170 que lista la pestaña Recetas (igual que la portada de
-                    Project Zomboid), no sólo las 969 primeras. */}
-                <b>{num(pzMeta.counts.recipes + pzMeta.counts.buildRecipes)}</b>
-                <span>{copy.home.games.zomboidRecipes}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* Rust estuvo acá del 2026-10-05 al 2026-11-02: quedó congelado y escondido (ver `gameGroups.ts`). */}
-
-          {/* Terraria estuvo acá del 2026-10-12 al 2026-11-02: quedó congelado y escondido (ver `gameGroups.ts`). */}
-
-          {/* Stardew Valley entra el 2026-10-22, con el valle de la pantalla de título. */}
-          <li className="game-panel" data-panel="stardew">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.stardew}</h4>
-              <p className="game-panel-note">{copy.home.games.stardewLive}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "stardew", sdSection: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.stardewCta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(sdMeta.counts.items)}</b>
-                <span>{copy.home.games.stardewItems}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(sdMeta.counts.villagers)}</b>
-                <span>{copy.home.games.stardewVillagers}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-
-        {/* ARPG (PoE2, Diablo II y Warframe) estuvo acá hasta el 2026-11-05: quedó escondido (ver `gameGroups.ts`). */}
-
-        <h3 className="home-group">{copy.games.groups.shooters}</h3>
-        <ul className="game-list">
-          <li className="game-panel" data-panel="deadlock">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.deadlock}</h4>
-              <p className="game-panel-note">{copy.home.games.deadlock}</p>
-              <div className="game-panel-ctas">
-                <RouteLink
-                  className="game-cta"
-                  to={{ ...route, view: "deadlock", dlSection: "meta", detail: undefined }}
-                  onNavigate={navigate}
-                >
-                  {copy.home.games.deadlockCta(num(heroes.length))}
-                  <Arrow />
-                </RouteLink>
-                <RouteLink
-                  className="game-cta is-ghost"
-                  to={{ ...route, view: "deadlock", dlSection: "player", detail: undefined }}
-                  onNavigate={navigate}
-                >
-                  {copy.home.games.profile}
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>
-                  {bestHero ? pct(bestHero.winRate).replace("%", "") : "—"}
-                  <i>&#8201;%</i>
-                </b>
-                <span>{copy.home.figures.winRate(bestHero?.name ?? "")}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(heroesJson.matches)}</b>
-                <span>{copy.home.figures.matchesBand(copy.home.figures.topBand)}</span>
-              </p>
-            </div>
-          </li>
-
-          {/* CS2 entra el 2026-11-03: skins, cajas y colecciones con precio, en la estética "Mesa de mercado". */}
-          <li className="game-panel" data-panel="cs2">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.cs2}</h4>
-              <p className="game-panel-note">{copy.home.games.cs2Live}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "cs2", c2Section: "cases", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.cs2Cta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(c2Meta.counts.skins)}</b>
-                <span>{copy.home.games.cs2Skins}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(c2Meta.counts.cases)}</b>
-                <span>{copy.home.games.cs2Cases}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-
-        {/* RTS (2026-11-04): el género nuevo arranca con Company of Heroes 3, estética "Puesto de mando". */}
-        <h3 className="home-group">{copy.games.groups.rts}</h3>
-        <ul className="game-list">
-          <li className="game-panel" data-panel="coh3">
-            <div className="game-panel-main">
-              <h4 className="game-panel-name">{copy.games.coh3}</h4>
-              <p className="game-panel-note">{copy.home.games.coh3Live}</p>
-              <div className="game-panel-ctas">
-                <RouteLink className="game-cta" to={{ ...route, view: "coh3", c3Section: "home", detail: undefined }} onNavigate={navigate}>
-                  {copy.home.games.coh3Cta}
-                  <Arrow />
-                </RouteLink>
-              </div>
-            </div>
-            <div className="game-panel-figures">
-              <p className="game-figure">
-                <b>{num(c3Meta.counts.units)}</b>
-                <span>{copy.home.games.coh3Units}</span>
-              </p>
-              <p className="game-figure is-second">
-                <b>{num(c3Meta.counts.weapons)}</b>
-                <span>{copy.home.games.coh3Weapons}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
-      </section>
-
-      {/* Las cifras de confianza, chicas y al pie: dicen de qué está hecho el
-          sitio, no qué hacer en él. */}
-      <p className="home-counts">
-        <span>
-          <b>{num(matchesRead)}</b> {copy.home.counts.matches}
-        </span>
-        <span>
-          {copy.home.counts.measured} <b>{freshness}</b>
-        </span>
-      </p>
     </main>
   );
 }
 
-/** El único icono de la página. Trazo, no emoji, para que escale con el texto. */
-function Arrow() {
+/** Un cuadro del mosaico: el arte del juego de fondo (en `home.css`, por `data-game`), su logo, una línea y cifras. */
+function Tile({
+  game,
+  name,
+  to,
+  navigate,
+  note,
+  tag,
+  art,
+  figures,
+  style,
+}: {
+  game: Game;
+  name: string;
+  to: Route;
+  navigate: (route: Route) => void;
+  note: string;
+  tag?: string;
+  art?: ReactNode;
+  figures?: (readonly [string, string] | null | undefined)[];
+  style?: CSSProperties;
+}) {
+  const [w, h] = GAME_LOGOS[game];
+  const scale = game === "deadlock" ? 1.9 : 1.35;
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="square" />
-    </svg>
+    <RouteLink className="home-tile" data-game={game} to={to} onNavigate={navigate} style={style}>
+      <span className="home-tile-art" aria-hidden="true" />
+      {art}
+      {tag && <span className="home-tile-tag">{tag}</span>}
+      <span
+        className="home-tile-logo"
+        aria-hidden="true"
+        style={{ "--logo": `url(/logos/${logoFile(game)})`, width: Math.round(w * scale), height: Math.round(h * scale) } as CSSProperties}
+      />
+      <h3 className="visually-hidden">{name}</h3>
+      <span className="home-tile-note">{note}</span>
+      {figures && figures.some(Boolean) && (
+        <span className="home-tile-figs">
+          {figures.filter((f): f is readonly [string, string] => !!f).map(([v, label]) => (
+            <span key={label}>
+              <b>{v}</b>
+              {label}
+            </span>
+          ))}
+        </span>
+      )}
+    </RouteLink>
+  );
+}
+
+/** Un dato de "Hoy en Deadlock": retrato, qué es, quién y la cifra. */
+function Fact({
+  to,
+  navigate,
+  img,
+  square,
+  kicker,
+  name,
+  value,
+}: {
+  to: Route;
+  navigate: (route: Route) => void;
+  img: string;
+  square?: boolean;
+  kicker: string;
+  name: string;
+  value: string;
+}) {
+  return (
+    <li>
+      <RouteLink className="home-fact" to={to} onNavigate={navigate}>
+        {img && (
+          <img className={square ? "is-square" : undefined} src={img} alt="" width={52} height={square ? 52 : 70} loading="lazy" decoding="async" />
+        )}
+        <span>
+          <small>{kicker}</small>
+          <strong>{name}</strong>
+          <b>{value}</b>
+        </span>
+      </RouteLink>
+    </li>
   );
 }

@@ -270,26 +270,26 @@
   --on-accent: #000000;
 }
 
-/* Portada: papel. La marca es clara y los juegos son oscuros; ese contraste es
-   el que hace que cada juego pegue el salto al entrar. */
+/* Portada: tinta cálida desde el 2026-11-17 (maqueta A). Antes era papel claro; ahora el color lo pone el arte de
+   cada juego en el mosaico, y la marca queda en un negro tibio que no compite con ninguno. */
 [data-theme="codex"][data-place="home"] {
-  --bg: #f2efe6;
-  --bg-2: #e7e2d4;
-  --bg-glow: #ffffff;
-  --surface: #ffffff;
-  --surface-2: #e7e2d4;
-  --surface-solid: #ffffff;
-  --text: #14140f;
-  --text-dim: #6b6a5e;
-  --text-faint: #a5a294;
-  --accent: #8a6a24;
-  --accent-lit: #b08a35;
-  --accent-dark: #6b511b;
-  --accent-rgb: 138, 106, 36;
-  --accent-2: #8a6a24;
-  --good: #2f8a4f;
-  --bad: #b8402e;
-  --line: #d8d3c4;
-  --line-strong: #b8b2a0;
-  --on-accent: #fffaf0;
+  --bg: #17150f;
+  --bg-2: #201d16;
+  --bg-glow: #2b271e;
+  --surface: #201d16;
+  --surface-2: #2b271e;
+  --surface-solid: #201d16;
+  --text: #efe8d8;
+  --text-dim: #a59d8a;
+  --text-faint: #6f685a;
+  --accent: #e0a03a;
+  --accent-lit: #f0b85a;
+  --accent-dark: #b47c22;
+  --accent-rgb: 224, 160, 58;
+  --accent-2: #e0a03a;
+  --good: #7fd49a;
+  --bad: #ff8a78;
+  --line: rgba(239, 232, 216, 0.1);
+  --line-strong: rgba(239, 232, 216, 0.22);
+  --on-accent: #17150f;
 }

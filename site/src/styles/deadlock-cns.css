@@ -1133,14 +1133,6 @@
   background: rgba(221, 102, 56, 0.12);
 }
 
-[data-theme="codex"][data-game="deadlock"] [data-place="home"] .game-panel[data-panel="deadlock"] .game-panel-name {
-  color: #f59a6c;
-}
-
-[data-theme="codex"][data-game="deadlock"] [data-place="home"] .game-panel[data-panel="deadlock"] .game-cta.is-ghost {
-  color: #f59a6c;
-}
-
 [data-theme="codex"][data-game="deadlock"] .dl-placing-row[data-metal="gold"] .dl-placing-place {
   color: #f59a6c;
 }

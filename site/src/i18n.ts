@@ -68,6 +68,10 @@ const EN = {
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters", rts: "RTS" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
+    /** La fila de herramientas al pie del menú (2026-11-17): las que sirven para cualquier juego. */
+    tools: "Tools",
+    tournaments: "Tournaments",
+    tournamentsNote: "Brackets for any game",
   },
   sections: {
     home: "Home",
@@ -103,6 +107,24 @@ const EN = {
   },
 
   home: {
+    /** La portada oscura del 2026-11-17 (maqueta A, "elegir juego"): el título y una línea, después los juegos. */
+    pick: {
+      title: "Pick a game",
+      lead: "Tier lists, maps, planners and price data for the games we cover. Free, no account needed.",
+      updated: (when: string) => `Updated ${when}`,
+      today: (game: string) => `Today in ${game}`,
+      climbing: "Also climbing",
+      winRateOf: (name: string) => `${name}'s win rate`,
+      matches: "matches this week",
+      notes: {
+        deadlock: (n: string) => `Hero and item tier lists from ${n} high-rank matches, builds, your profile and the ranked ladder.`,
+        valheim: "Seed map, encyclopedia and planner.",
+        zomboid: "The Knox County map, every item and recipe in Build 42.",
+        stardew: "Crops, fish, farm planner and predictor.",
+        cs2: "Every skin and case with its price in US$.",
+        coh3: "Units, weapons and battlegroups for CoH 1, 2 and 3.",
+      },
+    },
     eyebrow: "Data, guides and tools",
     /**
      * **"Vestigo" is Latin for "I track".** The line says so, which is a better
@@ -374,6 +396,9 @@ const ES: typeof EN = {
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters", rts: "Estrategia (RTS)" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
     beta: "Beta",
+    tools: "Herramientas",
+    tournaments: "Torneos",
+    tournamentsNote: "Llaves para cualquier juego",
   },
   sections: {
     home: "Inicio",
@@ -407,6 +432,23 @@ const ES: typeof EN = {
   },
 
   home: {
+    pick: {
+      title: "Elegí un juego",
+      lead: "Tier lists, mapas, planificadores y precios de los juegos que cubrimos. Gratis y sin cuenta.",
+      updated: (when: string) => `Actualizado ${when}`,
+      today: (game: string) => `Hoy en ${game}`,
+      climbing: "También sube",
+      winRateOf: (name: string) => `victorias de ${name}`,
+      matches: "partidas esta semana",
+      notes: {
+        deadlock: (n: string) => `Tier lists de héroes e ítems con ${n} partidas de rango alto, builds, tu perfil y el ranking.`,
+        valheim: "Mapa por semilla, enciclopedia y planificador.",
+        zomboid: "El mapa de Knox County y cada objeto y receta de la Build 42.",
+        stardew: "Cultivos, peces, planificador de granja y predictor.",
+        cs2: "Cada skin y caja con su precio en US$.",
+        coh3: "Unidades, armas y grupos de batalla de CoH 1, 2 y 3.",
+      },
+    },
     eyebrow: "Datos, guías y herramientas",
     /** Ver la nota de la versión en inglés: el lema explica el nombre. */
     title: "Todo juego",

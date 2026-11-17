@@ -1,11 +1,9 @@
 /* ---------------------------------------------------------------------------
-   PORTADA — la identidad de Vestigo, que no es la de ningún juego.
+   PORTADA — "Pick a game" (2026-11-17, maqueta A elegida por ZoTaD).
 
-   Reescrita el 2026-09-06 contra los tokens (`tokens.css`): la paleta de papel
-   se declara ahí bajo `[data-place="home"]`, y esta hoja sólo pone la forma.
-   La regla que ordena el resto sigue siendo la misma: **la marca es clara y
-   los juegos son oscuros**. Ese contraste es el que hace que cada juego pegue
-   el salto al entrar, cada uno con su propio negro y su propio acento.
+   Tinta cálida (la paleta está en `tokens.css`, bajo `[data-place="home"]`) y un
+   mosaico donde cada juego entra con su arte. Antes la marca era papel claro con
+   los juegos oscuros; ahora todo es oscuro y el color lo pone cada cuadro.
 
    Todo va prefijado con `[data-place="home"]`, que `App.tsx` pone al lado de
    `data-theme`. Fuera de la portada esta hoja no existe.
@@ -19,8 +17,6 @@
   padding-bottom: 0;
 }
 
-/* El grano del códex está calibrado sobre oscuro; sobre papel se ve como
-   suciedad. La portada no lleva textura. */
 [data-theme="codex"][data-place="home"] .grain {
   display: none;
 }
@@ -31,528 +27,368 @@
   padding: 0 var(--pad);
 }
 
-/* Cabecera: el eslogan ------------------------------------------------------ */
+/* Cabecera ----------------------------------------------------------------- */
 
-[data-theme="codex"][data-place="home"] .home-hero {
-  padding-top: clamp(1.6rem, 4vw, 3rem);
+[data-theme="codex"][data-place="home"] .home-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.8rem 2.5rem;
+  padding: clamp(1.6rem, 4vw, 2.6rem) 0 clamp(1.1rem, 2.4vw, 1.6rem);
 }
 
-[data-theme="codex"][data-place="home"] .home-eyebrow {
-  margin: 0 0 0.8rem;
-  font-weight: 600;
-  font-size: 0.64rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-/**
- * El titular, a un tercio de lo que medía. Big Shoulders es angosta y muy
- * alta, así que aguanta cuerpo sin pedir dos líneas. La segunda parte va en
- * contorno: el mismo tipo, vaciado.
- */
 [data-theme="codex"][data-place="home"] .home-title {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 900;
-  font-size: clamp(2.6rem, 6.5vw, 5rem);
-  line-height: 0.86;
-  letter-spacing: -0.005em;
+  font-size: clamp(3.4rem, 9vw, 7.5rem);
+  line-height: 0.84;
+  letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--text);
 }
 
-[data-theme="codex"][data-place="home"] .home-title-break {
-  display: block;
-  color: transparent;
-  -webkit-text-stroke: 2px var(--text);
-}
-
 [data-theme="codex"][data-place="home"] .home-lead {
-  max-width: 44ch;
-  margin: 1.1rem 0 0;
-  font-size: 1.02rem;
-  line-height: 1.55;
+  max-width: 34ch;
+  margin: 0 0 0.35rem;
+  font-size: 1.12rem;
+  line-height: 1.45;
   color: var(--text-dim);
 }
 
-/* Títulos de sección de la portada ------------------------------------------ */
+/* El mosaico --------------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .home-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: 300px 300px 240px;
+  grid-template-areas:
+    "dl dl vh pz"
+    "dl dl sd pz"
+    "cs cs c3 c3";
+}
+
+[data-theme="codex"][data-place="home"] .home-tile {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 22px;
+  border-radius: 14px;
+  background: var(--bg-2);
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* El arte va en su propia capa para poder acercarla al pasar el mouse sin mover el texto. */
+[data-theme="codex"][data-place="home"] .home-tile-art {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-position: center;
+  transition: transform 500ms ease;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(14, 12, 9, 0) 30%, rgba(14, 12, 9, 0.88) 100%);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile:hover .home-tile-art {
+  transform: scale(1.035);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 3px;
+}
+
+/* El logo es una máscara, como en el menú: la forma, pintada de claro. */
+[data-theme="codex"][data-place="home"] .home-tile-logo {
+  display: block;
+  margin-bottom: 12px;
+  background: #fff;
+  -webkit-mask: var(--logo) left bottom / contain no-repeat;
+  mask: var(--logo) left bottom / contain no-repeat;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile-note {
+  max-width: 40ch;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #d4ccb8;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile-figs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.4rem;
+  margin-top: 14px;
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1.2;
+  color: #c9c0aa;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile-figs b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.65rem;
+  line-height: 1;
+  color: #fff;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile-tag {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(14, 12, 9, 0.7);
+  font-weight: 600;
+  font-size: 0.8rem;
+  line-height: 1;
+  color: #e9e2d0;
+}
+
+/* Cada juego: su lugar en la grilla y su arte. */
+[data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] { grid-area: dl; }
+[data-theme="codex"][data-place="home"] .home-tile[data-game="valheim"] { grid-area: vh; }
+[data-theme="codex"][data-place="home"] .home-tile[data-game="zomboid"] { grid-area: pz; }
+[data-theme="codex"][data-place="home"] .home-tile[data-game="stardew"] { grid-area: sd; }
+[data-theme="codex"][data-place="home"] .home-tile[data-game="cs2"] { grid-area: cs; }
+[data-theme="codex"][data-place="home"] .home-tile[data-game="coh3"] { grid-area: c3; }
+
+/* Deadlock: el color del mejor héroe del día (`--hero`, del catálogo del juego) tiñe el fondo, y su carta va encima. */
+[data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] .home-tile-art {
+  background:
+    radial-gradient(ellipse 70% 70% at 72% 32%, color-mix(in srgb, var(--hero, #c46a3a) 55%, transparent) 0%, transparent 70%),
+    radial-gradient(ellipse 120% 90% at 10% 0%, #3a2c15 0%, transparent 62%),
+    linear-gradient(180deg, #1e1914 0%, #120f0c 100%);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile-hero {
+  position: absolute;
+  z-index: -1;
+  right: 7%;
+  top: 9%;
+  width: 40%;
+  max-width: 280px;
+  height: auto;
+  border-radius: 10px;
+  transform: rotate(2.5deg);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] .home-tile-note {
+  font-size: 1.02rem;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] .home-tile-figs b {
+  font-size: 2.5rem;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] .home-tile-figs span:first-child b {
+  color: var(--accent);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="valheim"] .home-tile-art {
+  background-image: linear-gradient(160deg, rgba(255, 160, 70, 0.25), transparent 60%), url(/valheim/ui/tabletop.webp);
+  background-size: auto, 240px;
+  background-position: center;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile-emblem {
+  position: absolute;
+  z-index: -1;
+  top: 18px;
+  right: 18px;
+  width: 92px;
+  height: 92px;
+  border-radius: 6px;
+  transform: rotate(4deg);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="zomboid"] .home-tile-art {
+  background-image: url(/zomboid/ui/muldraughmap.webp);
+  background-position: 50% 30%;
+  filter: saturate(0.75) brightness(0.8);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="stardew"] .home-tile-art {
+  background-image: url(/stardew/ui/panorama.png);
+  background-position: center 70%;
+  image-rendering: pixelated;
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="cs2"] .home-tile-art {
+  background-image: url(/cs2/bg/dust2-800.webp);
+  background-position: center 40%;
+  filter: brightness(0.75) saturate(0.85);
+}
+
+[data-theme="codex"][data-place="home"] .home-tile[data-game="coh3"] .home-tile-art {
+  background-image: url(/coh3/bg/hero-800.webp);
+  background-position: 85% 30%;
+}
+
+@media (min-width: 1200px) {
+  [data-theme="codex"][data-place="home"] .home-tile[data-game="cs2"] .home-tile-art { background-image: url(/cs2/bg/dust2-1600.webp); }
+  [data-theme="codex"][data-place="home"] .home-tile[data-game="coh3"] .home-tile-art { background-image: url(/coh3/bg/hero-1600.webp); }
+}
+
+/* Hoy en Deadlock ---------------------------------------------------------- */
+
+[data-theme="codex"][data-place="home"] .home-today {
+  margin-top: clamp(2rem, 5vw, 2.8rem);
+  padding-bottom: clamp(2rem, 5vw, 3.2rem);
+}
 
 [data-theme="codex"][data-place="home"] .home-h2 {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 0.4rem 1rem;
+  gap: 0.3rem 0.9rem;
   margin: 0 0 0.9rem;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
+  font-size: 1.5rem;
+  line-height: 1;
   text-transform: uppercase;
   color: var(--text);
-}
-
-[data-theme="codex"][data-place="home"] .home-h2::after {
-  content: "";
-  flex: 1 1 2rem;
-  height: 2px;
-  background: var(--accent);
-  align-self: center;
 }
 
 [data-theme="codex"][data-place="home"] .home-h2-note {
-  order: 3;
   font-family: var(--font-text);
   font-weight: 500;
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
+  font-size: 0.85rem;
   text-transform: none;
-  color: var(--text-dim);
+  color: var(--text-faint);
 }
 
-/* Hoy en el meta ------------------------------------------------------------- */
-
-[data-theme="codex"][data-place="home"] .home-today {
-  margin-top: clamp(1.8rem, 4vw, 2.8rem);
-}
-
-/* Las herramientas (2026-10-11): las mismas tarjetas de "Hoy en el meta", con una línea de qué hace cada una. */
-
-[data-theme="codex"][data-place="home"] .home-tools {
-  margin-top: clamp(1.8rem, 4vw, 2.8rem);
-}
-
-[data-theme="codex"][data-place="home"] .tool-note {
-  font-size: 0.82rem;
-  line-height: 1.35;
-  color: var(--text-dim);
-}
-
-[data-theme="codex"][data-place="home"] .today-cards {
+[data-theme="codex"][data-place="home"] .home-facts {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
-  gap: 0.7rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
 }
 
-[data-theme="codex"][data-place="home"] .today-link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  height: 100%;
-  padding: 0.85rem 0.95rem 0.95rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--text);
-  text-decoration: none;
-  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
-}
-
-[data-theme="codex"][data-place="home"] .today-link:hover {
-  transform: translateY(-2px);
-  border-color: var(--line-strong);
-  box-shadow: 0 10px 26px rgba(20, 20, 15, 0.08);
-}
-
-[data-theme="codex"][data-place="home"] .today-kicker {
-  font-weight: 600;
-  font-size: 0.6rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-[data-theme="codex"][data-place="home"] .today-body {
+[data-theme="codex"][data-place="home"] .home-fact {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  min-height: 48px;
+  gap: 14px;
+  height: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--bg-2);
+  color: var(--text);
+  text-decoration: none;
 }
 
-[data-theme="codex"][data-place="home"] .today-body img {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  object-fit: cover;
+[data-theme="codex"][data-place="home"] .home-fact:hover {
   background: var(--surface-2);
 }
 
-[data-theme="codex"][data-place="home"] .today-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.3rem;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+[data-theme="codex"][data-place="home"] .home-fact img {
+  flex: none;
+  width: 52px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
-[data-theme="codex"][data-place="home"] .today-figure {
-  margin-top: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+[data-theme="codex"][data-place="home"] .home-fact img.is-square {
+  height: 52px;
+  object-fit: contain;
 }
 
-[data-theme="codex"][data-place="home"] .today-figure b {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.7rem;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
+[data-theme="codex"][data-place="home"] .home-fact > span {
+  min-width: 0;
 }
 
-[data-theme="codex"][data-place="home"] .today-figure small {
-  font-size: 0.68rem;
-  color: var(--text-dim);
-}
-
-/* Los juegos ------------------------------------------------------------------- */
-
-[data-theme="codex"][data-place="home"] .home-games {
-  margin-top: clamp(2rem, 5vw, 3.2rem);
-}
-
-[data-theme="codex"][data-place="home"] .game-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* El nombre de la categoría, arriba de sus juegos. */
-[data-theme="codex"][data-place="home"] .home-group {
-  margin: 1.8rem 0 0.7rem;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 0.95rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-[data-theme="codex"][data-place="home"] .home-h2 + .home-group {
-  margin-top: 0.4rem;
-}
-
-/**
- * Cada juego, a sangre y en su propia oscuridad. `100vw` con el margen
- * negativo saca al panel de la columna; el relleno lo vuelve a alinear con el
- * contenido de la página.
- */
-[data-theme="codex"][data-place="home"] .game-panel {
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  padding: clamp(1.6rem, 4vw, 2.6rem) max(var(--pad), calc((100vw - var(--col)) / 2 + var(--pad)));
-  display: grid;
-  grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
-  gap: clamp(1.2rem, 4vw, 2.5rem);
-  align-items: center;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel-name {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2.4rem, 6vw, 4.8rem);
-  line-height: 0.88;
-  letter-spacing: 0.005em;
-  text-transform: uppercase;
-  max-width: 10ch;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel-note {
-  margin: 0.9rem 0 0;
-  max-width: 42ch;
-  font-size: 0.92rem;
-  line-height: 1.5;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel-ctas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.2rem;
-}
-
-[data-theme="codex"][data-place="home"] .game-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65em;
-  min-height: 44px;
-  padding: 0 1.2rem;
-  border-radius: var(--radius);
-  font-weight: 700;
-  font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border: 2px solid transparent;
-  transition: filter 140ms ease, background 140ms ease;
-}
-
-[data-theme="codex"][data-place="home"] .game-cta:hover {
-  filter: brightness(1.12);
-}
-
-[data-theme="codex"][data-place="home"] .game-panel-figures {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: clamp(1.2rem, 3vw, 2.1rem);
-  text-align: right;
-}
-
-[data-theme="codex"][data-place="home"] .game-figure {
-  margin: 0;
-}
-
-[data-theme="codex"][data-place="home"] .game-figure b {
+[data-theme="codex"][data-place="home"] .home-fact small {
   display: block;
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2.4rem, 6vw, 4.8rem);
-  line-height: 0.85;
-  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  color: var(--text-faint);
 }
 
-[data-theme="codex"][data-place="home"] .game-figure b i {
-  font-style: normal;
-  font-size: 0.5em;
-}
-
-[data-theme="codex"][data-place="home"] .game-figure span {
+[data-theme="codex"][data-place="home"] .home-fact strong {
   display: block;
-  margin-top: 0.4rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  font-size: 0.58rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
 }
 
-[data-theme="codex"][data-place="home"] .game-figure.is-second {
-  padding-bottom: 0.5rem;
-}
-
-[data-theme="codex"][data-place="home"] .game-figure.is-second b {
-  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
-}
-
-/* --- Deadlock: el negro cálido del juego, con su ámbar ---------------------- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] {
-  background:
-    radial-gradient(ellipse 120% 90% at 12% -20%, #3a2c15 0%, transparent 62%),
-    linear-gradient(180deg, #171b12 0%, #10130d 100%);
-  color: #cbc3ae;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-panel-name {
-  color: #e2c391;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-figure b {
-  color: #d4860b;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-figure.is-second b {
-  color: #ffefd7;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-figure span {
-  color: #9c9581;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-cta {
-  background: #d4860b;
-  border-color: #d4860b;
-  color: #10130d;
-}
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="deadlock"] .game-cta.is-ghost {
-  background: transparent;
-  border-color: rgba(212, 134, 11, 0.5);
-  color: #e2c391;
-}
-
-/* --- Valheim: la madera y el latón de la sección (2026-09-24) -------------- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] {
-  background:
-    radial-gradient(ellipse 120% 90% at 12% -20%, rgba(255, 170, 80, 0.16) 0%, transparent 62%),
-    linear-gradient(180deg, rgba(20, 14, 10, 0.9) 0%, rgba(14, 9, 6, 0.95) 100%),
-    url(/valheim/ui/tabletop.webp) center / 520px;
-  color: #b3a07e;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-panel-name { color: #f3e6c8; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-figure b { color: #f2c46f; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-figure.is-second b { color: #f3e6c8; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-figure span { color: #9c8b6c; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-cta { background: #c8963e; border-color: #c8963e; color: #1a1008; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="valheim"] .game-cta.is-ghost { background: transparent; border-color: rgba(200, 150, 62, 0.5); color: #f2c46f; }
-
-/* --- Diablo II: la piedra del Arcón y el oro de los únicos (2026-09-29) ----- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] {
-  background:
-    radial-gradient(ellipse 120% 90% at 12% -20%, rgba(255, 110, 20, 0.14) 0%, transparent 62%),
-    linear-gradient(180deg, rgba(8, 6, 5, 0.88) 0%, rgba(6, 5, 4, 0.95) 100%),
-    url(/d2r/game/stone.webp) center / cover;
-  color: #9a8f78;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-panel-name { color: #e6dac0; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure b { color: #c7b377; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure.is-second b { color: #e6dac0; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-figure span { color: #8a806b; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="d2r"] .game-cta { background: #8f1d14; border-color: #8f1d14; color: #fff3d6; }
-
-/* --- Project Zomboid: el verde del escritorio y el mapa de papel (2026-09-30) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] {
-  background:
-    linear-gradient(180deg, rgba(24, 33, 24, 0.9) 0%, rgba(20, 28, 20, 0.96) 100%),
-    url(/zomboid/ui/muldraughmap.webp) 50% 35% / cover;
-  color: #b9c2ad;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-panel-name { color: #efe9d8; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-figure b { color: #f3d36b; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-figure.is-second b { color: #efe9d8; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-figure span { color: #8a9580; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="zomboid"] .game-cta { background: #b3261e; border-color: #b3261e; color: #fff5e6; }
-
-/* --- Rust: el HUD del juego sobre la calle de Outpost (2026-10-05) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] {
-  background:
-    linear-gradient(180deg, rgba(20, 20, 18, 0.86) 0%, rgba(18, 18, 16, 0.95) 100%),
-    url(/rust/bg/outpost.webp) 50% 40% / cover;
-  color: #a39d93;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-panel-name { color: #e2dbd3; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-figure b { color: #e2dbd3; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-figure.is-second b { color: #82a845; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-figure span { color: #7d776e; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="rust"] .game-cta { background: #55702a; border-color: #55702a; color: #ffffff; }
-
-/* --- Terraria: el subsuelo de tierra del juego, oscurecido (2026-10-12) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] {
-  background:
-    linear-gradient(180deg, rgba(23, 17, 15, 0.8) 0%, rgba(23, 17, 15, 0.93) 100%),
-    url(/terraria/art/dirt.png);
-  color: #d9cfc6;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-panel-name { color: #ffffff; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure b { color: #ffe36a; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure.is-second b { color: #ffffff; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-figure span { color: #a89c92; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="terraria"] .game-cta { background: #e7c21b; border-color: #e7c21b; color: #17110f; }
-
-/* --- Stardew Valley: el cielo y el valle de la pantalla de título, con la madera del menú (2026-10-22) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] {
-  /* El paisaje entero estirado sin suavizar, con un velo crema del lado del texto para que se lea sobre las colinas. */
-  background:
-    linear-gradient(90deg, rgba(255, 243, 214, 0.9) 0%, rgba(255, 243, 214, 0.6) 45%, rgba(255, 243, 214, 0) 80%),
-    url(/stardew/ui/panorama.png) center 62% / cover no-repeat;
-  image-rendering: pixelated;
-  color: #3b1f12;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-panel-name { color: #3b1f12; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure b { color: #3b1f12; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure.is-second b { color: #7a4a00; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-figure span { color: #3b1f12; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="stardew"] .game-cta { background: #e78b2c; border-color: #5b2b29; color: #fff7e0; }
-
-/* --- Warframe: el azul noche del Arsenal, con el resplandor radial (2026-10-27) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] {
-  background: radial-gradient(900px 420px at 20% 20%, #1d3346 0%, #0b131c 60%, #070b10 100%);
-  color: #8fa3b5;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-panel-name { color: #e8eef4; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure b { color: #6fd3ff; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure.is-second b { color: #e8eef4; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-figure span { color: #8fa3b5; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="warframe"] .game-cta { background: #6fd3ff; border-color: #6fd3ff; color: #07131c; }
-
-/* --- CS2: la piedra de Dust II con tinta azul marino (2026-11-03) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] { background: #d9c8a2; color: #5b6573; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-panel-name { color: #1d2a3a; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure b { color: #1d2a3a; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure.is-second b { color: #244b7a; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-figure span { color: #5b6573; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="cs2"] .game-cta { background: #1d2a3a; border-color: #1d2a3a; color: #e6d8b8; }
-
-/* --- Company of Heroes 3: el puesto de mando, oliva casi negro con el arte del juego y bronce (2026-11-04) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] {
-  background:
-    linear-gradient(90deg, #15170f 30%, rgba(21, 23, 15, 0.82) 60%, rgba(21, 23, 15, 0.45)),
-    url("/coh3/bg/hero-800.webp") 80% 25% / cover no-repeat,
-    #15170f;
-  color: #a29c84;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-panel-name { color: #e6dfc8; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-figure b { color: #d0a75a; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-figure.is-second b { color: #e6dfc8; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-figure span { color: #a29c84; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="coh3"] .game-cta { background: #d0a75a; border-color: #d0a75a; color: #15170f; }
-
-/* --- Path of Exile 2: el oro viejo de su interfaz, sobre negro (2026-10-11) --- */
-
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] {
-  background: linear-gradient(180deg, #1b1712 0%, #110e0a 100%);
-  color: #968a76;
-}
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-panel-name { color: #e8dcc2; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-figure b { color: #d6a551; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-figure.is-second b { color: #e8dcc2; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-figure span { color: #857a67; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-cta { background: #b8893d; border-color: #b8893d; color: #17110a; }
-[data-theme="codex"][data-place="home"] .game-panel[data-panel="poe2"] .game-cta.is-ghost { background: transparent; border-color: rgba(184, 137, 61, 0.5); color: #d6a551; }
-
-/* Cifras de confianza, al pie ---------------------------------------------- */
-
-[data-theme="codex"][data-place="home"] .home-counts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem 1.5rem;
-  margin: 1.4rem 0 0;
-  font-size: 0.74rem;
-  color: var(--text-dim);
-}
-
-[data-theme="codex"][data-place="home"] .home-counts b {
+[data-theme="codex"][data-place="home"] .home-fact b {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1rem;
-  color: var(--text);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--accent);
 }
-
-/* Pie de la portada: la misma cáscara, con el papel --------------------------- */
 
 [data-theme="codex"][data-place="home"] .foot {
-  border-top: 2px solid var(--text);
+  border-top: 1px solid var(--line);
 }
 
-/* Teléfono ----------------------------------------------------------------- */
+/* Tablet y teléfono --------------------------------------------------------- */
 
-@media (max-width: 860px) {
-  [data-theme="codex"][data-place="home"] .game-panel {
+@media (max-width: 900px) {
+  [data-theme="codex"][data-place="home"] .home-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 380px repeat(3, 220px);
+    grid-template-areas:
+      "dl dl"
+      "vh pz"
+      "sd pz"
+      "cs c3";
+  }
+
+  [data-theme="codex"][data-place="home"] .home-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  [data-theme="codex"][data-place="home"] .home-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    grid-auto-rows: minmax(220px, auto);
+    grid-template-areas: none;
+  }
+
+  [data-theme="codex"][data-place="home"] .home-tile[data-game] {
+    grid-area: auto;
+  }
+
+  [data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] {
+    min-height: 400px;
+  }
+
+  [data-theme="codex"][data-place="home"] .home-tile-hero {
+    width: 46%;
+    top: 14%;
+  }
+
+  [data-theme="codex"][data-place="home"] .home-facts {
     grid-template-columns: minmax(0, 1fr);
   }
+}
 
-  [data-theme="codex"][data-place="home"] .game-panel-figures {
-    justify-content: flex-start;
-    text-align: left;
-  }
-
-  [data-theme="codex"][data-place="home"] .game-panel-name {
-    max-width: none;
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="codex"][data-place="home"] .home-tile-art {
+    transition: none;
   }
 }
