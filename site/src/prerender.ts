@@ -7,6 +7,9 @@ import { isPatchName, patchName } from "./cs2/patches/names";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
 import { SEO_COPY } from "./seoCopy";
+
+/** Las sub-pestañas del ranking que no son un héroe (ver `ladderTabOf`). */
+export const LADDER_SUBTABS = ["stats", "one-tricks", "check"] as const;
 import { CALC_TOOLS, LANGS, parseRoute, routeUrl, SITE_ORIGIN, type CalcTool, type Route } from "./route";
 import { deadlockDetailSlugs, sitemapPaths, type SitemapData } from "./sitemap";
 import { POE2_COPY, type Poe2Copy } from "./poe2Copy";
@@ -94,6 +97,10 @@ export function metaFor(
   if (detailName && route.view === "deadlock" && route.dlSection === "builds") {
     const [build, hero] = detailName.split(BUILD_NAME_SEP);
     return hero === undefined ? seo.deadlock.buildsHero(build) : seo.deadlock.buildsOne(build, hero);
+  }
+  // Ranking (2026-11-17): el de un héroe, o una sub-pestaña (stats, one-tricks, check).
+  if (detailName && route.view === "deadlock" && route.dlSection === "ladder") {
+    return seo.deadlock.ladderTab[route.detail ?? ""] ?? seo.deadlock.ladderHero(detailName);
   }
   if (detailName && route.view === "deadlock") {
     return {
@@ -272,6 +279,11 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`dl-builds/${slug}`] = hero;
     for (const b of builds) out[`dl-builds/${slug}/${b.id}`] = `${b.name || `Build #${b.id}`}${BUILD_NAME_SEP}${hero}`;
   });
+  // El ranking de cada héroe y las sub-pestañas del ranking (2026-11-17).
+  dlSlugs.heroes.forEach((slug, i) => {
+    out[`dl-ladder/${slug}`] = say(data.dlHeroes[data.dlHeroIds[i]]?.name as Localized, lang, slug);
+  });
+  for (const t of LADDER_SUBTABS) out[`dl-ladder/${t}`] = t;
   for (const e of data.dlNews ?? []) out[`dl-patches/${e.slug}`] = e.title;
   for (const l of data.p2?.leagues ?? []) out[`p2-economy/${l.slug}`] = l.name;
   for (const e of data.p2?.editions ?? []) out[`p2-patches/${e.slug}`] = e.version;

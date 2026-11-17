@@ -36,6 +36,10 @@ export const PAGES = [
   "/en/deadlock/map",
   "/en/deadlock/draft",
   "/en/deadlock/ladder",
+  // Ranking (2026-11-17): el de un héroe, estadísticas y ¿Entro?
+  "/en/deadlock/ladder/abrams",
+  "/en/deadlock/ladder/stats",
+  "/en/deadlock/ladder/check",
   "/en/deadlock/live",
   "/en/deadlock/dle",
   "/en/deadlock/dle/ranking",

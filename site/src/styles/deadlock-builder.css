@@ -495,7 +495,6 @@
   padding: 1rem;
   border-radius: 6px;
   background: rgba(255, 239, 215, 0.04);
-  scrollbar-width: thin;
 }
 
 [data-theme="codex"] .dl-bd-bar-empty {

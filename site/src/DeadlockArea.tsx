@@ -24,6 +24,7 @@ import "./styles/deadlock-game.css";
 import "./styles/deadlock-cns.css";
 // El estilo "Cartel" (2026-09-30), el que eligió ZoTaD: papel crema, cartas con cinta.
 import "./styles/deadlock-cartel.css";
+import "./styles/deadlock-mixto.css";
 // Vestigo News (2026-09-17): la única página con paleta y fuentes propias, todo bajo `.vn`.
 import "./styles/news.css";
 

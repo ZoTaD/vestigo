@@ -307,7 +307,7 @@ export const DL_DETAIL_SECTIONS: DeadlockSection[] = ["meta", "heroes", "items"]
  * (`/deadlock/patches/2026-09-16`). No está en `DL_DETAIL_SECTIONS` porque las
  * ediciones salen del índice de noticias, no de los slugs de héroes e ítems.
  */
-const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "dle", "player", "match", "builds"];
+const DL_WITH_DETAIL: DeadlockSection[] = [...DL_DETAIL_SECTIONS, "patches", "dle", "player", "match", "builds", "ladder"];
 
 export const DEFAULT_LANG: Lang = "en";
 const DEFAULT_DL_SECTION: DeadlockSection = "meta";

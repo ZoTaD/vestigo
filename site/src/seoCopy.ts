@@ -223,6 +223,27 @@ const EN = {
               "order, and the matchups that change it.",
       },
       /** Builds (2026-11-15): la biblioteca de un héroe y la ficha de una build. */
+      /** Ranking (2026-11-17): el de cada héroe y las sub-pestañas, cada una con su título. */
+      ladderHero: (hero: string) => ({
+        title: `${hero} Leaderboard – Best Deadlock ${hero} Players | Vestigo`,
+        description:
+          `The best ${hero} players in Deadlock ranked this season, with a hero score, win rate, ` +
+          "kills, deaths and souls per minute, top heroes and region.",
+      }),
+      ladderTab: {
+        stats: {
+          title: "Deadlock Stat Leaderboards – Most Kills, Souls and Damage | Vestigo",
+          description: "Who leads every number in Deadlock ranked this season: kills, deaths, souls, damage, last hits and single-match records, by hero and region.",
+        },
+        "one-tricks": {
+          title: "Deadlock One-Tricks – The Best Player on Every Hero | Vestigo",
+          description: "The highest-ranked Deadlock player on every hero, with their matches and win rate on it in the last 30 days.",
+        },
+        check: {
+          title: "Am I on the Deadlock Leaderboard? Check Your Rank | Vestigo",
+          description: "Search your Steam name and see where you stand on the Deadlock world and hero leaderboards, and how many ranked matches you still need.",
+        },
+      } as Record<string, { title: string; description: string }>,
       buildsHero: (hero: string) => ({
         title: `${hero} Builds – Best Deadlock ${hero} Builds by Win Rate | Vestigo`,
         description:
@@ -434,6 +455,26 @@ const ES: typeof EN = {
             : `Cómo jugar ${name} en Deadlock: victorias, uso, el orden de compra recomendado ` +
               "y los enfrentamientos que lo cambian.",
       },
+      ladderHero: (hero: string) => ({
+        title: `Ranking de ${hero} – los mejores jugadores de ${hero} en Deadlock | Vestigo`,
+        description:
+          `Los mejores con ${hero} en las clasificatorias de Deadlock esta temporada, con puntaje de héroe, ` +
+          "victorias, kills, muertes y almas por minuto, sus héroes y su región.",
+      }),
+      ladderTab: {
+        stats: {
+          title: "Rankings por estadística de Deadlock – más kills, almas y daño | Vestigo",
+          description: "Quién encabeza cada número en las clasificatorias de Deadlock esta temporada: kills, muertes, almas, daño, últimos golpes y récords de una partida, por héroe y región.",
+        },
+        "one-tricks": {
+          title: "One-tricks de Deadlock – el mejor jugador de cada héroe | Vestigo",
+          description: "El jugador de mejor rango con cada héroe de Deadlock, con sus partidas y victorias con él en los últimos 30 días.",
+        },
+        check: {
+          title: "¿Estoy en el ranking de Deadlock? Revisá tu puesto | Vestigo",
+          description: "Buscá tu nombre de Steam y mirá dónde estás en el ranking mundial y por héroe de Deadlock, y cuántas clasificatorias te faltan.",
+        },
+      } as Record<string, { title: string; description: string }>,
       buildsHero: (hero: string) => ({
         title: `Builds de ${hero} – las mejores de Deadlock por % de victoria | Vestigo`,
         description:

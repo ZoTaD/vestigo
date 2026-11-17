@@ -21,6 +21,9 @@
 
 [data-theme="codex"] .dl-ht-wrap {
   overflow-x: auto;
+  /* Sin esto el canto rasgado de abajo (::after, bottom: -9px, en
+     deadlock-cartel.css) estiraba la caja 9 px y aparecía un scroll vertical. */
+  overflow-y: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);

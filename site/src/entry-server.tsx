@@ -18,6 +18,7 @@ import { EDITIONS, loadAllEditions, loadEdition as loadP2Edition } from "./poe2P
 import { loadIndex as loadVhIndex, loadSkills as loadVhSkills, loadTab as loadVhTab } from "./valheimData";
 import { loadEdition as loadVhEdition, loadEditions as loadVhEditions } from "./valheimPatchesData";
 import { preloadItemsRoute } from "./zomboid/items/data";
+import { loadHeroBoard } from "./deadlockHeroBoards";
 import { preloadRecipesRoute } from "./zomboid/recipes/data";
 import { preloadCraftRoute } from "./zomboid/crafting/data";
 import { preloadItemsRoute as preloadRsItemsRoute } from "./rust/items/data";
@@ -97,6 +98,11 @@ async function preload(route: Route): Promise<void> {
   }
   if (route.view !== "deadlock") return;
   if (route.dlSection === "meta" && route.detail) await Promise.all([quiet(loadBuilds()), quiet(loadMastery())]);
+  // El ranking de un héroe sale con sus filas en el HTML: es lo que se busca ("abrams leaderboard").
+  if (route.dlSection === "ladder" && route.detail) {
+    const id = heroSlugs.toId.get(route.detail);
+    if (id) await quiet(loadHeroBoard(Number(id)));
+  }
   if (route.dlSection === "heroes" && route.detail) {
     // La ficha entera: su kit, lo medido en la banda publicada y las cuatro
     // tier lists, que la sección "Por rango" compara.
