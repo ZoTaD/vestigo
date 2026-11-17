@@ -1,0 +1,252 @@
+/* ---------------------------------------------------------------------------
+   Deadlock, estilo "Mixto" (2026-11-17) — elegido por ZoTaD entre cinco
+   muestras (papel, quemado, kraft, tinta y mixto).
+
+   Carga después de deadlock-cartel.css y lo pisa: las cajas dejan de ser papel
+   de diario y pasan a tinta oscura, como las de la pestaña Builds. El papel
+   queda de acento: los títulos de caja son tiras de papel pegadas torcidas y
+   la tier list sigue en papel. Lo demás del Cartel (títulos estampados, cartas
+   de héroe con cinta, caras de ánimo) no cambia.
+
+   El Cartel tiene reglas con la tinta oscura escrita a mano para el papel;
+   las de abajo las vuelven a tinta clara.
+   --------------------------------------------------------------------------- */
+
+/* ---------- adentro de las cajas: tinta clara ---------- */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side) {
+  --text: #f7e9d5;
+  --text-dim: #c4b59c;
+  --text-faint: #8f846f;
+  --surface: rgba(247, 233, 213, 0.04);
+  --surface-2: rgba(247, 233, 213, 0.085);
+  --surface-solid: #1f1b16;
+  --line: rgba(247, 233, 213, 0.13);
+  --line-strong: rgba(247, 233, 213, 0.3);
+  --accent: #dd6638;
+  --accent-lit: #f59a6c;
+  --accent-dark: #a2431f;
+  --good: #97da79;
+  --bad: #ef5b4b;
+  --vellum: #f7e9d5;
+  --vellum-dim: #c4b59c;
+  --gold: #dd6638;
+  --gold-lit: #f59a6c;
+  --dl-amber: #ffe14d;
+  color: var(--text);
+}
+
+/* ---------- las cajas: tinta oscura y plana, como Builds ---------- */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side):not(.dl-chalkboard) {
+  background: #1a1714;
+  border: 1px solid rgba(247, 233, 213, 0.09);
+  box-shadow: none;
+  transform: none;
+}
+/* Sin cantos rasgados: son cajas, no recortes. */
+/* Los titulares de Remontadas (.dl-cb-heads li) y .cartel-papel siguen siendo
+   recortes de papel, con su canto y su tinta oscura: el papel como acento. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side):not(.dl-chalkboard)::before,
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-shelf, .dl-ht-wrap, .dl-hp-ability, .dl-bd-side):not(.dl-chalkboard)::after {
+  display: none;
+}
+
+/* ---------- el título de cada caja: una tira de papel con la letra en tinta ---------- */
+[data-theme="codex"][data-game="deadlock"] .box-title {
+  background:
+    url(/deadlock/game/ui/cns/speckle.webp) center / 300px,
+    linear-gradient(100deg, #e9dbbd, #d6c39c);
+  background-blend-mode: multiply, normal;
+  /* Siempre tinta: la pizarra de Rangos y las tarjetas del perfil lo pintaban
+     en crema, y crema sobre la tira de papel no se leía. */
+  color: #17130e !important;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.55);
+  transform: rotate(-1deg);
+}
+
+/* ---------- las reglas del Cartel con tinta oscura a mano, en tinta clara ---------- */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg {
+  border-color: var(--line);
+  background: var(--surface);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > * {
+  border-right-color: var(--line);
+  color: var(--text-dim);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > *:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .seg > *:is([data-active="true"], [aria-pressed="true"]) {
+  color: var(--cns-ink);
+  background: var(--cns-orange);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) :is(.box-lead, .box-empty, .box-aside, .dl-history-name) {
+  color: var(--text-dim);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) :is(.dl-rail-name, .dl-history-date) {
+  color: var(--text);
+}
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-rail-list > li + li {
+  border-top-color: var(--line);
+}
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-rail-row:hover {
+  background: var(--surface-2);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel) .dl-rep-form {
+  background: var(--surface);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-activity-day {
+  background: var(--surface-2);
+}
+
+/* ---------- más reglas del Cartel pensadas para el papel ---------- */
+/* Los íconos de habilidad iban en negro sobre crema: sobre tinta desaparecían. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) :is(.dl-hp-ability-icon, .abi) {
+  filter: none;
+}
+/* Los colores de familia, que el Cartel oscureció para el crema, en tonos claros. */
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) :is(.dl-attr[data-attr^="Spirit"], .dl-attr[data-attr="BonusSpiritDamage"], .dl-hp-stat-spirit, .dl-irow-slot[data-slot="spirit"]) {
+  color: #b593f0;
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) .dl-attr:is([data-attr*="Weapon"], [data-attr*="FireRate"], [data-attr="BulletResist"]) {
+  color: #f0a35e;
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) :is(.dl-attr[data-attr="Heal"], .dl-attr[data-attr="Regen"], .dl-irow-slot[data-slot="vitality"]) {
+  color: var(--good);
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) .dl-attr[data-attr*="MoveSpeed"] {
+  color: #5fd3bb;
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) .dl-attr[data-attr="MeleeDamage"] {
+  color: #f07a63;
+}
+[data-theme="codex"][data-game="deadlock"] :is(.box, .dl-panel, .dl-hp-ability) .dl-attr:is([data-attr="Slow"], [data-attr="Stun"]) {
+  color: #8fb4f0;
+}
+[data-theme="codex"][data-game="deadlock"] .box .dl-callout-num { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .box .dl-callout-num[data-kind="trap"] { color: var(--bad); }
+
+/* El costado de la tier list y los enlaces naranjas. */
+[data-theme="codex"][data-game="deadlock"] .page-rail .dl-rail-figure { color: var(--accent-lit); }
+[data-theme="codex"][data-game="deadlock"] .page-rail .delta.is-up { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .page-rail .delta.is-down { color: var(--bad); }
+[data-theme="codex"][data-game="deadlock"] .page-rail :is(.dl-history-link, .dl-rail-more) { color: var(--accent-lit); }
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-link { color: var(--text); }
+[data-theme="codex"][data-game="deadlock"] .box .vn-archive-link:hover { color: var(--accent-lit); }
+[data-theme="codex"][data-game="deadlock"] .box .dl-lb-step[data-metal="gold"] .dl-lb-step-pos { color: #e0b54a; }
+[data-theme="codex"][data-game="deadlock"] .box .dl-lb-step[data-metal="silver"] .dl-lb-step-pos { color: #c3ccd6; }
+[data-theme="codex"][data-game="deadlock"] .box .dl-lb-step[data-metal="bronze"] .dl-lb-step-pos { color: #d48a55; }
+
+/* Perfil: Rasgos y el botón de compartir. */
+[data-theme="codex"][data-game="deadlock"] .dl-trait { background: var(--surface); }
+[data-theme="codex"][data-game="deadlock"] .dl-trait[data-tone="good"] { background: rgba(151, 218, 121, 0.1); }
+[data-theme="codex"][data-game="deadlock"] .dl-trait[data-tone="bad"] { background: rgba(239, 91, 75, 0.1); }
+[data-theme="codex"][data-game="deadlock"] .dl-trait-why { color: var(--text-dim); }
+[data-theme="codex"][data-game="deadlock"] .dl-share-btn:not(.is-quiet) {
+  background: var(--cns-orange, #dd6638);
+  color: var(--cns-ink, #120c08);
+}
+
+/* Rangos: las estampillas y el escudo. */
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps li {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-rp-stamps li[data-tone="shield"] strong { color: #8fb4f0; }
+
+/* Remontadas: la tabla de calor, con tinta clara donde no hay color de fondo. */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid td {
+  color: var(--ink, var(--text));
+  background: var(--heat, var(--surface));
+}
+
+/* Builds: el hueco vacío del costado. */
+[data-theme="codex"][data-game="deadlock"] .dl-bd-side .dl-bd-empty {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* Partida: la ventaja, la chance y las líneas. */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-lead-time, .dl-lead-axis) { color: var(--text-faint); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-chart { background: var(--surface); }
+[data-theme="codex"][data-game="deadlock"] :is(.dl-lead-zero, .dl-lead-guide, .dl-chance-line) { stroke: var(--text); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-row { color: var(--text); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-row.is-open { background: var(--surface-2); }
+[data-theme="codex"][data-game="deadlock"] .dl-lead-track { background: var(--surface-2); }
+[data-theme="codex"][data-game="deadlock"] .dl-chance-fight { fill: var(--surface-2); }
+[data-theme="codex"][data-game="deadlock"] .dl-chance-swatch { background: var(--line-strong); }
+[data-theme="codex"][data-game="deadlock"] .dl-lane { background: var(--surface); }
+
+/* Objetos, Cómo juega, pros y en vivo. */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-imove-row, .dl-itiming-item):hover { background: var(--surface-2); }
+[data-theme="codex"][data-game="deadlock"] .dl-ps-swatch.is-pick { background: var(--line-strong); }
+[data-theme="codex"][data-game="deadlock"] .dl-ps-bar { background: var(--surface-2); }
+[data-theme="codex"][data-game="deadlock"] .dl-ps-trend-pick { fill: var(--surface-2); }
+[data-theme="codex"][data-game="deadlock"] .box .dl-pm-row[data-won="yes"] .dl-pm-result,
+[data-theme="codex"][data-game="deadlock"] .box .dl-iv-delta[data-dir="up"] { color: var(--good); }
+[data-theme="codex"][data-game="deadlock"] .dl-live-team.dl-live-team[data-team="1"] .dl-live-team-name { color: #8fb4f0; }
+
+/* Deadlockdle: el naranja de los enlaces y cifras, el claro. */
+[data-theme="codex"][data-game="deadlock"] :is(.dle-result a, .dle-standing b, .dle-standing .dle-signin, .dle-you b) { color: var(--accent-lit); }
+
+/* ---------- Héroes: filas alternadas para seguir la línea (pedido de ZoTaD) ---------- */
+[data-theme="codex"][data-game="deadlock"] .dl-ht tbody tr:nth-child(even) > :not([data-sorted]) {
+  background-color: rgba(247, 233, 213, 0.045);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-ht tbody tr:nth-child(even) > .dl-ht-sticky {
+  background-color: color-mix(in srgb, var(--surface-solid) 94%, var(--text) 6%);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-ht tbody tr:hover > * {
+  background-color: var(--surface-2);
+}
+
+/* Mapa: el panel sigue en papel; la tabla que vive en una caja de tinta, en tinta clara. */
+[data-theme="codex"][data-game="deadlock"] .box .dl-map-table :is(th, td) { border-bottom-color: var(--line); }
+[data-theme="codex"][data-game="deadlock"] .box .dl-map-table thead th { color: var(--text-faint); }
+[data-theme="codex"][data-game="deadlock"] .box :is(.dl-map-repeat, .dl-map-note) { color: var(--text-dim); }
+
+/* ---------- la ficha de build de un héroe: todo en una fila (pedido de ZoTaD) ----------
+   Antes: la foto a la izquierda y, a la derecha, el puesto arriba y las cifras
+   abajo, repartidas con auto-fit a todo el ancho; quedaba un hueco grande.
+   Ahora: foto · puesto y etiquetas · las cuatro cifras juntas. */
+@media (min-width: 701px) {
+  [data-theme="codex"][data-game="deadlock"] .dl-hero-head {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 0.8rem 2rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-hero-id {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+  }
+  [data-theme="codex"][data-game="deadlock"] .dl-hero-kpis {
+    grid-column: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem 2.6rem;
+  }
+}
+
+/* Remontadas: la columna fija de minutos tenía su propio crema; sobre tinta, tinta. */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid tbody th,
+[data-theme="codex"][data-game="deadlock"] .dl-cb-grid thead tr:last-child th:first-child {
+  background: #1a1714;
+}
+/* El verde del titular "esperanza", un punto más oscuro para leerse sobre el recorte. */
+[data-theme="codex"][data-game="deadlock"] .dl-cb-heads li[data-tone="hope"] strong {
+  color: #22601a;
+}
+
+/* Los colores de los equipos, que el Cartel oscureció para el crema: los de la página. */
+[data-theme="codex"][data-game="deadlock"] :is(.dl-lead, .dl-lane) {
+  --lead-amber: #f0a34a;
+  --lead-sapphire: #6fa8e6;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-numbers-teamrow.is-sapphire th { color: #6fa8e6; }
+
+/* "Lo que te distingue": la nota suelta tiene margen negativo arriba y se pegaba al subtítulo. */
+[data-theme="codex"][data-game="deadlock"] .dl-perf-sub + .detail-note {
+  margin-top: 0.15rem;
+}
