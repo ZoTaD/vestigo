@@ -26,7 +26,11 @@ describe("la barra: el menú de juegos", () => {
   it("todos los juegos están en el HTML, por categoría y en orden, con su logo", () => {
     const html = render("en", "/en", "home");
     const titles = [...html.matchAll(/<p class="top-menu-title">([^<]+)</g)].map((m) => m[1]);
-    expect(titles).toEqual(["Survival &amp; sandbox", "Shooters", "RTS"]);
+    // Las tres categorías de juegos y, al pie, la fila de herramientas.
+    expect(titles).toEqual(["Survival &amp; sandbox", "Shooters", "RTS", "Tools"]);
+    // Torneos está en beta: se ve, pero todavía no es un enlace.
+    expect(html).toMatch(/<span class="top-menu-tool is-soon" aria-disabled="true">/);
+    expect(html).not.toContain('href="/en/tournaments"');
     const logos = [...html.matchAll(/url\(\/logos\/([a-z0-9]+)\.(?:png|svg)\)/g)].map((m) => m[1]);
     expect(logos).toEqual(GAME_GROUPS.flatMap((g) => g.games));
     for (const game of Object.keys(GAME_LOGOS)) expect(existsSync(`public/logos/${logoFile(game as Game)}`)).toBe(true);
