@@ -1,23 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
+import "./styles/deadlock-ladder.css";
 import SectionHead from "./SectionHead";
 import { useLang, useLocale, type Lang } from "./i18n";
 import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
-import {
-  fetchLadder,
-  fetchPodium,
-  PODIUM_SIZE,
-  type Ladder,
-  type LadderRow,
-} from "./deadlockLadder";
+import { fetchLadder, type Ladder, type LadderRow } from "./deadlockLadder";
 import { catalog } from "./deadlockData";
 import { heroImg, rankLabel, rankOf } from "./deadlockReportData";
 import RankBadge from "./DeadlockRankBadge";
 import GameImg from "./GameImg";
 import DeadlockOneTricks from "./DeadlockOneTricks";
-import { flagUrl } from "./flags";
+import Flag from "./DeadlockFlag";
+import DeadlockHeroBoard from "./DeadlockHeroBoard";
+import DeadlockStatBoard from "./DeadlockStatBoard";
+import DeadlockLadderCheck from "./DeadlockLadderCheck";
+import { LADDER_COPY, type LadderTab } from "./deadlockLadderCopy";
+import { heroes as heroSlugs } from "./deadlockSlugs";
 import { ladderSeason } from "./deadlockSeasons";
 
 /**
@@ -38,37 +38,6 @@ import { ladderSeason } from "./deadlockSeasons";
  * llama `deadlockLadder.ts`, y en Windows dos archivos que sólo difieren en
  * mayúsculas son el mismo archivo para el compilador.
  */
-
-/**
- * La bandera del país como IMAGEN, no como emoji.
- *
- * **El emoji se probó el 2026-08-12 y se sacó**: se arma con indicadores
- * regionales y Windows no trae fuente para eso, así que en pantalla salían "US"
- * y "GB" sueltos, sin caja y sin alineación — se leía como un error de
- * codificación. Una imagen se ve igual en todos lados.
- *
- * Si la imagen no llega, queda el código de dos letras, que es exactamente lo
- * que la página mostraba antes: se degrada a lo anterior, no a un hueco.
- */
-function Flag({ code }: { code?: string }) {
-  const [falló, setFalló] = useState(false);
-  if (!code || code.length !== 2) return null;
-  const cc = code.toLowerCase();
-  if (falló) return <span className="dl-flag-code">{code.toUpperCase()}</span>;
-  return (
-    <img
-      className="dl-flag"
-      src={flagUrl(cc)}
-      srcSet={`${flagUrl(cc, "64x48")} 2x`}
-      alt={code.toUpperCase()}
-      title={code.toUpperCase()}
-      width={20}
-      height={15}
-      loading="lazy" decoding="async"
-      onError={() => setFalló(true)}
-    />
-  );
-}
 
 /** Los héroes del catálogo, con el nombre resuelto al idioma y ordenados por él. */
 function heroOptions(lang: Lang): { heroId: number; name: string }[] {
@@ -155,65 +124,119 @@ function LadderRowView({
   );
 }
 
-/** Los tres puestos, con su metal. El orden es el del podio, no el del array. */
-const METALS = ["gold", "silver", "bronze"] as const;
+/**
+ * La sub-pestaña sale de `route.detail` (2026-11-17): nada es el mundo,
+ * `stats`, `one-tricks` y `check` son las suyas, y un slug de héroe es el
+ * ranking de ese héroe (`/deadlock/ladder/abrams`), que tiene URL propia
+ * porque es lo que se busca ("abrams leaderboard").
+ */
+export function ladderTabOf(detail: string | undefined): { tab: LadderTab; heroId: number | null } {
+  if (!detail) return { tab: "world", heroId: null };
+  if (detail === "stats" || detail === "one-tricks" || detail === "check") return { tab: detail, heroId: null };
+  const id = heroSlugs.toId.get(detail);
+  return id ? { tab: "hero", heroId: Number(id) } : { tab: "world", heroId: null };
+}
 
-function Podium({
-  hero,
-  rows,
-  cargando,
-  route,
-  navigate,
-}: {
-  hero: number;
-  rows: LadderRow[];
-  cargando: boolean;
-  route: Route;
-  navigate: (route: Route) => void;
-}) {
+const TABS: LadderTab[] = ["world", "hero", "stats", "one-tricks", "check"];
+
+/** La tabla del mundo, que se pide en vivo. Sólo existe en su pestaña. */
+function WorldTable({ route, navigate }: { route: Route; navigate: (route: Route) => void }) {
   const copy = useCopy();
-  const { lang } = useLang();
-  const locale = useLocale();
   const c = copy.deadlock.playerLadder;
-  const nombre = catalog.heroes[String(hero)]?.name;
+  const [ladder, setLadder] = useState<Ladder | null>(null);
+  const [failed, setFailed] = useState(false);
+  /** Filtro por nombre sobre la tabla ya bajada: cero pedidos. */
+  const [q, setQ] = useState("");
+
+  /**
+   * Se pide una sola vez: no depende de nada que el visitante pueda cambiar.
+   * Ni banda ni métrica — el orden es el rango del juego, y Wilson desempata.
+   */
+  useEffect(() => {
+    let vivo = true;
+    fetchLadder({}).then(
+      (l) => vivo && setLadder(l),
+      () => vivo && setFailed(true)
+    );
+    return () => {
+      vivo = false;
+    };
+  }, []);
 
   return (
-    <div className="dl-lb-podium">
-      <div className="dl-lb-podium-head">
-        <GameImg className="dl-lb-podium-face" src={heroImg(hero) ?? ""} alt="" width={40} height={40} />
-        <h3 className="dl-lb-podium-title">{nombre ? text(nombre, lang, "") : `#${hero}`}</h3>
+    <section className="box dl-lb">
+      <div className="box-head dl-lb-top">
+        <h2 className="box-title">{c.worldTitle}</h2>
+        {ladder && !ladder.thin && (
+          <label className="field dl-lb-search">
+            <input
+              type="search"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder={copy.shell.search}
+              aria-label={copy.shell.search}
+              autoComplete="off"
+            />
+          </label>
+        )}
       </div>
 
-      {cargando && <p className="box-empty">{c.loading}</p>}
+      {!ladder && !failed && <p className="box-empty">{c.loading}</p>}
+      {failed && <p className="dl-notice">{c.failed}</p>}
+      {ladder && ladder.thin && <p className="dl-notice">{c.thin}</p>}
 
-      {/* Cero es una respuesta válida: con dos semanas de clasificatorias hay
-          héroes que todavía no tienen tres jugadores con partidas suficientes,
-          y decirlo es mejor que rellenar el podio con cualquiera. */}
-      {!cargando && rows.length === 0 && <p className="box-empty">{c.noPodium}</p>}
-
-      {!cargando && rows.length > 0 && (
-        <ol className="dl-lb-podium-list">
-          {rows.slice(0, PODIUM_SIZE).map((r, i) => (
-            <li className="dl-lb-step" key={r.accountId} data-metal={METALS[i]}>
-              <span className="dl-lb-step-pos" aria-hidden="true">
-                {i + 1}
-              </span>
-              <RouteLink
-                className="dl-lb-name"
-                to={{ ...route, view: "deadlock", dlSection: "player", detail: String(r.accountId) }}
-                onNavigate={navigate}
-              >
-                {r.name ?? r.accountId}
-              </RouteLink>
-              <span className="dl-lb-step-wins">
-                {c.wins(r.wins.toLocaleString(locale))}
-                <em>{c.of(r.matches.toLocaleString(locale))}</em>
-              </span>
-            </li>
-          ))}
-        </ol>
+      {ladder && !ladder.thin && (
+        <>
+          <div className="dl-lb-head">
+            <span className="dl-lb-pos">{c.cols.rank}</span>
+            <span className="dl-lb-flag" aria-hidden="true" />
+            <span>{c.cols.player}</span>
+            <span className="dl-lb-rank">{c.cols.badge}</span>
+            <span className="dl-lb-rating">{c.cols.winRate}</span>
+            <span className="dl-lb-wins">{c.cols.matches}</span>
+          </div>
+          <ol className="dl-lb-list">
+            {ladder.rows
+              .filter((row) => !q.trim() || (row.name ?? "").toLowerCase().includes(q.trim().toLowerCase()))
+              .map((row) => (
+                <LadderRowView key={row.accountId} row={row} route={route} navigate={navigate} />
+              ))}
+          </ol>
+        </>
       )}
-    </div>
+    </section>
+  );
+}
+
+/**
+ * La grilla de héroes como enlaces a su ranking. **Son enlaces y no botones**:
+ * cada héroe tiene su página, y así el prerender deja 38 enlaces que siguen
+ * los buscadores.
+ */
+function HeroGrid({ active, route, navigate }: { active: number | null; route: Route; navigate: (route: Route) => void }) {
+  const { lang } = useLang();
+  const heroes = useMemo(() => heroOptions(lang), [lang]);
+  const c = LADDER_COPY[lang];
+  return (
+    <nav className="dl-lb-heroes" aria-label={c.tabs.hero}>
+      {heroes.map((h) => {
+        const slug = heroSlugs.toSlug.get(String(h.heroId));
+        if (!slug) return null;
+        return (
+          <RouteLink
+            key={h.heroId}
+            className="dl-lb-hero"
+            to={{ ...route, view: "deadlock", dlSection: "ladder", detail: slug }}
+            onNavigate={navigate}
+            active={active === h.heroId}
+            title={h.name}
+            aria-label={h.name}
+          >
+            <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" decoding="async" />
+          </RouteLink>
+        );
+      })}
+    </nav>
   );
 }
 
@@ -227,181 +250,79 @@ export default function DeadlockPlayerLadder({
 }) {
   const copy = useCopy();
   const { lang } = useLang();
-  const locale = useLocale();
   const c = copy.deadlock.playerLadder;
+  const lc = LADDER_COPY[lang];
+  const { tab, heroId } = ladderTabOf(route.detail);
 
-  const [ladder, setLadder] = useState<Ladder | null>(null);
-  const [failed, setFailed] = useState(false);
-
-  const heroes = useMemo(() => heroOptions(lang), [lang]);
-  /** El héroe del podio. Arranca en el primero del catálogo, no en ninguno. */
-  const [hero, setHero] = useState<number | null>(null);
-  const [podio, setPodio] = useState<LadderRow[]>([]);
-  /** Filtro por nombre sobre la tabla ya bajada: cero pedidos. */
-  const [q, setQ] = useState("");
-  const [cargandoPodio, setCargandoPodio] = useState(false);
-
-  /**
-   * Se pide una sola vez: no depende de nada que el visitante pueda cambiar.
-   *
-   * Ni banda ni métrica — el orden lo decide `wilsonScore` y es el único. Un
-   * selector de orden le pasaba al lector una pregunta que la página tiene que
-   * contestar.
-   */
-  useEffect(() => {
-    let vivo = true;
-    setLadder(null);
-    setFailed(false);
-    fetchLadder({}).then(
-      (l) => vivo && setLadder(l),
-      () => vivo && setFailed(true)
-    );
-    return () => {
-      vivo = false;
-    };
-  }, []);
-
-  // El podio arranca con el primer héroe del catálogo en cuanto hay catálogo.
-  useEffect(() => {
-    if (hero === null && heroes.length > 0) setHero(heroes[0].heroId);
-  }, [heroes, hero]);
-
-  useEffect(() => {
-    if (hero === null) return;
-    let vivo = true;
-    setCargandoPodio(true);
-    setPodio([]);
-    fetchPodium(hero).then(
-      (l) => {
-        if (!vivo) return;
-        setPodio(l.rows);
-        setCargandoPodio(false);
-      },
-      () => {
-        if (!vivo) return;
-        setPodio([]);
-        setCargandoPodio(false);
-      }
-    );
-    return () => {
-      vivo = false;
-    };
-  }, [hero]);
+  /** "Por héroe" sin héroe abre el primero del catálogo por nombre. */
+  const primerHeroe = useMemo(() => heroOptions(lang)[0]?.heroId ?? null, [lang]);
+  const tabRoute = (t: LadderTab): Route => {
+    const detail =
+      t === "world" ? undefined : t === "hero" ? heroSlugs.toSlug.get(String(heroId ?? primerHeroe)) : t;
+    return { ...route, view: "deadlock", dlSection: "ladder", detail };
+  };
 
   return (
     <main className="deadlock deadlock-ladder">
-      {/**
-       * **Sin ningún control, y esa es la idea.** La pestaña tenía un selector
-       * de orden con ganadas, winrate y almas por partida; "quién es el mejor"
-       * no puede depender de cuál elija el lector. Hay un solo orden, y cómo se
-       * calcula va en la bajada plegable.
-       */}
       <SectionHead
         eyebrow={copy.deadlock.eyebrow}
         title={c.title}
         accent={c.titleBreak}
         lead={[c.lead, c.rankedOnly, c.howRanked]}
         meta={
-          ladder && (
-            <span>
-              {c.season(ladderSeason().season.id, ladderSeason().final)} ·{" "}
-              {c.floor(ladder.floor.toLocaleString(locale))}
-            </span>
-          )
+          <span>
+            {c.season(ladderSeason().season.id, ladderSeason().final)}
+          </span>
         }
       />
 
-      <div className="page has-rail dl-lb-page">
-        <section className="box dl-lb">
-          <div className="box-head dl-lb-top">
-            <h2 className="box-title">{c.worldTitle}</h2>
-            {ladder && !ladder.thin && (
-              <label className="field dl-lb-search">
-                <input
-                  type="search"
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder={copy.shell.search}
-                  aria-label={copy.shell.search}
-                  autoComplete="off"
-                />
-              </label>
-            )}
-          </div>
-
-          {!ladder && !failed && <p className="box-empty">{c.loading}</p>}
-          {failed && <p className="dl-notice">{c.failed}</p>}
-          {ladder && ladder.thin && <p className="dl-notice">{c.thin}</p>}
-
-          {ladder && !ladder.thin && (
-            <>
-              <div className="dl-lb-head">
-                <span className="dl-lb-pos">{c.cols.rank}</span>
-                <span className="dl-lb-flag" aria-hidden="true" />
-                <span>{c.cols.player}</span>
-                {/* Ahora SÍ lleva encabezado: dejó de ser un adorno que aparecía
-                    cuando había dato y pasó a ser la columna que ordena. El
-                    rango llega para todos, porque sale del MMR y no del promedio
-                    del equipo. */}
-                <span className="dl-lb-rank">{c.cols.badge}</span>
-                <span className="dl-lb-rating">{c.cols.winRate}</span>
-                <span className="dl-lb-wins">{c.cols.matches}</span>
-              </div>
-              <ol className="dl-lb-list">
-                {ladder.rows
-                  .filter((row) => !q.trim() || (row.name ?? "").toLowerCase().includes(q.trim().toLowerCase()))
-                  .map((row) => (
-                  <LadderRowView
-                    key={row.accountId}
-                    row={row}
-                    route={route}
-                    navigate={navigate}
-                  />
-                ))}
-              </ol>
-            </>
-          )}
-        </section>
-
-        <aside className="box dl-lb-aside">
-          <div className="box-head">
-            <h2 className="box-title">{c.byHero}</h2>
-          </div>
-
-          {/* La grilla de héroes ES el control: no hay un `select` además de
-              esto, porque dos formas de elegir lo mismo obligan a mantener las
-              dos sincronizadas y a que el visitante adivine cuál manda. */}
-          <div className="dl-lb-heroes" role="group" aria-label={c.byHero}>
-            {heroes.map((h) => (
-              <button
-                type="button"
-                key={h.heroId}
-                className="dl-lb-hero"
-                data-active={hero === h.heroId}
-                aria-pressed={hero === h.heroId}
-                title={h.name}
-                aria-label={h.name}
-                onClick={() => setHero(h.heroId)}
-              >
-                <GameImg src={heroImg(h.heroId) ?? ""} alt="" width={34} height={34} loading="lazy" decoding="async" />
-              </button>
-            ))}
-          </div>
-
-          {hero !== null && (
-            <Podium
-              hero={hero}
-              rows={podio}
-              cargando={cargandoPodio}
-              route={route}
-              navigate={navigate}
-            />
-          )}
-        </aside>
-      </div>
       <div className="page">
-        <DeadlockOneTricks route={route} navigate={navigate} />
+        <nav className="dl-ltabs" aria-label={c.title}>
+          {TABS.map((t) => (
+            <RouteLink key={t} className="dl-ltab" to={tabRoute(t)} onNavigate={navigate} active={tab === t}>
+              {lc.tabs[t]}
+            </RouteLink>
+          ))}
+        </nav>
       </div>
+
+      {tab === "world" && (
+        <div className="page has-rail dl-lb-page">
+          <WorldTable route={route} navigate={navigate} />
+          <aside className="box dl-lb-aside">
+            <div className="box-head">
+              <h2 className="box-title">{lc.worldAside}</h2>
+            </div>
+            <p className="dl-hb-lead">{lc.worldAsideLead}</p>
+            <HeroGrid active={null} route={route} navigate={navigate} />
+          </aside>
+        </div>
+      )}
+
+      {tab === "hero" && heroId !== null && (
+        <div className="page dl-hb-page">
+          <HeroGrid active={heroId} route={route} navigate={navigate} />
+          <DeadlockHeroBoard key={heroId} heroId={heroId} route={route} navigate={navigate} />
+        </div>
+      )}
+
+      {tab === "stats" && (
+        <div className="page">
+          <DeadlockStatBoard route={route} navigate={navigate} />
+        </div>
+      )}
+
+      {tab === "one-tricks" && (
+        <div className="page">
+          <DeadlockOneTricks route={route} navigate={navigate} />
+        </div>
+      )}
+
+      {tab === "check" && (
+        <div className="page">
+          <DeadlockLadderCheck route={route} navigate={navigate} />
+        </div>
+      )}
     </main>
   );
 }

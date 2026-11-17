@@ -442,6 +442,26 @@ jobs:
             echo "el top de jugadores tiene ${edad_h}h (< 20); esta corrida lo saltea"
           fi
 
+      # El ranking completo de cada héroe con su puntaje (2026-11-17), para
+      # /deadlock/ladder/<héroe>. ~15 pedidos por héroe (hero-stats tarda varios
+      # segundos por tanda; ~40 min la primera vez, menos con el caché entre
+      # héroes), una vez por día. **Perdona fallar**: queda lo commiteado.
+      - name: build hero boards
+        continue-on-error: true
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/hero-boards/1.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            timeout -k 1m 50m npm run build:hero-boards --prefix games/deadlock/pipeline
+          else
+            echo "los rankings por héroe tienen ${edad_h}h (< 20); esta corrida los saltea"
+          fi
+
       # Las partidas de pros por héroe (2026-11-10): parte del top de la escalera,
       # así que va después. Un pedido por héroe (~45, ~2 min), una vez por día.
       # **Perdona fallar**: queda lo commiteado.

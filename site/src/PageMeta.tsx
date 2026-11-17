@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useCopy, useLang } from "./i18n";
 import { LANGS, routeUrl, type PzTab, type Route } from "./route";
-import { BUILD_NAME_SEP, metaFor, ogImageUrl } from "./prerender";
+import { BUILD_NAME_SEP, LADDER_SUBTABS, metaFor, ogImageUrl } from "./prerender";
 import { editions } from "./deadlockNewsData";
 import { heroes as dlHeroSlugs, items as dlItemSlugs } from "./deadlockSlugs";
 import { buildHeroes, PUBLISHED_BAND as DL_PUBLISHED_BAND } from "./deadlockData";
@@ -116,6 +116,12 @@ function dlDetailName(route: Route, lang: "en" | "es"): string | null {
       return item?.name ?? null;
     }
     if (route.dlSection === "patches") return editions.find((e) => e.slug === route.detail)?.title ?? null;
+    // Ranking (2026-11-17): una sub-pestaña se nombra a sí misma; un héroe, por su nombre (ver `metaFor`).
+    if (route.dlSection === "ladder") {
+      if ((LADDER_SUBTABS as readonly string[]).includes(route.detail)) return route.detail;
+      const id = dlHeroSlugs.toId.get(route.detail);
+      return id ? (buildHeroes(DL_PUBLISHED_BAND, lang).find((h) => String(h.heroId) === id)?.name ?? null) : null;
+    }
     // Builds (2026-11-15): el héroe de la biblioteca, o "<build>␟<héroe>" en la ficha (ver `metaFor`).
     if (route.dlSection === "builds") {
       const [slug, buildId] = route.detail.split("/");

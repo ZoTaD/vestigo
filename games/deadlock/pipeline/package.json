@@ -32,7 +32,8 @@
     "build:rank-points": "node --max-old-space-size=8192 node_modules/tsx/dist/cli.mjs src/rankPoints.ts",
     "build:shop-filters": "node src/shopFilters.mjs",
     "lake:local": "node node_modules/tsx/dist/cli.mjs src/lakeLocal.ts",
-    "build:community-builds": "node node_modules/tsx/dist/cli.mjs src/communityBuilds.ts"
+    "build:community-builds": "node node_modules/tsx/dist/cli.mjs src/communityBuilds.ts",
+    "build:hero-boards": "node node_modules/tsx/dist/cli.mjs src/heroBoards.ts"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

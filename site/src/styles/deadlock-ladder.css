@@ -1,0 +1,501 @@
+/* Deadlock · Ranking: sub-pestañas, ranking por héroe, estadísticas y ¿Entro? (2026-11-17) */
+
+/* Las pestañas: las mismas del perfil (.dl-ptabs), copiadas para no cargar el CSS de logros. */
+.dl-ltabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0 0;
+  border-bottom: 2px solid var(--text);
+}
+.dl-ltab {
+  padding: 8px 16px 6px;
+  border-radius: 6px 6px 0 0;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+  font-size: 20px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.dl-ltab:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+.dl-ltab[aria-current="page"] {
+  background: var(--text);
+  color: var(--surface-solid, #f3ead8);
+}
+@media (max-width: 560px) {
+  .dl-ltab {
+    padding: 6px 10px 4px;
+    font-size: 16px;
+  }
+}
+
+/* Los retratos ahora son enlaces: sin subrayado y con el mismo tamaño. */
+[data-theme="codex"] a.dl-lb-hero {
+  display: block;
+  text-decoration: none;
+}
+[data-theme="codex"] a.dl-lb-hero[aria-current="page"] {
+  filter: none;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* ---------- Ranking por héroe ---------- */
+.page.dl-hb-page {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+}
+.dl-hb-page > .dl-lb-heroes {
+  grid-template-columns: repeat(auto-fill, minmax(2.3rem, 1fr));
+}
+
+.dl-hb-title {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 0.6rem;
+}
+.dl-hb-face {
+  flex: none;
+  border-radius: var(--radius);
+}
+.dl-hb-title .box-title {
+  margin: 0;
+}
+.dl-hb-lead {
+  margin: 0.25rem 0 0;
+  font-size: 0.86rem;
+  color: var(--text-dim);
+}
+.dl-hb-updated {
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+.dl-hb-how {
+  margin: 0 0 0.9rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+.dl-hb-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.6rem 0.8rem;
+  margin-bottom: 0.8rem;
+}
+.dl-hb-search {
+  margin-left: auto;
+  width: min(100%, 14rem);
+}
+
+/* Las columnas: #, jugador, héroes, partidas, victorias, K/M/A, almas, daño, rango, puntaje. */
+[data-theme="codex"] .dl-hb-head,
+[data-theme="codex"] .dl-hb-row {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1.6fr) 4.6rem 3.6rem 3.6rem 7.2rem 4rem 4rem 8.5rem 3.6rem;
+  align-items: center;
+  gap: 0.6rem;
+}
+[data-theme="codex"] .dl-sb-head,
+[data-theme="codex"] .dl-sb-row {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr) 10rem 5rem;
+  align-items: center;
+  gap: 0.8rem;
+}
+[data-theme="codex"] .dl-hb-head,
+[data-theme="codex"] .dl-sb-head {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: 2;
+  padding: 0.55rem 0.1rem;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--surface-solid);
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+[data-theme="codex"] .dl-hb-row,
+[data-theme="codex"] .dl-sb-row {
+  min-height: 2.6rem;
+  padding: 0.25rem 0.1rem;
+  border-bottom: 1px solid var(--line);
+}
+[data-theme="codex"] .dl-hb-row:hover,
+[data-theme="codex"] .dl-sb-row:hover {
+  background: var(--surface-2);
+}
+[data-theme="codex"] .dl-hb-pos {
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.dl-hb-player {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+.dl-hb-flag {
+  flex: none;
+  display: flex;
+  width: 20px;
+}
+.dl-hb-reg {
+  flex: none;
+  padding: 0 0.3rem;
+  border-radius: 3px;
+  background: var(--surface-2);
+  font-family: var(--font-data-narrow);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+.dl-hb-tops {
+  display: flex;
+  gap: 2px;
+}
+.dl-hb-tops img {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+}
+[data-theme="codex"] .dl-hb-num,
+[data-theme="codex"] .dl-hb-kda {
+  text-align: right;
+  font-family: var(--font-data-narrow);
+  font-weight: 600;
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text);
+}
+[data-theme="codex"] .dl-hb-head .dl-hb-num,
+[data-theme="codex"] .dl-hb-head .dl-hb-kda,
+[data-theme="codex"] .dl-sb-head .dl-hb-num {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  white-space: normal;
+  color: inherit;
+}
+[data-theme="codex"] .dl-hb-kda {
+  color: var(--text-dim);
+  font-weight: 500;
+}
+.dl-hb-rank {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+.dl-hb-rank .dl-badge-sub {
+  display: none;
+}
+[data-theme="codex"] .dl-hb-row .dl-hb-score,
+[data-theme="codex"] .dl-sb-row .dl-hb-score {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-lit);
+}
+[data-theme="codex"] .dl-hb-row .dl-hb-score {
+  cursor: help;
+}
+
+/* Tableta: se van almas y daño por minuto. */
+@media (max-width: 1100px) {
+  [data-theme="codex"] .dl-hb-head,
+  [data-theme="codex"] .dl-hb-row {
+    grid-template-columns: 2rem minmax(0, 1.6fr) 4.6rem 3.4rem 3.4rem 7rem 7.5rem 3.4rem;
+  }
+  .dl-hb-wide {
+    display: none;
+  }
+}
+/* Teléfono: #, jugador, partidas, victorias, insignia y puntaje. */
+@media (max-width: 46rem) {
+  [data-theme="codex"] .dl-hb-head,
+  [data-theme="codex"] .dl-hb-row {
+    grid-template-columns: 1.5rem minmax(0, 1fr) 2.6rem 2.8rem 1.5rem 2.8rem;
+    gap: 0.45rem;
+  }
+  .dl-hb-tops,
+  .dl-hb-kda,
+  .dl-hb-flag,
+  .dl-hb-reg,
+  .dl-hb-rank .dl-lb-rank-name {
+    display: none;
+  }
+  [data-theme="codex"] .dl-hb-head .dl-hb-rank {
+    visibility: hidden;
+  }
+  [data-theme="codex"] .dl-hb-head,
+  [data-theme="codex"] .dl-sb-head {
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+  }
+  [data-theme="codex"] .dl-sb-head,
+  [data-theme="codex"] .dl-sb-row {
+    grid-template-columns: 1.6rem minmax(0, 1fr) 5.5rem 3.2rem;
+    gap: 0.5rem;
+  }
+  .dl-hb-search {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* ---------- Estadísticas ---------- */
+.dl-sb-label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dl-sb-floor {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+/* ---------- ¿Entro? ---------- */
+.dl-chk-form {
+  display: flex;
+  gap: 0.6rem;
+  margin: 0.8rem 0;
+}
+.dl-chk-form .field {
+  flex: 1;
+  max-width: 30rem;
+}
+.dl-chk-pick ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dl-chk-pick button {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem 0.3rem 0.3rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+.dl-chk-pick button:hover {
+  background: var(--line);
+}
+.dl-chk-pick img {
+  border-radius: 3px;
+}
+.dl-chk-h {
+  margin: 1rem 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.dl-chk-count {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-dim);
+}
+.dl-chk-verdict {
+  margin: 0.2rem 0 0;
+  font-weight: 700;
+  color: var(--text);
+}
+.dl-chk-verdict[data-in="true"] {
+  color: var(--accent-lit);
+}
+.dl-chk-heroes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 0.35rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dl-chk-hero {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 0.55rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--radius);
+}
+.dl-chk-hero img {
+  grid-row: span 2;
+  border-radius: 3px;
+}
+.dl-chk-hero[data-in="true"] {
+  background: var(--surface-2);
+}
+.dl-chk-hero-name {
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+.dl-chk-hero-name a {
+  color: var(--text);
+}
+.dl-chk-hero-m {
+  font-family: var(--font-data-narrow);
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+.dl-chk-hero-v {
+  grid-column: 2 / span 2;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+.dl-chk-hero[data-in="true"] .dl-chk-hero-v {
+  font-family: var(--font-data-narrow);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-lit);
+}
+.dl-sb-ctl {
+  display: flex;
+  flex-direction: column;
+}
+.dl-sb {
+  max-width: 56rem;
+}
+/* En el teléfono la grilla de 38 caras ocupaba una pantalla: más chicas, más por fila. */
+@media (max-width: 46rem) {
+  [data-theme="codex"] .page.dl-hb-page > .dl-lb-heroes {
+    grid-template-columns: repeat(auto-fill, minmax(1.75rem, 1fr));
+    gap: 0.2rem;
+  }
+}
+
+/* ---------- El desplegable (DeadlockDropdown) ----------
+   El <select> nativo abre una lista blanca del sistema encima del papel; esta
+   es la misma caja que `.field`, y la lista es otro recorte de papel. */
+.dl-dd {
+  position: relative;
+  min-width: 12rem;
+}
+.dl-dd-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 0.7rem 0 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-text);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+.dl-dd-btn:hover,
+.dl-dd[data-open="true"] .dl-dd-btn {
+  border-color: var(--line-strong);
+}
+.dl-dd-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.dl-dd-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* La flecha: un triángulo de tinta, gira al abrir. */
+.dl-dd-caret {
+  flex: none;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid currentColor;
+  transition: transform 140ms ease;
+}
+.dl-dd[data-open="true"] .dl-dd-caret {
+  transform: rotate(180deg);
+}
+.dl-dd-list {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 100%;
+  max-height: min(28rem, 70vh);
+  overflow-y: auto;
+  /* Una barra fina en tinta: la del sitio (16 px, punteada) le ganaba a la
+     lista. Sólo con ::-webkit-scrollbar, como pide scrollbar.css: declarar
+     scrollbar-width apaga la barra propia en Chrome 121+. */
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+  box-shadow: 3px 4px 0 rgba(0, 0, 0, 0.35);
+}
+.dl-dd-list li {
+  padding: 0.38rem 0.6rem;
+  border-radius: 3px;
+  color: var(--text);
+  font-size: 0.86rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+/* La que apunta el mouse o el teclado: tinte del papel, sin filo de color. */
+.dl-dd-list li[data-active="true"] {
+  background: var(--surface-2);
+}
+/* La elegida: tinta del acento y en negrita. */
+.dl-dd-list li[aria-selected="true"] {
+  color: var(--accent-lit);
+  font-weight: 700;
+}
+@media (max-width: 46rem) {
+  .dl-dd,
+  .dl-sb-ctl {
+    width: 100%;
+  }
+}
+.dl-dd-list::-webkit-scrollbar {
+  width: 6px;
+}
+.dl-dd-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dl-dd-list::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: var(--line-strong);
+}
