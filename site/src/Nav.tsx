@@ -367,6 +367,27 @@ export default function Nav({
             </div>
           ))}
         </div>
+        {/* Herramientas que sirven para cualquier juego (2026-11-17), en una fila al pie del panel. Torneos todavía
+            no existe: se ve con su insignia "Beta" pero no se puede elegir. */}
+        <div className="top-menu-tools">
+          <p className="top-menu-title">{copy.games.tools}</p>
+          <ul className="top-menu-toollist">
+            <li>
+              <span className="top-menu-tool is-soon" aria-disabled="true">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 5h5v4H3zM3 15h5v4H3zM8 7h3v10H8M11 12h4M15 10h6v4h-6z" />
+                </svg>
+                <span className="top-menu-tool-text">
+                  <span className="top-menu-tool-name">
+                    {copy.games.tournaments}
+                    <span className="top-menu-beta">{copy.games.beta}</span>
+                  </span>
+                  <span className="top-menu-tool-note">{copy.games.tournamentsNote}</span>
+                </span>
+              </span>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
   );

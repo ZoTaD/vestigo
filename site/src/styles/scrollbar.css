@@ -40,15 +40,6 @@
   --sb-hover: #e2c391;
 }
 
-/* Portada: papel claro, así que se invierte — la barra es de tinta y los
-   puntos y el contorno del color del papel. */
-:root:has(.app[data-place="home"]) {
-  --sb-track: #e7e2d4;
-  --sb-hatch: rgba(20, 20, 15, 0.08);
-  --sb-paper: #14140f;
-  --sb-ink: #e7e2d4;
-  --sb-hover: #8a6a24;
-}
 
 @media (hover: hover) and (pointer: fine) {
   ::-webkit-scrollbar {
