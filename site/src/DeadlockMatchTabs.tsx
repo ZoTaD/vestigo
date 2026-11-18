@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import type { Lang } from "./i18n";
 import { useCopy } from "./deadlockCopy";
 import { text } from "./localized";
@@ -205,7 +205,10 @@ function MomentRow({ m, lang }: { m: Moment; lang: Lang }) {
 /** El minuto en que se mide la línea: el de la muestra de ~9 minutos. */
 const LANE_T = 540;
 
-function Lanes({ match, names, lang }: { match: ParsedMatch; names: Map<number, SteamAccount>; lang: Lang }) {
+/** Envuelve el nombre en el enlace al perfil del jugador (lo arma el informe, que tiene la ruta). */
+type PlayerLink = (p: MatchPlayer, label: string) => ReactNode;
+
+function Lanes({ match, names, lang, link }: { match: ParsedMatch; names: Map<number, SteamAccount>; lang: Lang; link: PlayerLink }) {
   const c = MATCH_TABS_COPY[lang].lanes;
   const nombre = usePlayerName(names, lang);
   const heroe = useHeroName(lang);
@@ -274,7 +277,7 @@ function Lanes({ match, names, lang }: { match: ParsedMatch; names: Map<number, 
                         <li key={p.slot} className="dl-lane-player">
                           <GameImg src={heroImg(p.heroId) ?? ""} alt={heroe(p.heroId)} width={32} height={32} loading="lazy" decoding="async" />
                           <span className="dl-lane-who">
-                            <span className="dl-lane-pname">{nombre(p)}</span>
+                            <span className="dl-lane-pname">{link(p, nombre(p))}</span>
                             <span className="dl-lane-hero">{heroe(p.heroId)}</span>
                           </span>
                           <span className="dl-lane-stats">
@@ -361,7 +364,7 @@ const GROUPS: { id: keyof (typeof MATCH_TABS_COPY)["en"]["numbers"]["groups"]; c
   },
 ];
 
-function Numbers({ match, names, lang }: { match: ParsedMatch; names: Map<number, SteamAccount>; lang: Lang }) {
+function Numbers({ match, names, lang, link }: { match: ParsedMatch; names: Map<number, SteamAccount>; lang: Lang; link: PlayerLink }) {
   const copy = useCopy();
   const c = MATCH_TABS_COPY[lang].numbers;
   const nombre = usePlayerName(names, lang);
@@ -414,7 +417,7 @@ function Numbers({ match, names, lang }: { match: ParsedMatch; names: Map<number
                     <th scope="row">
                       <span className="dl-numbers-who">
                         <GameImg src={heroImg(p.heroId) ?? ""} alt={heroe(p.heroId)} width={24} height={24} loading="lazy" decoding="async" />
-                        <span className="dl-numbers-name">{nombre(p)}</span>
+                        <span className="dl-numbers-name">{link(p, nombre(p))}</span>
                       </span>
                     </th>
                     {g.cols.map((col, i) => {
@@ -442,13 +445,15 @@ export default function DeadlockMatchTabs({
   match,
   names,
   lang,
+  link,
 }: {
   tab: Exclude<MatchTab, "report">;
   match: ParsedMatch;
   names: Map<number, SteamAccount>;
   lang: Lang;
+  link: PlayerLink;
 }) {
   if (tab === "win-chance") return <WinChance match={match} lang={lang} />;
-  if (tab === "lanes") return <Lanes match={match} names={names} lang={lang} />;
-  return <Numbers match={match} names={names} lang={lang} />;
+  if (tab === "lanes") return <Lanes match={match} names={names} lang={lang} link={link} />;
+  return <Numbers match={match} names={names} lang={lang} link={link} />;
 }
