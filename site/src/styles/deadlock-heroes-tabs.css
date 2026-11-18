@@ -1,0 +1,33 @@
+/* Deadlock · Héroes: sub-pestañas Estadísticas / Récords (2026-11-18).
+   Las mismas de la Escalera (.dl-ltabs), copiadas para no cargar su CSS. */
+.dl-htabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0 1rem;
+  border-bottom: 2px solid var(--text);
+}
+.dl-htab {
+  padding: 8px 16px 6px;
+  border-radius: 6px 6px 0 0;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+  font-size: 20px;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.dl-htab:hover {
+  color: var(--text);
+  text-decoration: none;
+}
+.dl-htab[aria-current="page"] {
+  background: var(--text);
+  color: var(--surface-solid, #f3ead8);
+}
+@media (max-width: 560px) {
+  .dl-htab {
+    padding: 6px 10px 4px;
+    font-size: 16px;
+  }
+}

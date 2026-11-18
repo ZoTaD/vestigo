@@ -1,0 +1,80 @@
+/* ---------------------------------------------------------------------------
+   Deadlock: Récords (2026-11-18). Cajas en tinta como el resto de Deadlock
+   (estilo Mixto): el número grande es lo que se mira, lo demás va chico.
+   --------------------------------------------------------------------------- */
+
+.dl-rec { display: grid; gap: 1rem; }
+
+
+/* El selector: "Todos los héroes" y después las caras (las de la Escalera). */
+.dl-rec-pick { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.5rem; align-items: start; }
+.dl-rec-heroes { min-width: 0; }
+[data-theme="codex"] a.dl-rec-all {
+  display: flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0 0.8rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font: 700 0.8rem/1 var(--font-body);
+  white-space: nowrap;
+  text-decoration: none;
+  color: inherit;
+}
+[data-theme="codex"] a.dl-rec-all[aria-current="page"] { box-shadow: 0 0 0 2px var(--accent); }
+[data-theme="codex"] a.dl-rec-hero { display: block; text-decoration: none; }
+[data-theme="codex"] a.dl-rec-hero[aria-current="page"] { filter: none; box-shadow: 0 0 0 2px var(--accent); }
+
+.dl-rec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: 0.8rem;
+}
+.dl-rec-card { display: grid; gap: 0.7rem; align-content: start; margin: 0; min-width: 0; }
+
+.dl-rec-metric {
+  margin: 0;
+  font: 700 0.8rem/1.1 var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.dl-rec-top { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0.75rem; align-items: center; }
+.dl-rec-top-img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius); }
+.dl-rec-top-body { min-width: 0; display: grid; gap: 0.15rem; }
+.dl-rec-value { margin: 0; font: 700 2rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.dl-rec-unit { font: 600 0.85rem/1 var(--font-body); opacity: 0.7; }
+.dl-rec-player { font: 700 0.95rem/1.2 var(--font-body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dl-rec-sub { margin: 0; font: 500 0.78rem/1.35 var(--font-body); opacity: 0.85; }
+.dl-rec-won { color: var(--good, #4caf6a); font-weight: 700; }
+.dl-rec-lost { color: var(--bad, #d9634f); font-weight: 700; }
+
+.dl-rec-list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; counter-reset: rec 1; }
+.dl-rec-list li {
+  counter-increment: rec;
+  display: grid;
+  grid-template-columns: 1.4rem 22px minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  min-height: 28px;
+  font: 500 0.85rem/1.2 var(--font-body);
+}
+.dl-rec-list li::before { content: counter(rec); font-weight: 700; opacity: 0.55; font-variant-numeric: tabular-nums; }
+.dl-rec-list img { width: 22px; height: 22px; object-fit: cover; border-radius: 4px; }
+.dl-rec-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dl-rec-n { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+
+@media (max-width: 560px) {
+  .dl-rec-value { font-size: 1.7rem; }
+  .dl-rec-pick { grid-template-columns: minmax(0, 1fr); }
+  [data-theme="codex"] .dl-rec-heroes { grid-template-columns: repeat(auto-fill, minmax(1.9rem, 1fr)); }
+  [data-theme="codex"] a.dl-rec-all { justify-self: start; }
+}
+
+/* Los enlaces van en el color del texto; el subrayado sólo al pasar. */
+[data-theme="codex"] .dl-rec-card a { color: inherit; text-decoration: none; }
+[data-theme="codex"] .dl-rec-card a:hover { text-decoration: underline; }
+[data-theme="codex"] .dl-rec-sub a { text-decoration: underline; text-decoration-color: rgba(239, 232, 216, 0.35); }
+.dl-rec, .dl-rec-grid, .dl-rec-card { min-width: 0; }
+[data-theme="codex"] .dl-rec-sub a { white-space: nowrap; }

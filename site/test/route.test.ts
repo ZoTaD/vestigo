@@ -275,3 +275,20 @@ describe("navigationPath: la dirección al navegar", () => {
     expect(navigationPath(from, from, at)).toBe("/es/d2r/drops");
   });
 });
+
+describe("Deadlock: récords en Héroes (2026-11-18)", () => {
+  it("lee el mundo y el de un héroe como sub-pestaña de Héroes", () => {
+    expect(parseRoute("/es/deadlock/heroes/records")).toMatchObject({ view: "deadlock", dlSection: "heroes", detail: "records" });
+    expect(parseRoute("/en/deadlock/heroes/records/abrams")).toMatchObject({ dlSection: "heroes", detail: "records/abrams" });
+  });
+
+  it("la ficha de un héroe sigue siendo un solo segmento", () => {
+    expect(parseRoute("/en/deadlock/heroes/abrams")).toMatchObject({ dlSection: "heroes", detail: "abrams" });
+    expect(parseRoute("/en/deadlock/heroes/abrams/extra").detail).toBe("abrams");
+  });
+
+  it("escribe y vuelve a leer la misma dirección", () => {
+    const r = parseRoute("/en/deadlock/heroes/records/abrams");
+    expect(routePath(r)).toBe("/en/deadlock/heroes/records/abrams");
+  });
+});

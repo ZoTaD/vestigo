@@ -214,12 +214,18 @@ export const DEADLOCK_TAB_ORIGINS: Partial<Record<DeadlockSection, { href: strin
 export const originsFor = (route: Route) => (route.view === "deadlock" ? DEADLOCK_TAB_ORIGINS[route.dlSection] ?? [] : []);
 
 /** Los archivos cuyo JS y CSS necesita una ruta antes del primer render. */
+/** Récords (2026-11-18) es una sub-pestaña de Héroes con su propio archivo: `/heroes/records[/<héroe>]`. */
+export const isRecordsDetail = (route: Route): boolean =>
+  route.view === "deadlock" && route.dlSection === "heroes" && (route.detail === "records" || !!route.detail?.startsWith("records/"));
+
 export function filesFor(route: Route): string[] {
   const area = AREA_FILES[route.view];
   if (!area) return [];
   const tab =
     route.view === "deadlock"
-      ? DEADLOCK_TAB_FILES[route.dlSection]
+      ? isRecordsDetail(route)
+        ? "src/DeadlockRecords.tsx"
+        : DEADLOCK_TAB_FILES[route.dlSection]
       : route.view === "d2r"
         ? D2R_TAB_FILES[route.d2Section ?? "home"]
         : route.view === "zomboid"

@@ -99,6 +99,13 @@ export function metaFor(
     return hero === undefined ? seo.deadlock.buildsHero(build) : seo.deadlock.buildsOne(build, hero);
   }
   // Ranking (2026-11-17): el de un héroe, o una sub-pestaña (stats, one-tricks, check).
+  // Récords (2026-11-18), sub-pestaña de Héroes: la del mundo y la de cada héroe.
+  if (route.view === "deadlock" && route.dlSection === "heroes" && route.detail === "records") {
+    return { title: seo.deadlock.records.title(), description: seo.deadlock.records.description() };
+  }
+  if (detailName && route.view === "deadlock" && route.dlSection === "heroes" && route.detail?.startsWith("records/")) {
+    return seo.deadlock.recordsHero(detailName);
+  }
   if (detailName && route.view === "deadlock" && route.dlSection === "ladder") {
     return seo.deadlock.ladderTab[route.detail ?? ""] ?? seo.deadlock.ladderHero(detailName);
   }
@@ -284,6 +291,10 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     out[`dl-ladder/${slug}`] = say(data.dlHeroes[data.dlHeroIds[i]]?.name as Localized, lang, slug);
   });
   for (const t of LADDER_SUBTABS) out[`dl-ladder/${t}`] = t;
+  // Los récords de cada héroe (2026-11-18).
+  dlSlugs.heroes.forEach((slug, i) => {
+    out[`dl-heroes/records/${slug}`] = say(data.dlHeroes[data.dlHeroIds[i]]?.name as Localized, lang, slug);
+  });
   for (const e of data.dlNews ?? []) out[`dl-patches/${e.slug}`] = e.title;
   for (const l of data.p2?.leagues ?? []) out[`p2-economy/${l.slug}`] = l.name;
   for (const e of data.p2?.editions ?? []) out[`p2-patches/${e.slug}`] = e.version;
