@@ -245,11 +245,12 @@ export const LOCAL_COLUMNS = [
   "ability_points", "ability_stats", "account_id", "assists", "average_badge", "average_badge_team0",
   "average_badge_team1", "banned_hero_ids", "deaths", "duration_s", "game_mode", "game_mode_version",
   "hero_id", "items.game_time_s", "items.imbued_ability_id", "items.item_id", "items.sold_time_s",
-  "items.upgrade_info", "kills", "match_id", "match_mode", "net_worth", "player_rank_consumed_demotion_protection",
+  "items.upgrade_info", "kills", "last_hits", "match_id", "match_mode", "net_worth", "player_rank_consumed_demotion_protection",
   "player_rank_desired_progress_change", "player_rank_final_flat_progress", "player_rank_initial_calibration_games",
   "player_rank_initial_display_rank", "player_rank_initial_flat_progress", "player_rank_initial_win_streak",
   "rank_interval", "ranked_type", "start_time", "stats.boss_damage", "stats.deaths", "stats.net_worth",
-  "stats.player_damage", "stats.time_stamp_s", "team", "winning_team", "won",
+  "stats.player_damage", "stats.player_damage_taken", "stats.player_healing", "stats.time_stamp_s", "team",
+  "winning_team", "won",
 ];
 
 /** La lectura de los deltas y residuales con la copia local (ver `LocalExtras`). */
