@@ -156,6 +156,10 @@ const EN = {
           "Guess today's Deadlock hero, item and ability from their stats, with a daily ranking for each. " +
           "New puzzles every day at 00:00 UTC.",
       },
+      records: {
+        title: () => "Deadlock Records — Most Kills, Damage & Souls in One Match | Vestigo",
+        description: () => "The best single-match performances of the Deadlock season: most kills, hero damage, souls, healing and more, for every hero, with a link to each match.",
+      },
       live: {
         title: () => "Deadlock Live Matches — High-Level Games Right Now | Vestigo",
         description: () => "Watch what's being played in Deadlock right now: the top live matches, every hero, the soul lead and the match ID to spectate in game.",
@@ -224,6 +228,11 @@ const EN = {
       },
       /** Builds (2026-11-15): la biblioteca de un héroe y la ficha de una build. */
       /** Ranking (2026-11-17): el de cada héroe y las sub-pestañas, cada una con su título. */
+      /** Récords (2026-11-18): los de un héroe. */
+      recordsHero: (hero: string) => ({
+        title: `${hero} Records – Most Kills, Damage & Souls in One Deadlock Match | Vestigo`,
+        description: `The best ${hero} matches of the Deadlock season: most kills, hero damage, souls, healing and more in a single game, with the player and a link to each match.`,
+      }),
       ladderHero: (hero: string) => ({
         title: `${hero} Leaderboard – Best Deadlock ${hero} Players | Vestigo`,
         description:
@@ -398,6 +407,10 @@ const ES: typeof EN = {
           "Adiviná el héroe, el objeto y la habilidad de Deadlock del día por sus stats, con un ranking diario " +
           "para cada uno. Nuevos todos los días a las 00:00 UTC.",
       },
+      records: {
+        title: () => "Récords de Deadlock — más kills, daño y almas en una partida | Vestigo",
+        description: () => "Las mejores partidas de la temporada de Deadlock: más kills, daño a héroes, almas, curación y más, de cada héroe, con el enlace a cada partida.",
+      },
       live: {
         title: () => "Partidas en vivo de Deadlock — las de mayor nivel ahora | Vestigo",
         description: () => "Qué se está jugando en Deadlock ahora: las mejores partidas en vivo, cada héroe, la ventaja de almas y el ID para espectarla desde el juego.",
@@ -455,6 +468,10 @@ const ES: typeof EN = {
             : `Cómo jugar ${name} en Deadlock: victorias, uso, el orden de compra recomendado ` +
               "y los enfrentamientos que lo cambian.",
       },
+      recordsHero: (hero: string) => ({
+        title: `Récords de ${hero} – más kills, daño y almas en una partida de Deadlock | Vestigo`,
+        description: `Las mejores partidas de ${hero} en la temporada de Deadlock: más kills, daño a héroes, almas, curación y más en una sola partida, con el jugador y el enlace a cada partida.`,
+      }),
       ladderHero: (hero: string) => ({
         title: `Ranking de ${hero} – los mejores jugadores de ${hero} en Deadlock | Vestigo`,
         description:

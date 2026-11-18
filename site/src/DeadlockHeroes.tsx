@@ -1,3 +1,4 @@
+import DeadlockHeroesTabs from "./DeadlockHeroesTabs";
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import RouteLink from "./RouteLink";
 import SectionHead from "./SectionHead";
@@ -263,6 +264,8 @@ export default function DeadlockHeroes({
           )
         }
       />
+
+      <DeadlockHeroesTabs route={route} navigate={navigate} active="stats" />
 
       {!meta ? (
         <p className="detail-note dl-loading">{t.loading}</p>

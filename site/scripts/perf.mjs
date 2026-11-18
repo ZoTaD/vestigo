@@ -41,6 +41,9 @@ export const PAGES = [
   "/en/deadlock/ladder/stats",
   "/en/deadlock/ladder/check",
   "/en/deadlock/live",
+  // Récords (2026-11-18): el mundo y un héroe.
+  "/en/deadlock/heroes/records",
+  "/es/deadlock/heroes/records/abrams",
   "/en/deadlock/dle",
   "/en/deadlock/dle/ranking",
   "/en/deadlock/heroes/infernus",

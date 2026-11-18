@@ -669,8 +669,11 @@ export function parseRoute(pathname: string): Route {
       const dlSection = maybeSection;
       // El perfil y la partida llevan además su pestaña: /player/123/achievements,
       // /match/456/lanes. Builds lleva el héroe y la build: /builds/abrams/748747.
+      // Héroes, los récords de uno: /heroes/records/abrams (2026-11-18).
       const detail =
-        (dlSection === "player" || dlSection === "match" || dlSection === "builds") && rest[2] && rest[3]
+        (dlSection === "player" || dlSection === "match" || dlSection === "builds" || (dlSection === "heroes" && rest[2] === "records")) &&
+        rest[2] &&
+        rest[3]
           ? `${rest[2]}/${rest[3]}`
           : DL_WITH_DETAIL.includes(dlSection) && rest[2]
             ? rest[2]

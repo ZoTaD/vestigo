@@ -612,6 +612,28 @@ jobs:
             echo "las remontadas tienen ${edad_h}h (son las ${hora} UTC); esta corrida las saltea con los puntos"
           fi
 
+      # Récords de una partida (2026-11-18): la mejor partida de la temporada en
+      # cada estadística, del mundo y de cada héroe, del lake. Suma de a poco: lee
+      # desde la corrida anterior (con dos días de margen) y mezcla; la primera de
+      # una temporada lee la temporada entera, de a dos días. Una vez por día.
+      # **Perdona fallar**: queda lo commiteado.
+      - name: build records
+        continue-on-error: true
+        timeout-minutes: 30
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/records.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          if [ "$edad_h" -ge 20 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            timeout -k 1m 25m npm run build:records --prefix games/deadlock/pipeline
+          else
+            echo "los récords de partida tienen ${edad_h}h (< 20); esta corrida los saltea"
+          fi
+
       - name: guard
         id: guard
         run: |
