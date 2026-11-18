@@ -22,6 +22,22 @@
   clip-path: inset(0 -100vmax);
 }
 
+/* La barra de arriba abre el menú Games hacia abajo: no se recorta (el
+   clip-path lo escondía) y va sobre la de pestañas. El negro de borde a borde
+   lo pone una capa propia detrás, en vez de la sombra recortada. */
+[data-theme="codex"][data-game="deadlock"] nav.top {
+  z-index: 60;
+  box-shadow: none;
+  clip-path: none;
+}
+[data-theme="codex"][data-game="deadlock"] nav.top::before {
+  content: "";
+  position: absolute;
+  inset: 0 -100vmax;
+  z-index: -1;
+  background: #0d0c0b;
+}
+
 /* El banner deja su foto: la escena ya está detrás, sin corte. Su canto
    rasgado oscuro la partía en dos. */
 [data-theme="codex"][data-game="deadlock"] .sechead::before {
