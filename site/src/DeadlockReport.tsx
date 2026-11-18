@@ -415,6 +415,20 @@ export default function DeadlockReport({
   const [error, setError] = useState<string | null>(null);
   const [elegido, setElegido] = useState<number | null>(null);
 
+  /** El nombre de un jugador como enlace a su perfil; los anónimos (cuenta 0) quedan en texto. */
+  const perfil = (p: MatchPlayer, label: string) =>
+    p.accountId > 0 ? (
+      <RouteLink
+        className="dl-rep-who-link"
+        to={{ ...route, view: "deadlock", dlSection: "player", detail: String(p.accountId) }}
+        onNavigate={navigate}
+      >
+        {label}
+      </RouteLink>
+    ) : (
+      label
+    );
+
   const id = matchId ? Number(matchId) : null;
   const pestana: MatchTab = MATCH_TABS.includes(tab as MatchTab) ? (tab as MatchTab) : "report";
   const tabRoute = (t: MatchTab): Route => ({
@@ -530,7 +544,7 @@ export default function DeadlockReport({
 
       {pestana !== "report" ? (
         <Suspense fallback={<div className="area-loading" aria-busy="true" />}>
-          <DeadlockMatchTabs tab={pestana} match={match} names={names} lang={lang} />
+          <DeadlockMatchTabs tab={pestana} match={match} names={names} lang={lang} link={perfil} />
         </Suspense>
       ) : (
       <>
@@ -563,11 +577,23 @@ export default function DeadlockReport({
                 const quien = names.get(p.accountId)?.name;
                 return (
                   <li key={p.slot}>
-                    <button
+                    {/* Un `div` y no un `button`: adentro va el enlace al
+                        perfil, y un enlace no puede ir dentro de un botón. */}
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={elegido === p.slot}
                       className={`dl-rep-row ${elegido === p.slot ? "is-open" : ""} ${
                         p.team === match.winningTeam ? "is-win" : "is-loss"
                       }`}
                       onClick={() => setElegido(p.slot)}
+                      onKeyDown={(e) => {
+                        if (e.target !== e.currentTarget) return;
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setElegido(p.slot);
+                        }
+                      }}
                       title={g ? c.gradeHow(g.letter, nombreHeroe(p.heroId)) : c.noGrade}
                     >
                       <span className="dl-rep-who">
@@ -580,7 +606,10 @@ export default function DeadlockReport({
                           loading="lazy" decoding="async"
                         />
                         <span className="dl-rep-who-txt">
-                          <span className="dl-rep-who-name">{quien ?? nombreHeroe(p.heroId)}</span>
+                          {/* El `span` corta el clic del enlace: si llegara a la fila, la elegiría además de navegar. */}
+                          <span className="dl-rep-who-name" onClick={(e) => e.stopPropagation()}>
+                            {perfil(p, quien ?? nombreHeroe(p.heroId))}
+                          </span>
                           <span className="dl-rep-who-hero">{nombreHeroe(p.heroId)}</span>
                         </span>
                       </span>
@@ -614,7 +643,7 @@ export default function DeadlockReport({
                           );
                         })}
                       </span>
-                    </button>
+                    </div>
                   </li>
                 );
               })}
