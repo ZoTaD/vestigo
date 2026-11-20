@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { FEATURES, fitLogistic, impactModel, impactSql, MIN_ROWS, smooth } from "../src/impactModel";
+import { FEATURES, fitLogistic, impactModel, impactSourceSql, impactSql, MIN_ROWS, modelIsUsable, smooth } from "../src/impactModel";
+import publicado from "../../data/impact-model.json";
 
 /** Filas agrupadas sacadas de una logística conocida, con n grande para que la proporción sea casi exacta. */
 function synth(coef: number[]): { x: number[]; prev: number[]; n: number; wins: number }[] {
@@ -68,11 +69,33 @@ describe("smooth", () => {
   });
 });
 
+describe("impactSourceSql", () => {
+  it("une las lecturas eligiendo columnas, con la ventana en cada una", () => {
+    const sql = impactSourceSql(["A", "B"], "2026-11-13T00:00:00");
+    expect(sql).not.toContain("select *");
+    expect(sql.match(/union all/g)).toHaveLength(1);
+    expect(sql.match(/start_time >= TIMESTAMP '2026-11-13T00:00:00'/g)).toHaveLength(2);
+    expect(sql).toContain('"death_details.game_time_s"');
+  });
+});
+
 describe("impactSql", () => {
   it("filtra rankeadas normales y cuenta cada estructura por tipo", () => {
     const sql = impactSql("X");
     expect(sql).toContain("match_mode = 'Ranked'");
     expect(sql).toContain("game_mode = 'Normal'");
     for (const k of ["Tier1%", "Tier2%", "TitanShield%", "BarrackBoss%"]) expect(sql).toContain(k);
+  });
+});
+
+describe("modelIsUsable", () => {
+  it("no deja publicar un modelo vacío o con pocas partidas", () => {
+    const base = { generatedAt: "", from: "", to: "", features: FEATURES };
+    expect(modelIsUsable({ ...base, matches: 1574, minutes: [] })).toBe(false);
+    expect(modelIsUsable({ ...base, matches: 40000, minutes: [] })).toBe(false);
+  });
+
+  it("el modelo publicado pasa la guarda", () => {
+    expect(modelIsUsable(publicado as never)).toBe(true);
   });
 });
