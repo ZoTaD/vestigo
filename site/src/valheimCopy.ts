@@ -134,7 +134,7 @@ const EN = {
   allBiomes: "All",
   wikiCredit: "Places, habitats and photos of creatures and places:",
   wikiLicense: "under CC BY-SA 3.0 (the author of each photo shows when you hover it).",
-  wikiExtraCredit: "Deep North data (places, attacks, drop rates) checked against",
+  wikiExtraCredit: "Deep North data (places, attacks, drop rates) checked against, and Deep North photos by ErmacLich and Cuikui (used with their permission) from",
   tabs: EN_TABS,
   // El título visible de cada pestaña: con el nombre del juego, que es como se busca.
   tabH1: {
@@ -466,7 +466,7 @@ const ES: typeof EN = {
   allBiomes: "Todos",
   wikiCredit: "Lugares, hábitats y fotos de criaturas y lugares:",
   wikiLicense: "bajo licencia CC BY-SA 3.0 (el autor de cada foto aparece al pasar el cursor).",
-  wikiExtraCredit: "Datos del Norte profundo (lugares, ataques, probabilidades) revisados contra",
+  wikiExtraCredit: "Datos del Norte profundo (lugares, ataques, probabilidades) revisados contra, y fotos del Norte profundo de ErmacLich y Cuikui (usadas con su permiso) de",
   tabs: ES_TABS,
   tabH1: {
     foods: "Comidas de Valheim", meads: "Hidromieles de Valheim", weapons: "Armas de Valheim", armor: "Armaduras de Valheim",
