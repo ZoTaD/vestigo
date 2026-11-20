@@ -1,7 +1,7 @@
 /**
  * La ficha de partida de AoE2 (2026-11-20): `/aoe2/matches/<id>?p=<perfil>` (la API sólo encuentra la partida en el
  * historial de alguien). Equipos con jugador, civ, ELO y cambio; el ganador con la corona del juego; mapa, modo,
- * duración, fecha, tamaño del mapa, build y espectadores. Sin prerender, con `noindex` y fuera del sitemap.
+ * duración, fecha, tamaño del mapa y espectadores. Sin prerender, con `noindex` y fuera del sitemap.
  */
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
@@ -45,7 +45,6 @@ function Ficha({ m, route, navigate }: { m: Aoe2Match; route: Route; navigate: N
     [t.match.facts.length, t.hist.min(m.end - m.start)],
     [t.match.facts.date, new Date(m.start * 1000).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" })],
     ...(m.mapSize ? ([[t.match.facts.size, t.match.tiles(m.mapSize)]] as [string, string][]) : []),
-    ...(m.build ? ([[t.match.facts.build, String(m.build)]] as [string, string][]) : []),
     [t.match.facts.observers, String(m.observers)],
   ];
   return (

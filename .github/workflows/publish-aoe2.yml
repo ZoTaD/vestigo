@@ -1,0 +1,74 @@
+name: publish aoe2 stats
+
+# Age of Empires II: DE (2026-11-20): rankings, memoria de ELO y estadísticas de civs, mapas y matchups, todos los días,
+# directo de la API de World's Edge (`games/aoe2/tools/daily.py`). Diseño: docs/superpowers/specs/2026-11-20-aoe2-design.md.
+#
+# **No dispara un build propio**, igual que `publish-coh3`: el commit lo empuja el GITHUB_TOKEN y las estadísticas van en
+# `games/aoe2/stats`, fuera de los `paths` de `deploy.yml`; salen con el siguiente build de `publish-deadlock`.
+#
+# **Parche nuevo** → sumar su línea en `games/aoe2/tools/patches.py`.
+on:
+  schedule:
+    # Después de la de CoH (07:05 UTC), para no pedirle a las dos APIs a la vez.
+    - cron: "20 7 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: publish-aoe2
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+
+      # Una falla de la API no tumba el commit de lo que se haya juntado (`continue-on-error`); el colector tiene su
+      # propio plazo para pedir historiales (`--deadline`) y escribe lo juntado.
+      - name: stats
+        continue-on-error: true
+        run: python games/aoe2/tools/daily.py --days 28 --budget 3000 --deadline 2400
+
+      - name: guard
+        id: guard
+        run: |
+          if [ -z "$(git status --porcelain -- games/aoe2/stats)" ]; then
+            echo "nada cambió; no hay commit"
+            echo "publish=no" >> "$GITHUB_OUTPUT"
+          else
+            git status --short -- games/aoe2/stats | head -20
+            echo "publish=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: commit
+        if: steps.guard.outputs.publish == 'yes'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          auth="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git_auth() { git -c "http.https://github.com/.extraheader=$auth" "$@"; }
+          git config user.name "vestigo-bot"
+          git config user.email "67348048+ZoTaD@users.noreply.github.com"
+          git add games/aoe2/stats
+          git commit -m "chore: publish today's AoE2 stats"
+          empujado=0
+          for intento in 1 2 3; do
+            if git_auth push origin "HEAD:$GITHUB_REF_NAME"; then empujado=1; break; fi
+            echo "push rechazado (intento $intento): traigo lo que llegó y reintento"
+            git_auth fetch origin "$GITHUB_REF_NAME" || break
+            git rebase "origin/$GITHUB_REF_NAME" || break
+          done
+          if [ "$empujado" != 1 ]; then
+            echo "::error::no se pudo publicar después de 3 intentos"
+            exit 1
+          fi

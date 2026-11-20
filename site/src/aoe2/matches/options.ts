@@ -4,8 +4,8 @@
  *
  * Formato (visto el 20/11): base64 → zlib → un string JSON con otro base64 → 1 byte con la cantidad de pares y después
  * cada par como `uint32` (largo) + `"clave:valor"`. Claves verificadas con partidas reales: 8 = tamaño del mapa en
- * casillas (120 en 1v1, 168 en 2v2, 200 en 3v3, 220 en 4v4), 10 = build del juego (sube con cada parche), 93 = el
- * `matchtype_id`. El resto no se muestra hasta verificarlo.
+ * casillas (120 en 1v1, 168 en 2v2, 200 en 3v3, 220 en 4v4) y 93 = el `matchtype_id`. La 10 NO es la build del juego
+ * (cambia dentro de un mismo día). El resto no se muestra hasta verificarlo.
  */
 import { inflateSync } from "node:zlib";
 
@@ -30,12 +30,11 @@ export function decodeOptions(b64: string): Record<number, string> {
   }
 }
 
-export type NamedOptions = { mapSize?: number; build?: number };
+export type NamedOptions = { mapSize?: number };
 
 export function namedOptions(o: Record<number, string>): NamedOptions {
   const n = (k: number) => (o[k] != null && /^\d+$/.test(o[k]) ? Number(o[k]) : undefined);
   const out: NamedOptions = {};
   if (n(8) != null) out.mapSize = n(8);
-  if (n(10) != null) out.build = n(10);
   return out;
 }

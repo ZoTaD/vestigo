@@ -14,8 +14,8 @@ describe("opciones de la partida", () => {
     expect(o[10]).toBe("11026");
     expect(o[93]).toBe("6");
   });
-  it("tamaño del mapa en casillas y build del juego", () => {
-    expect(namedOptions(decodeOptions(ms.find((m) => m.id === 493244815)!.options!))).toEqual({ mapSize: 220, build: 10895 });
+  it("tamaño del mapa en casillas (la clave 10 no es la build: cambia dentro de un mismo día)", () => {
+    expect(namedOptions(decodeOptions(ms.find((m) => m.id === 493244815)!.options!))).toEqual({ mapSize: 220 });
   });
   it("unas opciones rotas dan vacío sin tirar", () => {
     expect(decodeOptions("no-es-base64!!")).toEqual({});

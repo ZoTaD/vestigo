@@ -156,6 +156,11 @@
 .a2-who-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 6px; }
 .a2-btn.is-on { background: var(--a2-gold); color: #16120a; border-color: var(--a2-gold); }
 
+.a2-hist-bars { display: flex; align-items: flex-end; gap: 2px; height: 150px; margin-top: 8px; }
+.a2-hist-bars span { flex: 1; background: var(--a2-gold); border-radius: 2px 2px 0 0; min-height: 1px; opacity: 0.85; }
+.a2-hist-bars span:hover { opacity: 1; outline: 1px solid #fff; }
+.a2-hist-axis { display: flex; justify-content: space-between; color: var(--a2-muted); font-size: 12px; margin-top: 4px; }
+
 @media (max-width: 1000px) { .a2-hide-m { display: none; } }
 @media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
 @media (max-width: 560px) { .a2-table th { white-space: normal; } .a2-table td a { display: inline-block; max-width: 8.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; } .a2-panel { padding: 14px 12px; } .a2-mode button { height: 58px; } .a2-mode button span { font-size: 12px; padding: 12px 8px 5px; } }

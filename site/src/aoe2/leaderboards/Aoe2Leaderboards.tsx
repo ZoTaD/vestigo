@@ -13,7 +13,12 @@ import { countryName } from "../../coh3/live/ui";
 import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, ModePicker, Panel, type Aoe2Mode, type Nav } from "../ui";
 import { LEADERBOARD_OF, type Aoe2Row, type SearchResult } from "../api/wel";
-import { countriesOf } from "./logic";
+import { climbers, countriesOf, percentileOf, type Bucket } from "./logic";
+
+/** La foto diaria del colector (`games/aoe2/stats/ladder/<id>.json`). */
+type LadderSnap = { date: string; total: number; hist: Bucket[]; top: [number, number, string?][]; prev?: { date: string; top: [number, number, string?][] } };
+const FOTOS = import.meta.glob<{ default: LadderSnap }>("../../../../games/aoe2/stats/ladder/*.json");
+const fotoDe = (id: number) => FOTOS[`../../../../games/aoe2/stats/ladder/${id}.json`]?.().then((m) => m.default) ?? Promise.resolve(null);
 
 const PAGINA = 200;
 type Key = "rank" | "player" | "elo" | "max" | "wins" | "wr" | "streak" | "last";
@@ -57,6 +62,15 @@ export default function Aoe2Leaderboards({ route, navigate }: { route: Route; na
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, intento]);
 
+  const [foto, setFoto] = useState<LadderSnap | null>(null);
+  useEffect(() => {
+    setFoto(null);
+    let vivo = true;
+    void fotoDe(LEADERBOARD_OF[mode]).then((f) => vivo && setFoto(f));
+    return () => {
+      vivo = false;
+    };
+  }, [mode]);
   const paises = useMemo(() => countriesOf(rows), [rows]);
   const vista = useMemo(() => sortRows(pais ? rows.filter((r) => r.country === pais) : rows, COLS, sort), [rows, pais, sort]);
   const ahora = Math.floor(Date.now() / 1000);
@@ -149,7 +163,48 @@ export default function Aoe2Leaderboards({ route, navigate }: { route: Route; na
           )}
         </Panel>
       )}
+      {foto && <Foto foto={foto} route={route} navigate={navigate} />}
     </>
+  );
+}
+
+/** "Subieron hoy" y la distribución de ELO, de la foto diaria del colector. */
+function Foto({ foto, route, navigate }: { foto: LadderSnap; route: Route; navigate: Nav }) {
+  const t = useAoe2Copy();
+  const { lang } = useLang();
+  const alias = new Map(foto.top.map(([p, , a]) => [p, a ?? String(p)]));
+  const suben = foto.prev ? climbers(Object.fromEntries(foto.top.map(([p, e]) => [p, e])), Object.fromEntries(foto.prev.top.map(([p, e]) => [p, e])), 10) : [];
+  const max = Math.max(1, ...foto.hist.map((b) => b.count));
+  return (
+    <div className="a2-cols">
+      {suben.length > 0 && (
+        <Panel h={t.lb.climbersH} sub={t.lb.climbersSub(new Date(foto.date).toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" }))}>
+          <ul className="a2-vs">
+            {suben.map((c) => (
+              <li key={c.profileId}>
+                <RouteLink to={{ ...route, view: "aoe2", a2Section: "players", detail: String(c.profileId) }} onNavigate={navigate}>
+                  {alias.get(c.profileId)}
+                </RouteLink>
+                <span>
+                  {c.elo} <small className="a2-up">+{c.delta}</small>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      )}
+      <Panel h={t.lb.histH} sub={t.lb.histSub(foto.total)}>
+        <div className="a2-hist-bars" role="img" aria-label={t.lb.histH}>
+          {foto.hist.map((b) => (
+            <span key={b.from} title={t.lb.histTip(b.from, b.count, percentileOf(b.from, foto.hist))} style={{ height: `${(b.count / max) * 100}%` }} />
+          ))}
+        </div>
+        <div className="a2-hist-axis">
+          <span>{foto.hist[0]?.from}</span>
+          <span>{(foto.hist.at(-1)?.from ?? 0) + 100}</span>
+        </div>
+      </Panel>
+    </div>
   );
 }
 

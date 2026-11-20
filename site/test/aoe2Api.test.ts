@@ -106,7 +106,7 @@ describe("API de AoE2: intermediario", () => {
     expect(b.profile.alias).toBe("wR.Lucho");
     expect(b.matches).toHaveLength(6);
     // El intermediario decodifica las opciones y no manda el base64 crudo.
-    expect(b.matches.every((m: { build?: number; options: unknown }) => typeof m.build === "number" && m.options === null)).toBe(true);
+    expect(b.matches.every((m: { mapSize?: number; build?: number; options: unknown }) => typeof m.mapSize === "number" && m.build === undefined && m.options === null)).toBe(true);
   });
 
   it("partida dentro del historial del jugador", async () => {
