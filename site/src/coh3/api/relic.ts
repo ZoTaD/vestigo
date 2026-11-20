@@ -25,7 +25,15 @@ export const RELIC_NOT_FOUND = 5;
 export const RELIC_UNKNOWN_PROFILE_IDS = 6;
 export const RELIC_UNKNOWN_ALIASES = 9;
 
-async function pedir<T>(fetcher: typeof fetch, path: string, params: Record<string, string | number>, conf: GameConf = COH3): Promise<T> {
+const pedir = <T>(fetcher: typeof fetch, path: string, params: Record<string, string | number>, conf: GameConf = COH3): Promise<T> =>
+  relicGet<T>(fetcher, conf, path, params);
+
+/**
+ * Un pedido a una API de la familia de Relic (también la de World's Edge de Age of Empires, 2026-11-20): `conf` dice la
+ * base y el `title`. Corta a los 7 s; un error HTTP, una respuesta que no es JSON o un `result.code` distinto de 0 es
+ * un `RelicError`.
+ */
+export async function relicGet<T>(fetcher: typeof fetch, conf: { apiBase: string; title: string }, path: string, params: Record<string, string | number>): Promise<T> {
   const q = new URLSearchParams({ ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)])), title: conf.title });
   let r: Response;
   try {

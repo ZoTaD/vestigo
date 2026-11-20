@@ -1148,6 +1148,31 @@ function coh3Api(): Plugin {
   };
 }
 
+/** El intermediario de Age of Empires II (2026-11-20) en dev y preview: igual que `coh3Api`. */
+function aoe2Api(): Plugin {
+  const handle = (load: () => Promise<{ handleAoe2: (u: URL, f: typeof fetch, m: string) => Promise<Response> }>) =>
+    (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
+      if (!req.url?.startsWith("/api/aoe2/")) return next();
+      load()
+        .then((m) => m.handleAoe2(new URL(req.url!, "http://localhost"), fetch, req.method ?? "GET"))
+        .then(async (r) => {
+          res.statusCode = r.status;
+          r.headers.forEach((v, k) => res.setHeader(k, v));
+          res.end(await r.text());
+        })
+        .catch(() => ((res.statusCode = 500), res.end()));
+    };
+  return {
+    name: "aoe2-api",
+    configureServer(server) {
+      server.middlewares.use(handle(() => server.ssrLoadModule("/src/aoe2/api/handler.ts") as never));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle(() => import("./src/aoe2/api/handler")));
+    },
+  };
+}
+
 function cs2InventoryApi(): Plugin {
   const handle = (load: () => Promise<{ handleInventory: (u: URL) => Promise<Response> }>) =>
     (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
@@ -1216,6 +1241,7 @@ export default defineConfig({
     cs2InventoryApi(),
     cs2MatchesApi(),
     coh3Api(),
+    aoe2Api(),
     localDeadlockAssets(),
     esSlugsModule("virtual:d2r-slugs-es", [`${d2rDir}/wiki/index.json`, `${d2rDir}/drops/index.json`], () => buildD2rEsSlugs(readD2Index())),
     // Antes que el de las secciones: su `load` atiende todo lo que empiece con `virtual:pz-slugs-es/`.

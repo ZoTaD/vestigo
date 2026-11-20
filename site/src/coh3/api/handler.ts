@@ -32,23 +32,23 @@ import {
   RelicError,
 } from "./relic";
 
-const json = (body: unknown, status: number, headers: Record<string, string> = {}) =>
+export const json = (body: unknown, status: number, headers: Record<string, string> = {}) =>
   new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json; charset=utf-8", ...headers } });
 
 /** Navegador `max-age` segundos; la CDN, `cdn` segundos con una sola copia (`durable`) y algo de margen viejo. */
-const cache = (max: number, cdn: number) => ({
+export const cache = (max: number, cdn: number) => ({
   "Cache-Control": `public, max-age=${max}`,
   "Netlify-CDN-Cache-Control": `public, durable, s-maxage=${cdn}, stale-while-revalidate=${cdn * 2}`,
 });
 
-const bad = (why: string) => json({ error: "bad", why }, 400, { "Cache-Control": "public, max-age=300" });
-const notFound = () => json({ error: "notfound" }, 404, cache(60, 60));
+export const bad = (why: string) => json({ error: "bad", why }, 400, { "Cache-Control": "public, max-age=300" });
+export const notFound = () => json({ error: "notfound" }, 404, cache(60, 60));
 /** Una falla también queda un rato en la CDN: si no, con Relic caído cada visita le volvería a pedir. */
-const fail = (upstream: number) =>
+export const fail = (upstream: number) =>
   json({ error: "upstream", upstream }, 502, { "Cache-Control": "no-store", "Netlify-CDN-Cache-Control": "public, durable, s-maxage=30" });
 
 /** Un entero en [min, max], o null. Sin parámetro, `def`. */
-function entero(v: string | null, def: number | null, min: number, max: number): number | null {
+export function entero(v: string | null, def: number | null, min: number, max: number): number | null {
   if (v == null || v === "") return def;
   if (!/^\d{1,12}$/.test(v)) return null;
   const n = Number(v);
