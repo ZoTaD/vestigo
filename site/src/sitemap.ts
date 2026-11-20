@@ -604,11 +604,12 @@ export function sitemapPaths(data: SitemapData): string[] {
         for (const slug of data.c3.coh1?.[s] ?? []) paths.push(routePath({ ...base, lang, view: "coh3", cohGame: "coh1", c3Section: s, detail: slug }));
       }
     }
-    // Age of Empires II (2026-11-20): la portada, las pestañas (sin Jugadores ni Partidas, que son infinitas) y una ficha
+    // Age of Empires II (2026-11-20): la portada, las pestañas (Jugadores es el buscador; Partidas no tiene página sin
+    // número) y una ficha
     // por civ y por mapa.
     if (data.a2) {
       paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "home" }));
-      for (const s of AOE2_SECTIONS) if (s !== "players" && s !== "matches") paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: s }));
+      for (const s of AOE2_SECTIONS) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: s }));
       for (const c of data.a2.civs) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "civilizations", detail: c.slug }));
       for (const m of data.a2.maps) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "maps", detail: m.slug }));
     }

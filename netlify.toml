@@ -279,6 +279,23 @@
   from = "/es/valheim/planner/route"
   to = "/shell.html"
   status = 200
+# Age of Empires II (2026-11-20): perfil y partida (infinitos, sin prerender ni sitemap). La partida lleva `?p=`.
+[[redirects]]
+  from = "/en/aoe2/players/*"
+  to = "/shell.html"
+  status = 200
+[[redirects]]
+  from = "/es/aoe2/jugadores/*"
+  to = "/shell.html"
+  status = 200
+[[redirects]]
+  from = "/en/aoe2/matches/*"
+  to = "/shell.html"
+  status = 200
+[[redirects]]
+  from = "/es/aoe2/partidas/*"
+  to = "/shell.html"
+  status = 200
 
 [[redirects]]
   from = "/en/poe2/economy"

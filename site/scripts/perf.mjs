@@ -288,6 +288,15 @@ export const PAGES = [
   "/es/coh1/tier-list",
   "/en/coh2/tier-list",
   "/en/coh1/maps",
+  // Age of Empires II (2026-11-20).
+  "/en/aoe2",
+  "/es/aoe2/ranking",
+  "/en/aoe2/civilizations",
+  "/es/aoe2/civilizaciones/franks",
+  "/en/aoe2/matchups",
+  "/es/aoe2/mapas",
+  "/en/aoe2/maps/arabia",
+  "/es/aoe2/jugadores",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
