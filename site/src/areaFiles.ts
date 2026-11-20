@@ -168,6 +168,7 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
  * cuida `test/areas.test.ts`). La portada viene con el área.
  */
 export const AOE2_TAB_FILES: Partial<Record<Aoe2Section, string>> = {
+  leaderboards: "src/aoe2/leaderboards/Aoe2Leaderboards.tsx",
 };
 
 /**

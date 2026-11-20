@@ -63,6 +63,38 @@
 .a2-civgrid { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
 .a2-civgrid li { display: flex; align-items: center; gap: 8px; background: var(--a2-panel2); border-radius: 6px; padding: 6px 8px; font-weight: 600; font-size: 14px; }
 
+/* Tablas (Ranking y las que vienen). */
+.a2-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.a2-table th { color: var(--a2-muted); font-size: 12px; font-weight: 700; text-align: left; padding: 6px; border-bottom: 1px solid var(--a2-line); white-space: nowrap; }
+.a2-table td { padding: 8px 6px; border-bottom: 1px solid var(--a2-line); }
+.a2-table tbody tr:nth-child(odd) td { background: rgba(255, 255, 255, 0.02); }
+.a2-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.a2-table th.num .c3-sort { margin-left: auto; }
+.a2-table a { color: var(--a2-text); text-decoration: none; font-weight: 600; }
+.a2-table a:hover { color: var(--a2-gold); }
+.a2 .c3-sort { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; color: inherit; }
+.a2 .c3-sort.is-on { color: var(--a2-text); }
+.a2 .c3-sort-i { opacity: 0.6; font-size: 11px; }
+.a2-pos { font-weight: 700; color: var(--a2-muted); width: 44px; }
+.a2-cc { font-size: 11px; color: var(--a2-muted); border: 1px solid var(--a2-line); border-radius: 3px; padding: 0 4px; margin-left: 6px; }
+.a2-up { color: var(--a2-good); }
+.a2-down { color: var(--a2-bad); }
+.a2-note { color: var(--a2-muted); font-size: 13px; }
+.a2-champ { display: flex; align-items: center; gap: 12px; background: linear-gradient(90deg, rgba(240, 191, 76, 0.16), transparent); border-radius: 6px; padding: 10px 12px; margin: 4px 0 12px; color: var(--a2-text); text-decoration: none; }
+.a2-champ b { font-size: 18px; }
+.a2-champ small { display: block; color: var(--a2-muted); }
+.a2-filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; font-size: 14px; }
+.a2 select, .a2 input { font: inherit; background: var(--a2-panel2); color: var(--a2-text); border: 1px solid var(--a2-line); border-radius: 6px; padding: 6px 10px; }
+.a2-more { display: block; margin: 14px auto 0; }
+.a2-search label { font-family: var(--a2-title); font-weight: 700; font-size: 16px; }
+.a2-search-row { display: flex; gap: 8px; margin-top: 8px; }
+.a2-search-row input { flex: 1; min-width: 0; }
+.a2-results { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.a2-results a { color: var(--a2-text); font-weight: 700; }
+@media (max-width: 1000px) { .a2-hide-m { display: none; } }
+@media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
+@media (max-width: 560px) { .a2-table th { white-space: normal; } .a2-table td a { display: inline-block; max-width: 8.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; } .a2-panel { padding: 14px 12px; } .a2-mode button { height: 58px; } .a2-mode button span { font-size: 12px; padding: 12px 8px 5px; } }
+
 @media (max-width: 820px) {
   .a2-mode { grid-template-columns: repeat(2, 1fr); }
 }

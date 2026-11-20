@@ -22,9 +22,12 @@ type Nav = (route: Route) => void;
 type TabProps = { route: Route; navigate: Nav };
 type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 
+const Aoe2Leaderboards = lazyWithPreload(() => import("./aoe2/leaderboards/Aoe2Leaderboards"));
+
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `AOE2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `AOE2_TAB_FILES`.
 const TABS: Partial<Record<Aoe2Section, LazyTab>> = {
+  leaderboards: Aoe2Leaderboards,
 };
 
 const hasPage = (tab: Aoe2Section): boolean => tab === "home" || !!TABS[tab];
