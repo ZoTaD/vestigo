@@ -12,7 +12,7 @@ import { Aoe2Loading, CivShield, Panel, civById, type Nav } from "../ui";
 import type { Aoe2Match } from "../api/wel";
 import { mapName } from "../players/mapName";
 import { useModeName } from "../players/MatchHistory";
-import { useOpening } from "../players/useOpening";
+import { tieneApertura, useOpening } from "../players/useOpening";
 
 /** El número de partida y el jugador de origen: del detalle (`123?p=9` al navegar) o de la dirección (`?p=9` al recargar). */
 function ids(detail: string | undefined): { id: string | null; p: string | null } {
@@ -35,7 +35,8 @@ export default function Aoe2Matches({ route, navigate }: { route: Route; navigat
 }
 
 function Ficha({ m, route, navigate, p }: { m: Aoe2Match; route: Route; navigate: Nav; p: number }) {
-  const ops = useOpening(m.id, p);
+  const pide = tieneApertura(m);
+  const ops = useOpening(m.id, p, pide);
   const t = useAoe2Copy();
   const { lang } = useLang();
   const locale = useLocale();
@@ -105,7 +106,7 @@ function Ficha({ m, route, navigate, p }: { m: Aoe2Match; route: Route; navigate
                         </td>
                         <td className="num a2-hide-s">{p.newElo ?? "–"}</td>
                         <td>
-                          <span className={`a2-op${ops?.[p.profileId] ? ` is-${ops[p.profileId]}` : ""}`}>{ops === undefined ? t.op.loading : ops?.[p.profileId] ? t.op.names[ops[p.profileId]] : "–"}</span>
+                          <span className={`a2-op${ops?.[p.profileId] ? ` is-${ops[p.profileId]}` : ""}`}>{!pide ? "–" : ops === undefined ? t.op.loading : ops?.[p.profileId] ? t.op.names[ops[p.profileId]] : "–"}</span>
                         </td>
                         <td className={`num ${d != null && d > 0 ? "a2-up" : d != null && d < 0 ? "a2-down" : ""}`}>{d == null ? "–" : d > 0 ? `+${d}` : d}</td>
                       </tr>

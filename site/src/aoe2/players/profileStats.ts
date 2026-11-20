@@ -52,6 +52,7 @@ type Cruce = { profileId: number; alias: string; wins: number; losses: number };
 function cruces(matches: readonly Aoe2Match[], id: number, mismoEquipo: boolean, n: number): Cruce[] {
   const out = new Map<number, Cruce>();
   for (const m of matches) {
+    if (!esRanked(m)) continue;
     const p = yo(m, id);
     if (!p || p.result === "other") continue;
     for (const o of m.players) {
@@ -66,7 +67,7 @@ function cruces(matches: readonly Aoe2Match[], id: number, mismoEquipo: boolean,
   return [...out.values()].sort((a, b) => b.wins + b.losses - (a.wins + a.losses) || a.alias.localeCompare(b.alias)).slice(0, n);
 }
 
-/** Contra quién jugó más (rivales directos), con sus victorias y derrotas contra cada uno. */
+/** Contra quién jugó más en partidas de ranking (rivales directos), con sus victorias y derrotas contra cada uno. */
 export const rivals = (matches: readonly Aoe2Match[], id: number, n = 10): Cruce[] => cruces(matches, id, false, n);
 /** Con quién jugó más en el mismo equipo. */
 export const mates = (matches: readonly Aoe2Match[], id: number, n = 10): Cruce[] => cruces(matches, id, true, n);

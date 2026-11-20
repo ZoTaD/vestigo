@@ -192,3 +192,28 @@ def test_memoria_de_elo_partida_por_perfil_y_con_la_hora_de_la_corrida():
     # Cada perfil va a su pedazo; el punto viejo de 5 (hace más de 90 días) se cae; el nuevo lleva la hora de la corrida.
     assert nueva[d.shard_of(5)]["5"] == [[200 * 86400, 1100]]
     assert nueva[d.shard_of(21)]["21"] == [[200 * 86400, 900]]
+
+
+def test_cuenta_partidas_por_modo_y_banda():
+    # La elección por civ divide por las partidas reales, no por un número fijo de civs por partida (2v2 tiene 4).
+    acc = d.Acumulador(CIVS)
+    acc.agregar(partida(20, 7, "Arena.rms", [miembro(1, 2, 0, 1), miembro(2, 4, 0, 1), miembro(3, 12, 1, 0), miembro(4, 12, 1, 0)]))
+    acc.agregar(partida(21, 6, "Arabia.rms", [miembro(10, 2, 0, 1), miembro(11, 12, 1, 0)]))
+    n = acc.dias["2026-11-19"]["n"]
+    assert n == {"rmteam|1400-1800": [1, 4], "rm1v1|1400-1800": [1, 2]}
+    r = d.resumen(acc.dias, HOY)
+    assert r["windows"]["7"]["n"]["rmteam|1400-1800"] == [1, 4]
+    assert r["prev"]["7"]["n"] == {}
+
+
+def test_paginas_salteadas_del_ranking_se_avisan(capsys, monkeypatch):
+    def pedir(endpoint, params, intentos=3):
+        s = params["start"]
+        if s == 201:
+            return None
+        n = min(200, 450 - s + 1)
+        return {"rankTotal": 450, "statGroups": [{"id": s + i, "members": [{"profile_id": s + i, "alias": "x"}]} for i in range(n)], "leaderboardStats": [{"statgroup_id": s + i, "rating": 1500, "lastmatchdate": 0, "rank": s + i} for i in range(n)]}
+    monkeypatch.setattr(d, "_get", pedir)
+    filas = d.bajar_ranking(3, 2)
+    assert len(filas) == 250
+    assert "salteadas: 1 (201)" in capsys.readouterr().out

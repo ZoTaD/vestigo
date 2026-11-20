@@ -79,7 +79,8 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
   const curva = modo ?? modos[0] ?? "rm1v1";
   const memoria = useMemoria(id, curva);
 
-  if (error === 404) return <Panel h={t.pl.notFound}><Buscador route={route} navigate={navigate} /></Panel>;
+  // 400 = un id que la función no acepta (demasiado largo): para el que lo escribió, es "no existe".
+  if (error === 404 || error === 400) return <Panel h={t.pl.notFound}><Buscador route={route} navigate={navigate} /></Panel>;
   if (error != null) return <Aoe2Loading onRetry={retry} />;
   if (!data) return <Aoe2Loading />;
 

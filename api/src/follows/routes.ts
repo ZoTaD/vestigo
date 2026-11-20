@@ -5,6 +5,8 @@
 import type { FollowStore, Follows } from "./store";
 
 export const MAX_FOLLOWS = 200;
+/** 200 ids de 12 cifras entran holgados en 4 KB; más que 16 KB no es un cuerpo nuestro. */
+const MAX_CUERPO = 16 * 1024;
 const GAMES = new Set(["aoe2"]);
 
 export interface FollowsDeps {
@@ -36,9 +38,12 @@ export async function handleFollows(req: Request, url: URL, deps: FollowsDeps): 
   if (req.method === "GET") return json(await deps.store.get(deps.steamId, game));
   if (req.method === "PUT") {
     if (req.headers.get("origin") !== deps.siteOrigin) return json({ error: "origin" }, 403);
+    if (Number(req.headers.get("content-length") ?? 0) > MAX_CUERPO) return json({ error: "size" }, 413);
     let body: unknown;
     try {
-      body = await req.json();
+      const texto = await req.text();
+      if (texto.length > MAX_CUERPO) return json({ error: "size" }, 413);
+      body = JSON.parse(texto);
     } catch {
       return json({ error: "body" }, 400);
     }

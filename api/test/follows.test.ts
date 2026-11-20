@@ -47,6 +47,10 @@ describe("seguidos", () => {
     expect((await call("PUT", "/api/follows?game=aoe2", deps(), { me: -3, follows: [] }))!.status).toBe(400);
     expect((await call("PUT", "/api/follows?game=aoe2", deps(), { me: null, follows: ["x"] }))!.status).toBe(400);
   });
+  it("un cuerpo gigante es 413 sin leerlo entero", async () => {
+    const relleno = { me: null, follows: [], x: "a".repeat(64 * 1024) };
+    expect((await call("PUT", "/api/follows?game=aoe2", deps(), relleno))!.status).toBe(413);
+  });
   it("un PUT desde otro origen es 403", async () => {
     expect((await call("PUT", "/api/follows?game=aoe2", deps(), { me: 1, follows: [] }, "https://malo.com"))!.status).toBe(403);
   });

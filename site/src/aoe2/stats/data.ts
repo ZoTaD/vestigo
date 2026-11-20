@@ -8,7 +8,8 @@ export type BandOrAll = Band | "all";
 export type WindowKey = "7" | "14" | "28" | "patch";
 export type StatMode = "rm1v1" | "rmteam" | "ew1v1" | "ewteam";
 type Pares = Record<string, [number, number]>;
-export type Window = { games: number; days: number; civ: Pares; map: Pares; vs: Pares; dur: Pares; open?: Pares };
+/** `n`: `"<modo>|<banda>"` → [partidas, jugadores] (desde el 21/11; los resúmenes viejos no lo traen). */
+export type Window = { games: number; days: number; civ: Pares; map: Pares; vs: Pares; dur: Pares; open?: Pares; n?: Pares };
 export type Summary = {
   generatedAt: string;
   patch: { name: string; since: string } | null;
@@ -56,7 +57,14 @@ export function civTable(s: Summary, f: { mode: StatMode; band: BandOrAll; windo
   const hoy = sumarCiv(w.civ, f.mode, f.band);
   const antes = sumarCiv(s.prev[f.window]?.civ, f.mode, f.band);
   const total = [...hoy.values()].reduce((a, [g]) => a + g, 0);
-  const partidas = total / CIVS_POR_PARTIDA[f.mode];
+  const contadas = Object.entries(w.n ?? {})
+    .filter(([k]) => {
+      const [m, b] = k.split("|");
+      return m === f.mode && (f.band === "all" || b === f.band);
+    })
+    .reduce((a, [, [g]]) => a + g, 0);
+  // Sin la cuenta (resúmenes viejos), se estima con las civs por partida típicas del modo.
+  const partidas = contadas || total / CIVS_POR_PARTIDA[f.mode];
   return [...hoy.entries()]
     .map(([civ, [g, v]]) => {
       const p = antes.get(civ);

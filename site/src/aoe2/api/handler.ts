@@ -6,6 +6,9 @@
  * - `player?id=<perfil>` → `{ profile, standings, matches }`.
  * - `match?id=<partida>&p=<perfil>` → la partida, buscada en el historial de ese jugador (la API no tiene "partida por id").
  * - `search?q=<alias exacto o SteamID64>` → `{ q, results }`.
+ * - `players?ids=<id,id,…>` (hasta 50) → `{ players: [{ id, alias, country, elo }] }`, para los seguidos.
+ * - `opening?id=<partida>&p=<perfil>` → `{ id, players: { <perfil>: <apertura> } }`: baja la grabación (≤ 32 MB, 8 s) y
+ *   lee las aperturas; se guarda 30 días porque no cambia.
  *
  * Errores: 400 parámetros, 404 no existe, 502 si la API falla o no contesta en 7 s. No registra nada.
  */

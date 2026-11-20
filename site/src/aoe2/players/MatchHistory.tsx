@@ -13,8 +13,8 @@ import type { Aoe2Match, MatchMode } from "../api/wel";
 import { filterHistory, type HistoryFilter } from "./history";
 import { mapName } from "./mapName";
 import OpeningTag from "./OpeningTag";
+import { tieneApertura } from "./useOpening";
 
-const CON_GRABACION = new Set<MatchMode>(["rm1v1", "rmteam", "ew1v1", "ewteam"]);
 
 const PASO = 50;
 
@@ -89,7 +89,7 @@ export default function MatchHistory({ matches, id, route, navigate }: { matches
                     <small>
                       {modo(m.mode)} · {new Date(m.start * 1000).toLocaleDateString(locale, { day: "numeric", month: "short" })} · {t.hist.min(m.end - m.start)}
                     </small>
-                    {CON_GRABACION.has(m.mode) && m.end - m.start > 300 && <OpeningTag match={m.id} owner={id} player={id} />}
+                    {tieneApertura(m) && <OpeningTag match={m.id} owner={id} player={id} />}
                   </span>
                   <span className="a2-hist-civs">
                     {lado(true).map((p) => (

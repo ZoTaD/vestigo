@@ -32,6 +32,11 @@ export default function Aoe2Maps({ route, navigate }: { route: Route; navigate: 
             <h1 className="a2-alias">{mapLabel(route.detail, lang)}</h1>
           </div>
         </Panel>
+        {!civs.length ? (
+          <Panel>
+            <p className="a2-note">{t.st.mapEmpty}</p>
+          </Panel>
+        ) : (
         <Panel h={t.st.mapCivs}>
           <table className="a2-table">
             <tbody>
@@ -55,6 +60,7 @@ export default function Aoe2Maps({ route, navigate }: { route: Route; navigate: 
             </tbody>
           </table>
         </Panel>
+        )}
       </>
     );
   }

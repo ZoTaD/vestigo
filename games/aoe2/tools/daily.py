@@ -17,7 +17,7 @@ Qué hace:
 
 Formato de un día: `{date, games, patch, civ: {"<modo>|<banda>|<civ>": [partidas, victorias]},
 map: {"<modo>|<mapa>|<civ>": […]}, vs: {"<banda>|<civA>|<civB>": [partidas, victorias de A]} (sólo RM 1v1, civA <
-civB), dur: {"<modo>|<civ>": [partidas, segundos]}}`. La civ es su slug (`games/aoe2/data/civs.json`) o `civ_<id>`.
+civB), dur: {"<modo>|<civ>": [partidas, segundos]}, n: {"<modo>|<banda>": [partidas, jugadores]}}`. La civ es su slug (`games/aoe2/data/civs.json`) o `civ_<id>`.
 Un resultado que no es victoria ni derrota no cuenta. La IA (perfil ≤ 0) y las personalizadas quedan afuera.
 """
 import argparse
@@ -117,7 +117,7 @@ def slots_of(b64: str | None) -> dict[int, int]:
 
 
 def _dia_vacio(fecha: str) -> dict:
-    return {"date": fecha, "games": 0, "patch": None, "civ": {}, "map": {}, "vs": {}, "dur": {}, "open": {}}
+    return {"date": fecha, "games": 0, "patch": None, "civ": {}, "map": {}, "vs": {}, "dur": {}, "open": {}, "n": {}}
 
 
 def _sumar(d: dict, k: str, gano: bool | int, n: int = 1) -> None:
@@ -157,6 +157,7 @@ class Acumulador:
         fecha = datetime.fromtimestamp(m["startgametime"], timezone.utc).date().isoformat()
         d = self.dias.setdefault(fecha, _dia_vacio(fecha))
         d["games"] += 1
+        _sumar(d.setdefault("n", {}), f"{modo}|{b}", len(js), 1)
         d["patch"] = patch_of(int(datetime.fromisoformat(fecha).replace(tzinfo=timezone.utc).timestamp()) + DIA - 1)
         mapa = map_slug(m["mapname"])
         dur = max(0, m["completiontime"] - m["startgametime"])
@@ -253,14 +254,14 @@ def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
         return [d for f, d in dias.items() if desde.isoformat() <= f <= hasta.isoformat()]
 
     def ventana(ds):
-        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur"), "open": _suma(ds, "open")}
+        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur"), "open": _suma(ds, "open"), "n": _suma(ds, "n")}
 
     ayer = hoy - timedelta(days=1)
     out = {"generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "patch": None, "windows": {}, "prev": {}}
     for n in ventanas:
         out["windows"][str(n)] = ventana(entre(ayer - timedelta(days=n - 1), ayer))
         prev = entre(ayer - timedelta(days=2 * n - 1), ayer - timedelta(days=n))
-        out["prev"][str(n)] = {"games": sum(d["games"] for d in prev), "civ": _suma(prev, "civ")}
+        out["prev"][str(n)] = {"games": sum(d["games"] for d in prev), "civ": _suma(prev, "civ"), "n": _suma(prev, "n")}
     actual = patch_of(int(datetime(ayer.year, ayer.month, ayer.day, tzinfo=timezone.utc).timestamp()) + DIA - 1)
     if actual:
         desde = (datetime.fromisoformat(PARCHES[actual].replace("Z", "+00:00")).date() + timedelta(days=1)).isoformat()
@@ -338,6 +339,9 @@ def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str]]:
         for f in as_completed(fut):
             if f.result():
                 paginas[fut[f]] = f.result()
+    faltan = sorted(set(fut.values()) - set(paginas))
+    if faltan:
+        print(f"ranking {lb}: páginas salteadas: {len(faltan)} ({', '.join(map(str, faltan[:20]))})", flush=True)
     filas = []
     for s in sorted(paginas):
         p = paginas[s]

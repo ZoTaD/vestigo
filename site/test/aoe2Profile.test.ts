@@ -40,6 +40,10 @@ describe("perfil de AoE2: cálculos", () => {
     expect(r.some((x) => x.profileId <= 0)).toBe(false);
   });
 
+  it("rivales: las personalizadas no cuentan", () => {
+    expect(rivals(H, YO).some((x) => x.profileId === 10)).toBe(false);
+  });
+
   it("compañeros: sólo los del mismo equipo", () => {
     expect(mates(H, YO)).toEqual([{ profileId: 8, alias: "j8", wins: 0, losses: 1 }]);
   });

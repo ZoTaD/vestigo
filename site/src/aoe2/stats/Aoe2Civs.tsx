@@ -56,7 +56,7 @@ function Tabla({ s, f, route, navigate }: { s: Summary; f: Filters; route: Route
     pick: (r) => r.pick,
     games: (r) => r.games,
   };
-  const partidas = Math.round(filas.reduce((a, r) => a + r.games, 0) / (f.mode.endsWith("1v1") ? 2 : 6));
+  const partidas = Math.round(filas.reduce((a, r) => a + (r.pick ? r.games / r.pick : 0), 0) / Math.max(1, filas.filter((r) => r.pick).length));
   if (!filas.length) return <SinDatos />;
   return (
     <Panel h={t.st.civsH} sub={t.st.civsSub(partidas)}>

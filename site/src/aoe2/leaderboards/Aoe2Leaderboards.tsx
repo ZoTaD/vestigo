@@ -13,6 +13,7 @@ import { countryName } from "../../coh3/live/ui";
 import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, ModePicker, Panel, type Aoe2Mode, type Nav } from "../ui";
 import { LEADERBOARD_OF, type Aoe2Row, type SearchResult } from "../api/wel";
+import { buscarPerfiles } from "../players/search";
 import { aplicarRespuesta, climbers, countriesOf, percentileOf, type Bucket, type Tabla } from "./logic";
 
 /** La foto diaria del colector (`games/aoe2/stats/ladder/<id>.json`). */
@@ -215,18 +216,17 @@ function Foto({ foto, route, navigate }: { foto: LadderSnap; route: Route; navig
 export function Buscador({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
   const [q, setQ] = useState("");
-  const [res, setRes] = useState<SearchResult[] | null>(null);
+  const [res, setRes] = useState<SearchResult[] | "down" | null>(null);
   const [busy, setBusy] = useState(false);
   const enviar = (e: FormEvent) => {
     e.preventDefault();
     const v = q.trim();
     if (!v) return;
     setBusy(true);
-    fetch(`/api/aoe2/search?q=${encodeURIComponent(v)}`)
-      .then((r) => (r.ok ? r.json() : { results: [] }))
-      .then((d: { results: SearchResult[] }) => setRes(d.results))
-      .catch(() => setRes([]))
-      .finally(() => setBusy(false));
+    void buscarPerfiles(v).then((r) => {
+      setRes(r ?? "down");
+      setBusy(false);
+    });
   };
   return (
     <Panel className="a2-search">
@@ -239,7 +239,12 @@ export function Buscador({ route, navigate }: { route: Route; navigate: Nav }) {
           </button>
         </div>
       </form>
-      {res && (
+      {res === "down" && (
+        <p className="a2-note" role="alert">
+          {t.t.apiDown}
+        </p>
+      )}
+      {res && res !== "down" && (
         <ul className="a2-results">
           {res.length ? (
             res.map((p) => (

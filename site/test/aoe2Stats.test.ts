@@ -35,6 +35,12 @@ describe("estadísticas de civs de AoE2", () => {
     expect(f.small).toBe(false);
     expect(t.find((r) => r.civ === "mongols")!.small).toBe(true);
   });
+  it("la elección divide por las partidas contadas del modo y banda, si están", () => {
+    const conN: Summary = { ...S, windows: { "14": { ...S.windows["14"]!, n: { "rmteam|1400-1800": [10, 40] } } } };
+    // 10 partidas de equipo (2v2): franks estuvo en 50 lugares → 5 por partida, no 50 / (50 / 6).
+    expect(civTable(conN, { mode: "rmteam", band: "1400-1800", window: "14" })[0].pick).toBeCloseTo(50 / 10);
+    expect(civTable(conN, { mode: "rmteam", band: "all", window: "14" })[0].pick).toBeCloseTo(50 / 10);
+  });
   it("todas las bandas suman", () => {
     const f = civTable(S, { mode: "rm1v1", band: "all", window: "14" }).find((r) => r.civ === "franks")!;
     expect(f.games).toBe(400);

@@ -4,6 +4,12 @@
  */
 import { useEffect, useState } from "react";
 import type { Opening } from "../api/openings";
+import type { Aoe2Match, MatchMode } from "../api/wel";
+
+const CON_APERTURA = new Set<MatchMode>(["rm1v1", "rmteam", "ew1v1", "ewteam"]);
+/** Si vale la pena leer la apertura: en Deathmatch se arranca en Imperial, las personalizadas pueden ser cualquier cosa y
+ * en menos de 5 minutos no hay apertura. */
+export const tieneApertura = (m: Pick<Aoe2Match, "mode" | "start" | "end">): boolean => CON_APERTURA.has(m.mode) && m.end - m.start > 300;
 
 type Res = Record<number, Opening> | null;
 const hechas = new Map<string, Promise<Res>>();
@@ -25,9 +31,17 @@ export function fetchOpening(id: number, p: number): Promise<Res> {
     pr = new Promise<Res>((ok) => {
       cola.push(() =>
         fetch(`/api/aoe2/opening?id=${id}&p=${p}`)
-          .then((r) => (r.ok ? (r.json() as Promise<{ players: Record<number, Opening> }>) : null))
+          .then((r) => {
+            if (r.ok) return r.json() as Promise<{ players: Record<number, Opening> }>;
+            // 404 = no hay grabación (no va a aparecer); lo demás es una falla pasajera: se puede volver a pedir.
+            if (r.status !== 404) hechas.delete(k);
+            return null;
+          })
           .then((d) => ok(d?.players ?? null))
-          .catch(() => ok(null))
+          .catch(() => {
+            hechas.delete(k);
+            ok(null);
+          })
           .finally(() => {
             activas--;
             correr();

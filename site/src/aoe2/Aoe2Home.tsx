@@ -3,6 +3,7 @@
  * la civ más fuerte en cada banda de ELO, los mapas más jugados, accesos a cada pestaña y todas las civs. Lo del ranking y
  * las estadísticas sale de `games/aoe2/stats/home.json` (lo escribe el colector diario; chico, va con la página).
  */
+import { pedirSeguidos, type Seguido } from "./players/search";
 import { useEffect, useState } from "react";
 import RouteLink from "../RouteLink";
 import type { Aoe2Tab, Route } from "../route";
@@ -153,7 +154,7 @@ function Seguidos({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
   const yo = useAoe2Me();
   const ids = [...new Set([...(yo.me ? [yo.me] : []), ...yo.follows])].slice(0, 50);
-  const [js, setJs] = useState<{ id: number; alias: string; elo: number | null }[] | null>(null);
+  const [js, setJs] = useState<Seguido[] | "down" | null>(null);
   const clave = ids.join(",");
   useEffect(() => {
     if (!clave) {
@@ -161,17 +162,18 @@ function Seguidos({ route, navigate }: { route: Route; navigate: Nav }) {
       return;
     }
     let vivo = true;
-    fetch(`/api/aoe2/players?ids=${clave}`)
-      .then((r) => (r.ok ? r.json() : { players: [] }))
-      .then((d: { players: { id: number; alias: string; elo: number | null }[] }) => vivo && setJs(d.players))
-      .catch(() => vivo && setJs([]));
+    void pedirSeguidos(clave).then((r) => vivo && setJs(r ?? "down"));
     return () => {
       vivo = false;
     };
   }, [clave]);
   return (
     <Panel h={t.hm.followH}>
-      {!js?.length ? (
+      {js === "down" ? (
+        <p className="a2-note" role="alert">
+          {t.t.apiDown}
+        </p>
+      ) : !js?.length ? (
         <p className="a2-note">{js ? t.hm.followEmpty : t.t.loading}</p>
       ) : (
         <ul className="a2-vs">
