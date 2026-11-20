@@ -88,6 +88,17 @@ describe("API de AoE2: intermediario", () => {
     expect(r.status).toBe(404);
   });
 
+  it("jugador desconocido con el historial en código 7 también es 404", async () => {
+    // El historial contesta antes que el perfil (así pasó el 20/11): su código 7 no puede volverse un 502.
+    const lento: typeof fetch = async (input) => {
+      const ep = new URL(String(input)).pathname.split("/").pop();
+      if (ep === "GetPersonalStat") await new Promise((r) => setTimeout(r, 50));
+      return new Response(JSON.stringify({ result: { code: ep === "GetPersonalStat" ? 6 : 7 } }), { status: 200 });
+    };
+    const r = await handleAoe2(u("player?id=123"), lento);
+    expect(r.status).toBe(404);
+  });
+
   it("jugador: perfil, puestos y partidas", async () => {
     const r = await handleAoe2(u("player?id=9423131"), ok);
     const b = await r.json();

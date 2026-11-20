@@ -91,6 +91,41 @@
 .a2-search-row input { flex: 1; min-width: 0; }
 .a2-results { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
 .a2-results a { color: var(--a2-text); font-weight: 700; }
+/* Perfil. */
+.a2-who-row { display: flex; align-items: center; gap: 10px; }
+.a2-who { container-type: inline-size; }
+.a2-alias { margin: 0; font-size: clamp(18px, 7cqi, 36px); white-space: nowrap; }
+.a2-cards { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.a2-cards li { background: var(--a2-panel2); border-radius: 6px; padding: 10px 12px; display: grid; gap: 2px; font-size: 13px; color: var(--a2-muted); }
+.a2-cards small { font-weight: 700; color: var(--a2-text); font-size: 13px; }
+.a2-cards b { font-size: 26px; color: var(--a2-gold); font-variant-numeric: tabular-nums; }
+.a2-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.a2-cols > * { min-width: 0; }
+.a2-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.a2-chips button { font: inherit; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 4px; border: 1px solid var(--a2-line); background: var(--a2-panel2); color: var(--a2-muted); cursor: pointer; }
+.a2-chips button.is-on { background: var(--a2-gold); color: #16120a; border-color: var(--a2-gold); }
+.a2-elo { width: 100%; height: auto; display: block; }
+.a2-elo-grid { stroke: var(--a2-line); stroke-width: 1; }
+.a2-elo-ax { fill: var(--a2-muted); font-size: 12px; }
+.a2-elo-line { fill: none; stroke: var(--a2-gold); stroke-width: 2.5; stroke-linejoin: round; }
+.a2-elo-dot { fill: var(--a2-gold); }
+.a2-form { list-style: none; margin: 4px 0 14px; padding: 0; display: flex; gap: 5px; flex-wrap: wrap; }
+.a2-form li { width: 28px; height: 28px; border-radius: 4px; display: grid; place-items: center; font-weight: 800; font-size: 13px; background: var(--a2-panel2); color: var(--a2-muted); }
+.a2-form li.is-win { background: rgba(105, 210, 127, 0.18); color: var(--a2-good); }
+.a2-form li.is-loss { background: rgba(242, 107, 91, 0.18); color: var(--a2-bad); }
+.a2-h3 { font-size: 15px; margin: 12px 0 6px; }
+.a2-vs { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; }
+.a2-vs li { display: flex; justify-content: space-between; gap: 10px; }
+.a2-vs a { color: var(--a2-text); text-decoration: none; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.a2-vs span { font-variant-numeric: tabular-nums; font-weight: 700; }
+.a2-civ { display: inline-flex; align-items: center; gap: 8px; }
+.a2-heat { display: grid; gap: 3px; font-size: 11px; color: var(--a2-muted); }
+.a2-heat-row { display: grid; grid-template-columns: 34px repeat(24, 1fr); gap: 3px; align-items: center; }
+.a2-heat-c { height: 16px; border-radius: 2px; background: var(--a2-panel2); }
+.a2-heat-h { text-align: left; }
+.a2 a { color: var(--a2-gold); }
+@media (max-width: 920px) { .a2-cols { grid-template-columns: 1fr; } }
+
 @media (max-width: 1000px) { .a2-hide-m { display: none; } }
 @media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
 @media (max-width: 560px) { .a2-table th { white-space: normal; } .a2-table td a { display: inline-block; max-width: 8.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; } .a2-panel { padding: 14px 12px; } .a2-mode button { height: 58px; } .a2-mode button span { font-size: 12px; padding: 12px 8px 5px; } }

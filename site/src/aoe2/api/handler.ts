@@ -26,6 +26,8 @@ import {
 } from "./wel";
 
 const ID_MAX = 1e10;
+/** "Perfil desconocido": 6 en `GetPersonalStat` y 7 en `getRecentMatchHistory` (los dos dicen UNKNOWN_PROFILE_IDS, 20/11). */
+const DESCONOCIDO = new Set([RELIC_UNKNOWN_PROFILE_IDS, 7]);
 
 async function leaderboard(p: URLSearchParams, f: typeof fetch) {
   const id = entero(p.get("id"), null, 1, 1000);
@@ -78,7 +80,7 @@ export async function handleAoe2(url: URL, fetcher: typeof fetch = fetch, method
   try {
     return await fn(url.searchParams, fetcher);
   } catch (e) {
-    if (e instanceof RelicError) return e.upstream === RELIC_UNKNOWN_PROFILE_IDS ? notFound() : fail(e.upstream);
+    if (e instanceof RelicError) return DESCONOCIDO.has(e.upstream) ? notFound() : fail(e.upstream);
     return fail(0);
   }
 }
