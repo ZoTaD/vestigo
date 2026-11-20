@@ -2,6 +2,13 @@
  * Age of Empires II (2026-11-20): estética C "Campo de batalla". Maqueta: scratchpad/aoe2-maq/c2-campo.html.
  * Sin franjas ni bordes de color en tarjetas y filas (regla de la casa): el color va en tinte, texto o barras.
  */
+/* Las cifras de los títulos en Noto Sans: en Cinzel el "1" parece una "I" y "1v1" se leía "IVI" (2026-11-20). */
+@font-face {
+  font-family: "A2 Cifras";
+  src: url("@fontsource/noto-sans/files/noto-sans-latin-700-normal.woff2") format("woff2");
+  font-weight: 100 900;
+  unicode-range: U+0030-0039;
+}
 .a2 {
   --a2-bg: #0b0f14;
   --a2-panel: #121a23;
@@ -12,7 +19,7 @@
   --a2-gold: #f0bf4c;
   --a2-good: #69d27f;
   --a2-bad: #f26b5b;
-  --a2-title: "Cinzel", Georgia, serif;
+  --a2-title: "A2 Cifras", "Cinzel", Georgia, serif;
   background: var(--a2-bg);
   color: var(--a2-text);
   font-family: "Noto Sans", system-ui, sans-serif;
@@ -161,9 +168,29 @@
 .a2-hist-bars span:hover { opacity: 1; outline: 1px solid #fff; }
 .a2-hist-axis { display: flex; justify-content: space-between; color: var(--a2-muted); font-size: 12px; margin-top: 4px; }
 
+/* Civilizaciones, matchups y mapas. */
+.a2-wrbar { position: relative; display: block; height: 8px; min-width: 90px; background: var(--a2-panel2); border-radius: 4px; }
+.a2-wrbar::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; border-left: 1px solid var(--a2-muted); }
+.a2-wrbar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
+.a2-wrbar i.is-up { background: var(--a2-good); }
+.a2-wrbar i.is-down { background: var(--a2-bad); }
+.a2-barcell { width: 26%; }
+.a2-matrix { border-collapse: separate; border-spacing: 2px; font-size: 12px; font-variant-numeric: tabular-nums; margin: 0 auto; }
+.a2-matrix th { padding: 0; }
+.a2-matrix td { width: 34px; height: 30px; text-align: center; border-radius: 3px; background: var(--a2-panel2); font-weight: 700; }
+.a2-maps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); gap: 8px; }
+.a2-maps a { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 10px; background: var(--a2-panel2); border-radius: 6px; color: var(--a2-text); text-decoration: none; }
+.a2-maps a:hover { outline: 1px solid var(--a2-gold); }
+.a2-maps img { border-radius: 4px; }
+.a2-maps-what { display: grid; min-width: 0; }
+.a2-maps-what b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.a2-maps-what small { color: var(--a2-muted); }
+.a2-maps-civs { display: flex; gap: 2px; }
+
 @media (max-width: 1000px) { .a2-hide-m { display: none; } }
 @media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
-@media (max-width: 560px) { .a2-table th { white-space: normal; } .a2-table td a { display: inline-block; max-width: 8.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; } .a2-panel { padding: 14px 12px; } .a2-mode button { height: 58px; } .a2-mode button span { font-size: 12px; padding: 12px 8px 5px; } }
+@media (max-width: 760px) { .a2-matrix tr > :nth-child(n + 10), .a2-matrix tbody tr:nth-child(n + 9) { display: none; } }
+@media (max-width: 560px) { .a2-table td, .a2-table th { padding: 6px 3px; } .a2-civ { gap: 5px; font-size: 13px; } .a2-civ .a2-shield { width: 24px; height: 24px; } .a2-table .a2-small { display: block; width: max-content; margin: 2px 0 0 auto; font-size: 10px; padding: 0 3px; } .a2-table th { white-space: normal; } .a2-table td a { display: inline-block; max-width: 8.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; } .a2-panel { padding: 14px 12px; } .a2-mode button { height: 58px; } .a2-mode button span { font-size: 12px; padding: 12px 8px 5px; } }
 
 @media (max-width: 820px) {
   .a2-mode { grid-template-columns: repeat(2, 1fr); }

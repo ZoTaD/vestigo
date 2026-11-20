@@ -82,6 +82,27 @@ def civ_table(lista: list[dict], en: dict[int, str], es: dict[int, str]) -> list
     return out
 
 
+def map_slug(script: str) -> str:
+    """Igual que `mapSlug` del sitio y `daily.map_slug`: `"Arabian Desert.rms"` → `"arabian-desert"`."""
+    s = re.sub(r"\.rms2?$", "", script, flags=re.I).lower()
+    return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+
+
+def maps_table(lista: list[dict], en: dict[int, str], es: dict[int, str]) -> list[dict]:
+    """Los mapas con script (los que aparecen en partidas), con el slug que les da la API y su ícono."""
+    out, vistos = [], set()
+    for m in lista:
+        if not m.get("script_filename"):
+            continue
+        slug = map_slug(m["script_filename"])
+        if slug in vistos:
+            continue
+        vistos.add(slug)
+        nombre_en = en.get(m.get("name_string_id", -1)) or m["const_name"].replace("_", " ").title()
+        out.append({"slug": slug, "icon": m["map_icon_filename"], "name": {"en": nombre_en, "es": es.get(m.get("name_string_id", -1)) or nombre_en}})
+    return out
+
+
 def _webp(origen: Path, destino: Path, ancho: int, cuadrado: int | None = None) -> bool:
     """Guarda `origen` como WebP de hasta `ancho` px (o recortado a su contenido y centrado en `cuadrado`×`cuadrado`).
     Devuelve si escribió (no reescribe un archivo idéntico)."""
@@ -129,6 +150,15 @@ def main() -> None:
     for destino, (carpeta, archivo, ancho) in ARTE.items():
         escritas += _webp(wpfg / carpeta / archivo, PUBLIC / "ui" / f"{destino}.webp", ancho, cuadrado=96 if destino == "civ-unknown" else None)
 
+    mapas = maps_table(json.loads((res / "_common" / "dat" / "maps.json").read_text(encoding="utf-8"))["map_list"], textos("en"), textos("mx"))
+    con_icono = []
+    for m in mapas:
+        origen = next((p for p in (wpfg / "mapicons" / f"{m['icon']}.png", wpfg / "mapicons" / f"{m['icon']}.PNG") if p.exists()), None)
+        if origen:
+            escritas += _webp(origen, PUBLIC / "map" / f"{m['slug']}.webp", 96, cuadrado=96)
+            con_icono.append(m["slug"])
+    escritas += _webp(wpfg / "mapicons" / "cm_generic.png", PUBLIC / "map" / "_generic.webp", 96, cuadrado=96)
+    _escribir_json(DATA / "maps.json", [{"slug": m["slug"], "name": m["name"], "icon": m["slug"] in con_icono} for m in mapas])
     _escribir_json(DATA / "civs.json", [{k: c[k] for k in ("id", "slug", "name", "era")} for c in civs])
     _escribir_json(DATA / "meta.json", {"generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "civs": len(civs)})
     print(f"{len(civs)} civs; {escritas} imágenes nuevas o cambiadas")

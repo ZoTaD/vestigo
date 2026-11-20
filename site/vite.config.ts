@@ -398,7 +398,16 @@ function readSitemapData(): { data: OgData } {
         try {
           const meta = JSON.parse(readFileSync(`${aoe2Dir}/meta.json`, "utf-8"));
           const civs = JSON.parse(readFileSync(`${aoe2Dir}/civs.json`, "utf-8")).filter((c: { era: string }) => c.era === "base");
-          return { generatedAt: meta.generatedAt, civs, maps: [] };
+          // Mapas: sólo los que tienen partidas de ranking en los últimos 28 días (el juego trae 194, casi todos de campaña).
+          let maps: { slug: string; name: { en: string; es: string } }[] = [];
+          try {
+            const sum = JSON.parse(readFileSync(`${aoe2StatsDir}/summary.json`, "utf-8"));
+            const jugados = new Set(Object.keys(sum.windows?.["28"]?.map ?? {}).map((k: string) => k.split("|")[1]));
+            maps = JSON.parse(readFileSync(`${aoe2Dir}/maps.json`, "utf-8")).filter((m: { slug: string }) => jugados.has(m.slug));
+          } catch {
+            maps = [];
+          }
+          return { generatedAt: meta.generatedAt, civs, maps };
         } catch (e) {
           console.warn(`[aoe2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
           return undefined;

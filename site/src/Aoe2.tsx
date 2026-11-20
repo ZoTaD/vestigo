@@ -25,6 +25,9 @@ type LazyTab = ReturnType<typeof lazyWithPreload<TabProps>>;
 const Aoe2Leaderboards = lazyWithPreload(() => import("./aoe2/leaderboards/Aoe2Leaderboards"));
 const Aoe2Players = lazyWithPreload(() => import("./aoe2/players/Aoe2Players"));
 const Aoe2Matches = lazyWithPreload(() => import("./aoe2/matches/Aoe2Matches"));
+const Aoe2Civs = lazyWithPreload(() => import("./aoe2/stats/Aoe2Civs"));
+const Aoe2Matchups = lazyWithPreload(() => import("./aoe2/stats/Aoe2Matchups"));
+const Aoe2Maps = lazyWithPreload(() => import("./aoe2/stats/Aoe2Maps"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `AOE2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `AOE2_TAB_FILES`.
@@ -32,6 +35,9 @@ const TABS: Partial<Record<Aoe2Section, LazyTab>> = {
   leaderboards: Aoe2Leaderboards,
   players: Aoe2Players,
   matches: Aoe2Matches,
+  civilizations: Aoe2Civs,
+  matchups: Aoe2Matchups,
+  maps: Aoe2Maps,
 };
 
 const hasPage = (tab: Aoe2Section): boolean => tab === "home" || !!TABS[tab];

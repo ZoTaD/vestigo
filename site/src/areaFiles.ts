@@ -171,6 +171,9 @@ export const AOE2_TAB_FILES: Partial<Record<Aoe2Section, string>> = {
   leaderboards: "src/aoe2/leaderboards/Aoe2Leaderboards.tsx",
   players: "src/aoe2/players/Aoe2Players.tsx",
   matches: "src/aoe2/matches/Aoe2Matches.tsx",
+  civilizations: "src/aoe2/stats/Aoe2Civs.tsx",
+  matchups: "src/aoe2/stats/Aoe2Matchups.tsx",
+  maps: "src/aoe2/stats/Aoe2Maps.tsx",
 };
 
 /**
