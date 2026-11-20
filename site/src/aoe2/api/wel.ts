@@ -82,6 +82,7 @@ export type RawAoe2Match = {
   completiontime: number;
   observertotal?: number;
   options?: string;
+  slotinfo?: string | null;
   matchhistorymember: { profile_id: number; civilization_id: number; teamid: number; outcome: number; oldrating: number; newrating: number }[];
   matchhistoryreportresults?: { profile_id: number; resulttype: number; teamid: number; civilization_id: number }[];
 };

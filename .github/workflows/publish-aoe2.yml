@@ -6,6 +6,9 @@ name: publish aoe2 stats
 # **No dispara un build propio**, igual que `publish-coh3`: el commit lo empuja el GITHUB_TOKEN y las estadísticas van en
 # `games/aoe2/stats`, fuera de los `paths` de `deploy.yml`; salen con el siguiente build de `publish-deadlock`.
 #
+# **Aperturas**: además baja 500 grabaciones de RM 1v1 del día anterior (~1 MB cada una) y las clasifica
+# (`games/aoe2/tools/openings.py`).
+#
 # **Parche nuevo** → sumar su línea en `games/aoe2/tools/patches.py`.
 on:
   schedule:
@@ -37,7 +40,7 @@ jobs:
       # propio plazo para pedir historiales (`--deadline`) y escribe lo juntado.
       - name: stats
         continue-on-error: true
-        run: python games/aoe2/tools/daily.py --days 28 --budget 3000 --deadline 2400
+        run: python games/aoe2/tools/daily.py --days 28 --budget 3000 --replays 500 --deadline 2400
 
       - name: guard
         id: guard

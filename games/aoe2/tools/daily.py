@@ -20,6 +20,10 @@ civB), dur: {"<modo>|<civ>": [partidas, segundos]}}`. La civ es su slug (`games/
 Un resultado que no es victoria ni derrota no cuenta. La IA (perfil ≤ 0) y las personalizadas quedan afuera.
 """
 import argparse
+import base64
+import io
+import zipfile
+import zlib
 import json
 import re
 import sys
@@ -34,6 +38,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from patches import PARCHES  # noqa: E402
+from openings import openings as _aperturas  # noqa: E402
+from replay import read_actions  # noqa: E402
 
 AQUI = Path(__file__).resolve().parent
 RAIZ = AQUI.parents[2]
@@ -100,8 +106,17 @@ def patch_of(ts: int) -> str | None:
     return vigente
 
 
+def slots_of(b64: str | None) -> dict[int, int]:
+    """`slotinfo` (base64 + zlib, `"<n>,[{…}]"`) → perfil → número de jugador en la grabación (`stationID`)."""
+    try:
+        txt = zlib.decompress(base64.b64decode(b64 or "")).decode("utf-8", "replace").rstrip(chr(0))
+        return {s["profileInfo.id"]: s["stationID"] for s in json.loads(txt[txt.index(",") + 1 :]) if s["profileInfo.id"] > 0}
+    except Exception:
+        return {}
+
+
 def _dia_vacio(fecha: str) -> dict:
-    return {"date": fecha, "games": 0, "patch": None, "civ": {}, "map": {}, "vs": {}, "dur": {}}
+    return {"date": fecha, "games": 0, "patch": None, "civ": {}, "map": {}, "vs": {}, "dur": {}, "open": {}}
 
 
 def _sumar(d: dict, k: str, gano: bool | int, n: int = 1) -> None:
@@ -117,6 +132,8 @@ class Acumulador:
         self.civs = civs
         self.vistas: set[int] = set()
         self.dias: dict[str, dict] = {}
+        #: Partidas de RM 1v1 candidatas a bajar la grabación (aperturas): id, día, banda, jugadores con lugar.
+        self.muestras: list[dict] = []
 
     def civ(self, cid: int) -> str:
         return self.civs.get(cid, f"civ_{cid}")
@@ -152,10 +169,20 @@ class Acumulador:
             x[0] += 1
             x[1] += dur
         if modo == "rm1v1" and len(js) == 2:
+            lugares = slots_of(m.get("slotinfo"))
+            if len(self.muestras) < 20000 and all(j["profile_id"] in lugares for j in js):
+                self.muestras.append({"id": m["id"], "fecha": fecha, "band": b, "jugador": js[0]["profile_id"], "js": [(lugares[j["profile_id"]], self.civ(j["civilization_id"]), j["outcome"] == 1) for j in js]})
             a, z = sorted(js, key=lambda j: self.civ(j["civilization_id"]))
             ca, cz = self.civ(a["civilization_id"]), self.civ(z["civilization_id"])
             if ca != cz:
                 _sumar(d["vs"], f"{b}|{ca}|{cz}", a["outcome"] == 1)
+
+    def aperturas(self, muestra: dict, por_lugar: dict[int, str]) -> None:
+        """Suma las aperturas de una partida de la muestra: `"<banda>|<civ>|<apertura>": [partidas, victorias]`."""
+        d = self.dias.setdefault(muestra["fecha"], _dia_vacio(muestra["fecha"]))
+        for lugar, civ, gano in muestra["js"]:
+            if lugar in por_lugar:
+                _sumar(d.setdefault("open", {}), f"{muestra['band']}|{civ}|{por_lugar[lugar]}", gano)
 
     def completos(self, hoy: date):
         """Los días ya terminados (UTC)."""
@@ -199,7 +226,7 @@ def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
         return [d for f, d in dias.items() if desde.isoformat() <= f <= hasta.isoformat()]
 
     def ventana(ds):
-        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur")}
+        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur"), "open": _suma(ds, "open")}
 
     ayer = hoy - timedelta(days=1)
     out = {"generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "patch": None, "windows": {}, "prev": {}}
@@ -269,6 +296,17 @@ def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str]]:
     return [(p, e, u, a) for p, e, u, _, a in filas]
 
 
+def _grabacion(match_id: int, perfil: int) -> bytes | None:
+    """La grabación de una partida (zip del servidor de Microsoft), descomprimida; None si no está."""
+    try:
+        req = urllib.request.Request(f"https://aoe.ms/replay/?gameId={match_id}&profileId={perfil}", headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            z = zipfile.ZipFile(io.BytesIO(r.read()))
+        return z.read(z.namelist()[0])
+    except Exception:
+        return None
+
+
 # ---------- Archivos ----------
 
 def _leer(ruta: Path):
@@ -289,6 +327,7 @@ def main() -> None:
     ap.add_argument("--budget", type=int, default=3000)
     ap.add_argument("--deadline", type=int, default=2400, help="segundos para pedir historiales")
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--replays", type=int, default=500, help="grabaciones de RM 1v1 a bajar para las aperturas")
     a = ap.parse_args()
     hoy = datetime.now(timezone.utc).date()
     ahora = int(time.time())
@@ -335,6 +374,29 @@ def main() -> None:
             for m in (h or {}).get("matchHistoryStats", []):
                 acc.agregar(m)
     print(f"historiales: {hechos}; partidas vistas: {len(acc.vistas)}", flush=True)
+
+    # 3b: aperturas. Grabaciones de una muestra de RM 1v1 de días completos, repartida entre bandas de ELO.
+    candidatas = [m for m in acc.muestras if m["fecha"] < hoy.isoformat() and not (STATS / "days" / f"{m['fecha']}.json").exists()]
+    por_banda = {b: [m for m in candidatas if m["band"] == b] for b in BANDAS}
+    elegidas = []
+    for b, ms in por_banda.items():
+        cupo = a.replays // len(BANDAS)
+        paso = max(1, len(ms) // max(1, cupo))
+        elegidas += ms[::paso][:cupo]
+    hechas = 0
+    fin_rec = time.time() + a.deadline / 2
+    with ThreadPoolExecutor(a.workers) as ex:
+        futs = {ex.submit(_grabacion, m["id"], m["jugador"]): m for m in elegidas}
+        for f in as_completed(futs):
+            if time.time() > fin_rec:
+                for x in futs:
+                    x.cancel()
+                break
+            datos = f.result()
+            if datos:
+                acc.aperturas(futs[f], _aperturas(read_actions(datos)))
+                hechas += 1
+    print(f"grabaciones leídas: {hechas} de {len(elegidas)}", flush=True)
 
     # 4: días nuevos y resumen.
     for f, d in acc.completos(hoy):

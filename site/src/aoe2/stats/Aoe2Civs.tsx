@@ -11,6 +11,7 @@ import { useAoe2Copy } from "../../aoe2Copy";
 import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, CivShield, MuestraChica, Panel, civBySlug, type Nav } from "../ui";
 import { BANDS, SMALL, avgMinutes, civTable, matchup, type CivRow, type Summary } from "./data";
+import { CivOpenings, OpeningsView } from "./Openings";
 import { Civ, FILTROS_INICIALES, StatFilters, WrBar, mapIcon, mapLabel, pct, useSummary, type Filters } from "./parts";
 
 export default function Aoe2Civs({ route, navigate }: { route: Route; navigate: Nav }) {
@@ -21,7 +22,14 @@ export default function Aoe2Civs({ route, navigate }: { route: Route; navigate: 
   return (
     <>
       <StatFilters f={f} set={setF} s={s} />
-      {route.detail && civBySlug(route.detail) ? <Ficha slug={route.detail} s={s} f={f} /> : <Tabla s={s} f={f} route={route} navigate={navigate} />}
+      {route.detail && civBySlug(route.detail) ? (
+        <Ficha slug={route.detail} s={s} f={f} />
+      ) : (
+        <>
+          <Tabla s={s} f={f} route={route} navigate={navigate} />
+          <OpeningsView s={s} f={f} />
+        </>
+      )}
     </>
   );
 }
@@ -130,6 +138,7 @@ function Ficha({ slug, s, f }: { slug: string; s: Summary; f: Filters }) {
           ))}
         </ul>
       </Panel>
+      <CivOpenings s={s} f={f} civ={slug} />
       <div className="a2-cols">
         <Lista h={t.st.bestMaps} xs={ordenar(mapas, true).map((m) => ({ key: m.map, icon: mapIcon(m.map), label: mapLabel(m.map, lang), wr: m.wr, games: m.games }))} />
         <Lista h={t.st.worstMaps} xs={ordenar(mapas, false).map((m) => ({ key: m.map, icon: mapIcon(m.map), label: mapLabel(m.map, lang), wr: m.wr, games: m.games }))} />

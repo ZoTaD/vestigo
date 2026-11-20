@@ -26,6 +26,10 @@ import {
   type Aoe2Match,
 } from "./wel";
 import { decodeOptions, namedOptions } from "../matches/options";
+import { readActions } from "./replay";
+import { openings } from "./openings";
+import { slotsOf } from "./slots";
+import { unzipFirst } from "./zip";
 
 /** Las opciones decodificadas en lugar del base64 crudo. */
 const conOpciones = (m: Aoe2Match): Aoe2Match => ({ ...m, ...namedOptions(decodeOptions(m.options ?? "")), options: null });
@@ -75,7 +79,29 @@ async function search(p: URLSearchParams, f: typeof fetch) {
   }
 }
 
-const RUTAS: Record<string, (p: URLSearchParams, f: typeof fetch) => Promise<Response>> = { leaderboard, player, match, search };
+/**
+ * La apertura de cada jugador de una partida: baja la grabación (la sube el juego; puede tardar unos minutos en estar o
+ * haber vencido), lee las acciones y clasifica. El número de jugador de la grabación se cruza con el perfil por el
+ * `slotinfo` del historial de `p`. La respuesta no cambia nunca: se guarda 30 días.
+ */
+async function opening(p: URLSearchParams, f: typeof fetch) {
+  const id = entero(p.get("id"), null, 1, ID_MAX);
+  const jugador = entero(p.get("p"), null, 1, ID_MAX);
+  if (id == null || jugador == null) return bad("id");
+  const [hist, rec] = await Promise.all([
+    getRecentMatches(f, jugador).catch(() => null),
+    f(`https://aoe.ms/replay/?gameId=${id}&profileId=${jugador}`, { signal: AbortSignal.timeout(15000), redirect: "follow" }).catch(() => null),
+  ]);
+  if (!rec || !rec.ok) return notFound();
+  const datos = unzipFirst(new Uint8Array(await rec.arrayBuffer()));
+  if (!datos) return notFound();
+  const porLugar = openings(readActions(datos));
+  const lugares = slotsOf(hist?.matchHistoryStats.find((m) => m.id === id)?.slotinfo);
+  const players = Object.fromEntries(Object.entries(lugares).filter(([, lugar]) => porLugar[lugar]).map(([perfil, lugar]) => [perfil, porLugar[lugar]]));
+  return json({ id, players }, 200, cache(86400 * 30, 86400 * 30));
+}
+
+const RUTAS: Record<string, (p: URLSearchParams, f: typeof fetch) => Promise<Response>> = { leaderboard, player, match, search, opening };
 
 export async function handleAoe2(url: URL, fetcher: typeof fetch = fetch, method = "GET"): Promise<Response> {
   if (method !== "GET" && method !== "HEAD") return json({ error: "method" }, 405, { Allow: "GET, HEAD" });

@@ -8,7 +8,7 @@ export type BandOrAll = Band | "all";
 export type WindowKey = "7" | "14" | "28" | "patch";
 export type StatMode = "rm1v1" | "rmteam" | "ew1v1" | "ewteam";
 type Pares = Record<string, [number, number]>;
-export type Window = { games: number; days: number; civ: Pares; map: Pares; vs: Pares; dur: Pares };
+export type Window = { games: number; days: number; civ: Pares; map: Pares; vs: Pares; dur: Pares; open?: Pares };
 export type Summary = {
   generatedAt: string;
   patch: { name: string; since: string } | null;
@@ -106,4 +106,48 @@ export function mapsByGames(s: Summary, window: WindowKey, mode: StatMode): { ma
 export function avgMinutes(s: Summary, window: WindowKey, mode: StatMode, civ: string): number | null {
   const d = s.windows[window]?.dur[`${mode}|${civ}`];
   return d && d[0] ? Math.round(d[1] / d[0] / 60) : null;
+}
+
+// ---------- Aperturas (de las grabaciones de RM 1v1: `open`, "<banda>|<civ>|<apertura>") ----------
+
+type OpRow = { civ: string; opening: string; games: number; wins: number };
+function aperturas(s: Summary, window: WindowKey, band: BandOrAll): OpRow[] {
+  const out = new Map<string, OpRow>();
+  for (const [k, [g, w]] of Object.entries(s.windows[window]?.open ?? {})) {
+    const [b, civ, opening] = k.split("|");
+    if (band !== "all" && b !== band) continue;
+    const x = out.get(`${civ}|${opening}`) ?? { civ, opening, games: 0, wins: 0 };
+    x.games += g;
+    x.wins += w;
+    out.set(`${civ}|${opening}`, x);
+  }
+  return [...out.values()];
+}
+
+/** Las civs que abren con `opening`, de la más jugada a la menos. */
+export function openingTable(s: Summary, window: WindowKey, band: BandOrAll, opening: string): (OpRow & { wr: number; small: boolean })[] {
+  return aperturas(s, window, band)
+    .filter((r) => r.opening === opening)
+    .map((r) => ({ ...r, wr: r.wins / r.games, small: r.games < SMALL }))
+    .sort((a, b) => b.games - a.games || b.wr - a.wr);
+}
+
+/** Para cada apertura, la civ con mejor % de victorias entre las que la jugaron al menos 30 veces. */
+export function bestPerOpening(s: Summary, window: WindowKey, band: BandOrAll): { opening: string; civ: string; wr: number; games: number }[] {
+  const por = new Map<string, { opening: string; civ: string; wr: number; games: number }>();
+  for (const r of aperturas(s, window, band)) {
+    if (r.games < 30 || r.opening === "other") continue;
+    const wr = r.wins / r.games;
+    const x = por.get(r.opening);
+    if (!x || wr > x.wr) por.set(r.opening, { opening: r.opening, civ: r.civ, wr, games: r.games });
+  }
+  return [...por.values()].sort((a, b) => b.games - a.games);
+}
+
+/** Las aperturas de una civ, de la más jugada a la menos. */
+export function civOpenings(s: Summary, window: WindowKey, band: BandOrAll, civ: string): { opening: string; games: number; wins: number; wr: number; small: boolean }[] {
+  return aperturas(s, window, band)
+    .filter((r) => r.civ === civ)
+    .map((r) => ({ opening: r.opening, games: r.games, wins: r.wins, wr: r.wins / r.games, small: r.games < SMALL }))
+    .sort((a, b) => b.games - a.games);
 }

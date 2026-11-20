@@ -21,6 +21,7 @@ import MatchHistory from "./MatchHistory";
 import HeadToHead from "./HeadToHead";
 import { mapName } from "./mapName";
 import ShareCard from "./ShareCard";
+import TheirOpenings from "./TheirOpenings";
 import { useAoe2Me } from "./me";
 import { civById as civ } from "../ui";
 
@@ -187,6 +188,7 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
             <Actividad grilla={act} />
           </Panel>
 
+          <TheirOpenings matches={matches} id={id} />
           <MatchHistory matches={matches} id={id} route={route} navigate={navigate} />
           <HeadToHead matches={matches} id={id} route={route} navigate={navigate} />
         </>

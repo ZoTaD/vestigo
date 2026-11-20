@@ -187,6 +187,14 @@
 .a2-maps-what small { color: var(--a2-muted); }
 .a2-maps-civs { display: flex; gap: 2px; }
 
+.a2-op { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 6px; border-radius: 3px; background: var(--a2-panel); color: var(--a2-muted); white-space: nowrap; }
+.a2-op.is-scouts { color: #f0bf4c; }
+.a2-op.is-archers { color: #69d27f; }
+.a2-op.is-maa, .a2-op.is-drush, .a2-op.is-drush_fc { color: #f08a24; }
+.a2-op.is-fc, .a2-op.is-boom { color: #6fa8ff; }
+.a2-op.is-tower { color: #c69cff; }
+.a2-hist-what .a2-op { justify-self: start; margin-top: 3px; }
+
 @media (max-width: 1000px) { .a2-hide-m { display: none; } }
 @media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
 @media (max-width: 760px) { .a2-matrix tr > :nth-child(n + 10), .a2-matrix tbody tr:nth-child(n + 9) { display: none; } }

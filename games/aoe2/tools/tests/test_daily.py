@@ -133,3 +133,31 @@ def test_ladder_snapshot_guarda_el_alias_y_la_foto_de_ayer():
     snap = d.ladder_snapshot([(1, 2950, "a"), (2, 2800, "b")], HOY, top=10, prev=ayer)
     assert snap["top"][0] == [1, 2950, "a"]
     assert snap["prev"] == {"date": "2026-11-19", "top": [[1, 2900, "a"]]}
+
+
+def _slot(pares):
+    import base64, zlib
+    txt = f"{len(pares)}," + json.dumps([{"profileInfo.id": p, "stationID": s} for p, s in pares])
+    return base64.b64encode(zlib.compress(txt.encode())).decode()
+
+
+def test_lugares_desde_slotinfo():
+    assert d.slots_of(_slot([(10, 1), (11, 2)])) == {10: 1, 11: 2}
+    assert d.slots_of("roto") == {}
+
+
+def test_aperturas_por_civ_y_banda():
+    acc = d.Acumulador(CIVS)
+    p = partida(20, 6, "Arabia.rms", [miembro(10, 2, 0, 1), miembro(11, 12, 1, 0)])
+    p["slotinfo"] = _slot([(10, 1), (11, 2)])
+    acc.agregar(p)
+    assert [m["id"] for m in acc.muestras] == [20]
+    acc.aperturas(acc.muestras[0], {1: "scouts", 2: "drush"})
+    dia = acc.dias["2026-11-19"]
+    assert dia["open"] == {"1400-1800|franks|scouts": [1, 1], "1400-1800|mongols|drush": [1, 0]}
+
+
+def test_solo_rm_1v1_entra_en_la_muestra_de_grabaciones():
+    acc = d.Acumulador(CIVS)
+    acc.agregar(partida(21, 7, "Arena.rms", [miembro(1, 2, 0, 1), miembro(2, 4, 0, 1), miembro(3, 12, 1, 0), miembro(4, 12, 1, 0)]))
+    assert acc.muestras == []

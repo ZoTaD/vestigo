@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { civTable, mapTable, matchup, mapsByGames, type Summary } from "../src/aoe2/stats/data";
+import { bestPerOpening, civOpenings, civTable, mapTable, matchup, mapsByGames, openingTable, type Summary } from "../src/aoe2/stats/data";
 
-const W = (civ: Record<string, [number, number]>, map: Record<string, [number, number]> = {}, vs: Record<string, [number, number]> = {}) => ({
-  games: 0, days: 14, civ, map, vs, dur: {},
+const W = (civ: Record<string, [number, number]>, map: Record<string, [number, number]> = {}, vs: Record<string, [number, number]> = {}, open: Record<string, [number, number]> = {}) => ({
+  games: 0, days: 14, civ, map, vs, dur: {}, open,
 });
 const S: Summary = {
   generatedAt: "2026-11-20T08:00:00Z",
@@ -17,6 +17,7 @@ const S: Summary = {
       },
       { "rm1v1|arabia|franks": [250, 150], "rm1v1|arabia|mongols": [150, 70], "rm1v1|arena|franks": [10, 5] },
       { "1400-1800|franks|mongols": [80, 50] },
+      { "1400-1800|franks|scouts": [60, 40], "1800+|franks|scouts": [20, 10], "1400-1800|mongols|scouts": [50, 20], "1400-1800|franks|archers": [10, 4] },
     ),
   },
   prev: { "14": { games: 0, civ: { "rm1v1|1400-1800|franks": [200, 100] } } },
@@ -56,5 +57,15 @@ describe("estadísticas de civs de AoE2", () => {
     const t = mapTable(S, "14", "rm1v1", "arabia");
     expect(t.map((r) => [r.civ, r.games])).toEqual([["franks", 250], ["mongols", 150]]);
     expect(mapsByGames(S, "14", "rm1v1")).toEqual([{ map: "arabia", games: 200 }, { map: "arena", games: 5 }]);
+  });
+  it("aperturas: civs con una apertura, todas las bandas", () => {
+    const t = openingTable(S, "14", "all", "scouts");
+    expect(t.map((r) => [r.civ, r.games, r.wins])).toEqual([["franks", 80, 50], ["mongols", 50, 20]]);
+  });
+  it("la mejor civ para cada apertura (con al menos 30 partidas)", () => {
+    expect(bestPerOpening(S, "14", "1400-1800")).toEqual([{ opening: "scouts", civ: "franks", wr: 40 / 60, games: 60 }]);
+  });
+  it("las aperturas de una civ, de la más jugada a la menos", () => {
+    expect(civOpenings(S, "14", "all", "franks").map((o) => [o.opening, o.games])).toEqual([["scouts", 80], ["archers", 10]]);
   });
 });
