@@ -29,6 +29,13 @@ describe("calculadora de AoE2", () => {
     // Armadura a una clase que no tenía: aparece.
     expect(aplicar(caballero, [[4, 38, -1, 8, 15 * 256 + 2]]).armors[15]).toBe(2);
   });
+  it("multiplicar el ataque de una clase (bono de pólvora de los borgoñones: +25 %)", () => {
+    const canonero: Combatiente = { ...lancero, id: 5, cls: 44, attacks: { 3: 17, 1: 10 } };
+    // 7037 = 27 × 256 + 125: clase 27, ×1,25. Toca a la unidad 5; la clase que no tiene no aparece.
+    const c = aplicar(canonero, [[5, 5, -1, 9, 27 * 256 + 125], [5, 5, -1, 9, 3 * 256 + 125]]);
+    expect(c.attacks[3]).toBe(21);
+    expect(c.attacks[27]).toBeUndefined();
+  });
   it("duelo: golpes y segundos para matar (el primer golpe sale al empezar)", () => {
     const d = duelo(lancero, caballero);
     expect(d.dano).toBe(16);

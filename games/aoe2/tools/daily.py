@@ -247,6 +247,12 @@ def _suma(dias: list[dict], clave: str) -> dict:
     return out
 
 
+def _n(dias: list[dict]) -> dict:
+    """Las partidas por modo y banda, sólo si todos los días las tienen (los guardados antes del 21/11 no): con un día
+    sin la cuenta, la elección dividiría las civs de toda la ventana por las partidas de parte de ella."""
+    return _suma(dias, "n") if all("n" in x for x in dias) else {}
+
+
 def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
     """Las ventanas de los últimos N días completos, la anterior de cada una (sólo civ, para la tendencia) y la del
     parche actual: los días desde el siguiente al del parche (`patches.py`)."""
@@ -254,14 +260,14 @@ def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
         return [d for f, d in dias.items() if desde.isoformat() <= f <= hasta.isoformat()]
 
     def ventana(ds):
-        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur"), "open": _suma(ds, "open"), "n": _suma(ds, "n")}
+        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur"), "open": _suma(ds, "open"), "n": _n(ds)}
 
     ayer = hoy - timedelta(days=1)
     out = {"generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "patch": None, "windows": {}, "prev": {}}
     for n in ventanas:
         out["windows"][str(n)] = ventana(entre(ayer - timedelta(days=n - 1), ayer))
         prev = entre(ayer - timedelta(days=2 * n - 1), ayer - timedelta(days=n))
-        out["prev"][str(n)] = {"games": sum(d["games"] for d in prev), "civ": _suma(prev, "civ"), "n": _suma(prev, "n")}
+        out["prev"][str(n)] = {"games": sum(d["games"] for d in prev), "civ": _suma(prev, "civ"), "n": _n(prev)}
     actual = patch_of(int(datetime(ayer.year, ayer.month, ayer.day, tzinfo=timezone.utc).timestamp()) + DIA - 1)
     if actual:
         desde = (datetime.fromisoformat(PARCHES[actual].replace("Z", "+00:00")).date() + timedelta(days=1)).isoformat()

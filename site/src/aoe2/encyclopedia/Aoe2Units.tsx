@@ -153,11 +153,13 @@ function Ficha({ slug, u, a, route, navigate }: { slug: string; u: Unidades; a: 
       <div className="a2-two">
         <Panel h={t.units.stats}>
           <Datos filas={filas} />
+          {x.attacks.length > 0 && x.reload > 0 && (
           <p>
             <RouteLink className="a2-btn" to={{ ...route, view: "aoe2", a2Section: "calculator", detail: undefined }} onNavigate={navigate} search={`?a=${x.slug}`}>
               {t.units.calc}
             </RouteLink>
           </p>
+          )}
         </Panel>
         <div>
           {bonus.length > 0 && (

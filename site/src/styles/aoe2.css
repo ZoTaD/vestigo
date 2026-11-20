@@ -270,3 +270,5 @@
 }
 .a2-kicker { display: block; color: var(--a2-gold); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
 @media (max-width: 560px) { .a2-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; } .a2-calc-res .a2-table td:first-child { font-size: 12px; } }
+/* Nombres de unidad y tecnología: pueden ser largos ("Caballero teutónico de élite"); bajan de renglón entre palabras. */
+.a2-ico + .a2-alias { white-space: normal; min-width: 0; font-size: clamp(20px, 6cqi, 36px); line-height: 1.15; }

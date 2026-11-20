@@ -42,9 +42,15 @@ export function aplicar(u: Combatiente, fxs: readonly Fx[]): Combatiente {
     if (!toca(o, fx)) continue;
     const [tipo, , , attr, d] = fx;
     if (attr === 8 || attr === 9) {
-      if (tipo === 5) continue; // el juego no multiplica ataque ni armadura por clase
-      const [c, v] = claseValor(d);
       const tabla = attr === 9 ? o.attacks : o.armors;
+      if (tipo === 5) {
+        // Multiplicar: clase × 256 + porcentaje, sin signo (125 = ×1,25). Sólo si la unidad tiene esa clase.
+        const n = Math.round(d);
+        const c = Math.floor(n / 256);
+        if (tabla[c] !== undefined) tabla[c] = Math.round((tabla[c] * (n % 256)) / 100);
+        continue;
+      }
+      const [c, v] = claseValor(d);
       tabla[c] = tipo === 0 ? v : (tabla[c] ?? 0) + v;
       continue;
     }

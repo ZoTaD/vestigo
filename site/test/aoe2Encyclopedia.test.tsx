@@ -45,6 +45,12 @@ describe("prerender de la enciclopedia de AoE2", () => {
     expect(html).toMatch(/<h1[^>]*>Francos<\/h1>/);
     expect(html).toContain("Arbalestero");
   });
+  it("el árbol muestra las variantes propias de la civ (Konnik de la Krepost) y lo que le falta ya en el prerender", async () => {
+    const html = await render("/en/aoe2/tech-tree/bulgarians", Aoe2TechTree);
+    expect(html).toContain("Krepost");
+    expect(html).toContain("konnik-1254");
+    expect(html).toContain("What&#x27;s missing");
+  });
   it("la calculadora sale con un duelo armado", async () => {
     const html = await render("/es/aoe2/calculadora", Aoe2Calculator);
     expect(html).toContain("Daño por golpe");

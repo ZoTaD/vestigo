@@ -60,13 +60,14 @@ function Arbolito({ civ, a, us, ts, route, navigate }: { civ: string; a: Arbol; 
       const s = estado(a, civ, `u${x.id}`);
       // Lo único o regional de otra civ no está en su árbol; tampoco las variantes repetidas.
       if ((x.kind === "UniqueUnit" || x.kind === "RegionalUnit") && s === "0") continue;
-      if (x.slug.endsWith(`-${x.id}`)) continue;
+      // Una variante (mismo nombre, otro id) sólo si es de esta civ: el Huscarle de los godos, el Konnik de la Krepost.
+      if (x.slug.endsWith(`-${x.id}`) && s === "0") continue;
       sumar(x.building, { k: "u", id: x.id, slug: x.slug, name: x.name, pic: x.pic, age: x.age, off: s === "0" });
     }
     for (const x of ts) {
       const s = estado(a, civ, `t${x.id}`);
       if (x.kind !== "Research" && s === "0") continue;
-      if (x.slug.endsWith(`-${x.id}`)) continue;
+      if (x.slug.endsWith(`-${x.id}`) && s === "0") continue;
       sumar(x.building, { k: "t", id: x.id, slug: x.slug, name: x.name, pic: x.pic, age: x.age, off: s === "0" });
     }
     return a.buildings

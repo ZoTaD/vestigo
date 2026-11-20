@@ -122,7 +122,7 @@ export async function preloadEncyclopedia(route: { a2Section?: string; detail?: 
     const x = route.detail ? t.find((f) => f.slug === route.detail) : undefined;
     if (x) await loadAyuda(lang, x.id);
   } else if (sec === "tech-tree") {
-    await Promise.all([arbol.load(), unidades.load(), tecnologias.load()]);
+    await Promise.all([arbol.load(), unidades.load(), tecnologias.load(), route.detail ? loadCivInfo(route.detail) : undefined]);
   } else if (sec === "civilizations" && route.detail) {
     await loadCivInfo(route.detail);
   }

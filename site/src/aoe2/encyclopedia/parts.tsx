@@ -6,6 +6,7 @@ import { useLang } from "../../i18n";
 import type { Nav } from "../ui";
 import { RECURSOS, type Nombre, type Recurso } from "./data";
 import { useEncCopy } from "./copy";
+import { SettledImg } from "../../SettledImg";
 
 type Cache<T> = { load: () => Promise<T>; peek: () => T | undefined };
 
@@ -39,19 +40,14 @@ export function useCargado<T>(peek: () => T | null | undefined, load: () => Prom
 }
 
 const CARPETA = { u: "u", t: "t", b: "b" } as const;
-/** El ícono del juego de una unidad (`u`), tecnología (`t`) o edificio (`b`), de tamaño fijo. */
+/** El ícono del juego de una unidad (`u`), tecnología (`t`) o edificio (`b`), de tamaño fijo. Los de lista se piden
+ * recién con el scroll quieto (`SettledImg`): el árbol y las listas tienen cientos. `eager` es para el de arriba de una
+ * ficha. */
 export function Icono({ k, pic, size = 40, off = false, eager = false }: { k: keyof typeof CARPETA; pic: number; size?: number; off?: boolean; eager?: boolean }) {
-  return (
-    <img
-      className={`a2-ico${off ? " is-off" : ""}`}
-      src={`/aoe2/${CARPETA[k]}/${pic}.webp`}
-      alt=""
-      width={size}
-      height={size}
-      loading={eager ? undefined : "lazy"}
-      decoding="async"
-    />
-  );
+  const cls = `a2-ico${off ? " is-off" : ""}`;
+  const src = `/aoe2/${CARPETA[k]}/${pic}.webp`;
+  if (eager) return <img className={cls} src={src} alt="" width={size} height={size} decoding="async" />;
+  return <SettledImg className={cls} src={src} width={size} height={size} />;
 }
 
 /** "60 comida · 75 oro" (o "Gratis"). */

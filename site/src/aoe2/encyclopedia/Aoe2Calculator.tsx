@@ -70,10 +70,13 @@ function Calculadora({ us, a, ts, fx }: { us: Unidad[]; a: Arbol; ts: Tecnologia
   // Lo que venga en la dirección (link desde una ficha o compartido) manda, ya en el navegador.
   useEffect(() => {
     const q = leerQuery();
-    const ua = q.a && porSlug.has(q.a) ? q.a : "knight";
-    const ub = q.b && porSlug.has(q.b) ? q.b : "halberdier";
-    const ca = q.ca && a.civs[q.ca] ? q.ca : primeraCon(ua, "franks");
-    const cb = q.cb && a.civs[q.cb] ? q.cb : primeraCon(ub, "britons");
+    // Sólo unidades que pelean (con ataque y recarga) y una civ que la tenga; si no, la primera que la tiene.
+    const pelea = (s?: string) => !!s && !!porSlug.get(s)?.attacks.length && (porSlug.get(s)?.reload ?? 0) > 0;
+    const ua = pelea(q.a) ? q.a! : "knight";
+    const ub = pelea(q.b) ? q.b! : "halberdier";
+    const tiene = (c: string | undefined, u: string) => !!c && !!a.civs[c] && estado(a, c, `u${porSlug.get(u)!.id}`) !== "0";
+    const ca = tiene(q.ca, ua) ? q.ca! : primeraCon(ua, "franks");
+    const cb = tiene(q.cb, ub) ? q.cb! : primeraCon(ub, "britons");
     if (q.e && /^[2-4]$/.test(q.e)) setE(Number(q.e));
     setLados([
       { civ: ca, unit: ua, off: [] },

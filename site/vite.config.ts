@@ -407,7 +407,17 @@ function readSitemapData(): { data: OgData } {
           } catch {
             maps = [];
           }
-          return { generatedAt: meta.generatedAt, civs, maps };
+          // Enciclopedia: las fichas de unidades y tecnologías. Las variantes (mismo nombre, el id en el slug) también:
+          // la ficha de algunas civs enlaza a la suya (el Konnik de los búlgaros es una).
+          let units: { slug: string; name: { en: string; es: string } }[] = [];
+          let techs: { slug: string; name: { en: string; es: string } }[] = [];
+          try {
+            units = JSON.parse(readFileSync(`${aoe2Dir}/encyclopedia/units.json`, "utf-8")).units;
+            techs = JSON.parse(readFileSync(`${aoe2Dir}/encyclopedia/techs.json`, "utf-8"));
+          } catch {
+            units = [];
+          }
+          return { generatedAt: meta.generatedAt, civs, maps, units, techs };
         } catch (e) {
           console.warn(`[aoe2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
           return undefined;

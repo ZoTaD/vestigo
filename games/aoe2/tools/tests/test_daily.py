@@ -217,3 +217,14 @@ def test_paginas_salteadas_del_ranking_se_avisan(capsys, monkeypatch):
     filas = d.bajar_ranking(3, 2)
     assert len(filas) == 250
     assert "salteadas: 1 (201)" in capsys.readouterr().out
+
+
+def test_ventana_sin_cuenta_de_partidas_en_algun_dia_no_la_usa():
+    # Los días guardados antes de la cuenta no tienen "n": la ventana no la escribe hasta tenerla en todos, así el sitio
+    # usa el estimador en vez de dividir las civs de 7 días por las partidas de uno.
+    acc = d.Acumulador(CIVS)
+    acc.agregar(partida(30, 6, "Arabia.rms", [miembro(10, 2, 0, 1), miembro(11, 12, 1, 0)]))
+    dias = dict(acc.dias)
+    viejo = {k: v for k, v in d._dia_vacio("2026-11-18").items() if k != "n"}
+    dias["2026-11-18"] = viejo
+    assert d.resumen(dias, HOY)["windows"]["7"]["n"] == {}
