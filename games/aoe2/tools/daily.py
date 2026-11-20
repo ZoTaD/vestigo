@@ -255,6 +255,33 @@ def ladder_snapshot(filas: list[tuple], hoy: date, top: int = TOP_FOTO, prev: di
     return out
 
 
+def home_json(foto: dict | None, resumen_: dict | None, top: int = 5) -> dict:
+    """Lo chico que muestra la portada de la sección (`stats/home.json`): top de RM 1v1, los que más subieron, la mejor
+    civ de cada banda en RM 1v1 (con 200 partidas o más) y los mapas más jugados, de la ventana de 14 días."""
+    out: dict = {"date": (foto or {}).get("date"), "top": [], "climbers": [], "best": {}, "maps": [], "patch": (resumen_ or {}).get("patch")}
+    if foto:
+        out["top"] = [list(f) for f in foto["top"][:top]]
+        ayer = {f[0]: f[1] for f in (foto.get("prev") or {}).get("top", [])}
+        suben = [[f[0], f[1], f[2] if len(f) > 2 else "", f[1] - ayer[f[0]]] for f in foto["top"] if f[0] in ayer and f[1] > ayer[f[0]]]
+        out["climbers"] = sorted(suben, key=lambda x: (-x[3], -x[1]))[:top]
+    w = ((resumen_ or {}).get("windows") or {}).get("14") or {}
+    mejores: dict[str, list] = {}
+    for k, (g, v) in (w.get("civ") or {}).items():
+        modo, banda, civ = k.split("|")
+        if modo != "rm1v1" or g < 200:
+            continue
+        if banda not in mejores or v / g > mejores[banda][1]:
+            mejores[banda] = [civ, round(v / g, 4), g]
+    out["best"] = {b: mejores[b] for b in BANDAS if b in mejores}
+    mapas: Counter = Counter()
+    for k, (g, _) in (w.get("map") or {}).items():
+        modo, mapa, _civ = k.split("|")
+        if modo == "rm1v1":
+            mapas[mapa] += g
+    out["maps"] = [[m, g // 2] for m, g in mapas.most_common(6)]
+    return out
+
+
 # ---------- Red ----------
 
 def _get(endpoint: str, params: dict, intentos: int = 3) -> dict | None:
@@ -410,8 +437,10 @@ def main() -> None:
             r.unlink()
             continue
         dias[r.stem] = _leer(r)
-    if dias:
-        _escribir(STATS / "summary.json", resumen({k: v for k, v in dias.items() if v}, hoy))
+    sumario = resumen({k: v for k, v in dias.items() if v}, hoy) if dias else None
+    if sumario:
+        _escribir(STATS / "summary.json", sumario)
+    _escribir(STATS / "home.json", home_json(_leer(STATS / "ladder" / "3.json"), sumario or _leer(STATS / "summary.json")))
     print(f"días guardados: {len(dias)}", flush=True)
 
 

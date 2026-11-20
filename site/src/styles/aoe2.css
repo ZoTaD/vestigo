@@ -195,6 +195,15 @@
 .a2-op.is-tower { color: #c69cff; }
 .a2-hist-what .a2-op { justify-self: start; margin-top: 3px; }
 
+.a2-top .a2-pos { width: 22px; text-align: center; }
+.a2-go { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr)); gap: 10px; }
+.a2-go a { display: grid; border-radius: 6px; overflow: hidden; background: var(--a2-panel2); color: var(--a2-text); text-decoration: none; }
+.a2-go a:hover { outline: 1px solid var(--a2-gold); }
+.a2-go img { width: 100%; height: 96px; object-fit: cover; display: block; }
+.a2-go span { display: grid; padding: 8px 10px; }
+.a2-go small { color: var(--a2-muted); }
+.a2-civgrid a { color: var(--a2-text); text-decoration: none; }
+
 @media (max-width: 1000px) { .a2-hide-m { display: none; } }
 @media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
 @media (max-width: 760px) { .a2-matrix tr > :nth-child(n + 10), .a2-matrix tbody tr:nth-child(n + 9) { display: none; } }

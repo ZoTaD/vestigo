@@ -16,6 +16,7 @@ import {
   findBySteamId,
   getLeaderboard,
   getPersonalStat,
+  getPersonalStats,
   getRecentMatches,
   isLeaderboard,
   normalizeHistory,
@@ -101,7 +102,20 @@ async function opening(p: URLSearchParams, f: typeof fetch) {
   return json({ id, players }, 200, cache(86400 * 30, 86400 * 30));
 }
 
-const RUTAS: Record<string, (p: URLSearchParams, f: typeof fetch) => Promise<Response>> = { leaderboard, player, match, search, opening };
+/** `players?ids=1,2,3` (hasta 50): alias, país y ELO de mapa aleatorio 1v1 de cada uno (los seguidos de la portada). */
+async function players(p: URLSearchParams, f: typeof fetch) {
+  const ids = (p.get("ids") ?? "").split(",").filter(Boolean);
+  if (!ids.length || ids.length > 50 || !ids.every((x) => /^\d{1,12}$/.test(x))) return bad("ids");
+  const raw = await getPersonalStats(f, ids.map(Number));
+  const out = ids
+    .map(Number)
+    .map((id) => normalizePersonal(raw, id))
+    .filter((x): x is NonNullable<typeof x> => !!x)
+    .map(({ profile, standings }) => ({ ...profile, elo: standings.find((s) => s.leaderboard === 3)?.elo ?? null }));
+  return json({ players: out }, 200, cache(300, 300));
+}
+
+const RUTAS: Record<string, (p: URLSearchParams, f: typeof fetch) => Promise<Response>> = { leaderboard, player, players, match, search, opening };
 
 export async function handleAoe2(url: URL, fetcher: typeof fetch = fetch, method = "GET"): Promise<Response> {
   if (method !== "GET" && method !== "HEAD") return json({ error: "method" }, 405, { Allow: "GET, HEAD" });

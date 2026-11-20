@@ -109,6 +109,17 @@ describe("API de AoE2: intermediario", () => {
     expect(b.matches.every((m: { mapSize?: number; build?: number; options: unknown }) => typeof m.mapSize === "number" && m.build === undefined && m.options === null)).toBe(true);
   });
 
+  it("varios perfiles en un pedido: alias, país y ELO de 1v1", async () => {
+    const r = await handleAoe2(u("players?ids=9423131,5"), ok);
+    expect(r.status).toBe(200);
+    expect((await r.json()).players).toEqual([expect.objectContaining({ id: 9423131, alias: "wR.Lucho", elo: expect.any(Number) })]);
+  });
+
+  it("players con ids inválidos o de más es 400", async () => {
+    expect((await handleAoe2(u("players?ids=a,b"), ok)).status).toBe(400);
+    expect((await handleAoe2(u(`players?ids=${Array.from({ length: 51 }, (_, i) => i + 1).join(",")}`), ok)).status).toBe(400);
+  });
+
   it("partida dentro del historial del jugador", async () => {
     const r = await handleAoe2(u("match?id=521941306&p=9423131"), ok);
     expect(r.status).toBe(200);

@@ -161,3 +161,15 @@ def test_solo_rm_1v1_entra_en_la_muestra_de_grabaciones():
     acc = d.Acumulador(CIVS)
     acc.agregar(partida(21, 7, "Arena.rms", [miembro(1, 2, 0, 1), miembro(2, 4, 0, 1), miembro(3, 12, 1, 0), miembro(4, 12, 1, 0)]))
     assert acc.muestras == []
+
+
+def test_home_json_resume_lo_que_muestra_la_portada():
+    foto = {"date": "2026-11-20", "top": [[1, 3000, "a"], [2, 2990, "b"], [3, 2950, "c"]], "prev": {"date": "2026-11-19", "top": [[1, 2990, "a"], [3, 2900, "c"]]}}
+    w = {"civ": {"rm1v1|1800+|franks": [300, 180], "rm1v1|1800+|mongols": [300, 150], "rm1v1|1800+|goths": [50, 40]}, "map": {"rm1v1|arabia|franks": [100, 50], "rm1v1|arena|franks": [40, 20]}}
+    h = d.home_json(foto, {"windows": {"14": w}, "patch": {"name": "188329", "since": "2026-10-28"}}, top=2)
+    assert h["top"] == [[1, 3000, "a"], [2, 2990, "b"]]
+    assert h["climbers"] == [[3, 2950, "c", 50], [1, 3000, "a", 10]]
+    # La mejor civ de cada banda, sólo con 200 partidas o más (los godos tienen 50).
+    assert h["best"] == {"1800+": ["franks", 0.6, 300]}
+    assert h["maps"] == [["arabia", 50], ["arena", 20]]
+    assert h["patch"] == {"name": "188329", "since": "2026-10-28"}

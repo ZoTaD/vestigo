@@ -95,6 +95,9 @@ export const getLeaderboard = (f: typeof fetch, id: number, start: number, count
 export const getPersonalStat = (f: typeof fetch, profileId: number) =>
   relicGet<RawAoe2Personal>(f, AOE2_API, "GetPersonalStat", { profile_ids: JSON.stringify([profileId]) });
 /** Búsqueda exacta por alias (distingue mayúsculas, igual que en CoH). */
+/** Varios perfiles en un pedido (los seguidos de la portada). */
+export const getPersonalStats = (f: typeof fetch, profileIds: number[]) =>
+  relicGet<RawAoe2Personal>(f, AOE2_API, "GetPersonalStat", { profile_ids: JSON.stringify(profileIds) });
 export const findByAlias = (f: typeof fetch, alias: string) =>
   relicGet<RawAoe2Personal>(f, AOE2_API, "GetPersonalStat", { aliases: JSON.stringify([alias]) });
 export const findBySteamId = (f: typeof fetch, steamId: string) =>
