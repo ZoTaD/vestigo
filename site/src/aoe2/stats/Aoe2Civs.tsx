@@ -12,6 +12,7 @@ import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, CivShield, MuestraChica, Panel, civBySlug, type Nav } from "../ui";
 import { BANDS, SMALL, avgMinutes, civTable, matchup, type CivRow, type Summary } from "./data";
 import { CivOpenings, OpeningsView } from "./Openings";
+import CivBonos from "../encyclopedia/CivBonos";
 import { Civ, FILTROS_INICIALES, StatFilters, WrBar, mapIcon, mapLabel, pct, useSummary, type Filters } from "./parts";
 
 export default function Aoe2Civs({ route, navigate }: { route: Route; navigate: Nav }) {
@@ -23,7 +24,7 @@ export default function Aoe2Civs({ route, navigate }: { route: Route; navigate: 
     <>
       <StatFilters f={f} set={setF} s={s} />
       {route.detail && civBySlug(route.detail) ? (
-        <Ficha slug={route.detail} s={s} f={f} />
+        <Ficha slug={route.detail} s={s} f={f} route={route} navigate={navigate} />
       ) : (
         <>
           <Tabla s={s} f={f} route={route} navigate={navigate} />
@@ -99,7 +100,7 @@ function Tabla({ s, f, route, navigate }: { s: Summary; f: Filters; route: Route
   );
 }
 
-function Ficha({ slug, s, f }: { slug: string; s: Summary; f: Filters }) {
+function Ficha({ slug, s, f, route, navigate }: { slug: string; s: Summary; f: Filters; route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
   const { lang } = useLang();
   const c = civBySlug(slug)!;
@@ -124,6 +125,7 @@ function Ficha({ slug, s, f }: { slug: string; s: Summary; f: Filters }) {
         </div>
         {min != null && <p className="a2-note">{t.st.avgGame(min)}</p>}
       </Panel>
+      <CivBonos slug={slug} route={route} navigate={navigate} />
       <Panel h={t.st.detailBands}>
         <ul className="a2-cards">
           {porBanda.map(({ b, r }) => (

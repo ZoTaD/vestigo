@@ -223,3 +223,49 @@
   .a2-panel > h2 { font-size: 18px; }
   .a2-tab { padding: 8px 12px; font-size: 13px; }
 }
+
+/* Enciclopedia (2026-11-21): unidades, tecnologías, árbol y calculadora. */
+.a2-ico { display: block; border-radius: 4px; background: #0e151d; flex: none; }
+.a2-ico.is-off { filter: grayscale(1) brightness(0.45); }
+.a2-seg { display: inline-flex; gap: 4px; background: var(--a2-panel2); border-radius: 6px; padding: 4px; margin-top: 10px; flex-wrap: wrap; }
+.a2-seg button { font: inherit; font-weight: 700; font-size: 14px; border: 0; border-radius: 4px; padding: 6px 14px; background: transparent; color: var(--a2-muted); cursor: pointer; }
+.a2-seg button.is-on { background: var(--a2-gold); color: #1a1407; }
+.a2-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 0 20px; }
+.a2-group-h { display: flex; align-items: center; gap: 10px; font-size: 18px; margin: 0 0 10px; }
+.a2-group-h .a2-shield, .a2-group-h .a2-ico { width: 28px; height: 28px; }
+.a2-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 6px; }
+.a2-tiles a { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 6px; background: var(--a2-panel2); color: var(--a2-text); text-decoration: none; font-size: 13px; font-weight: 600; line-height: 1.2; min-height: 54px; }
+.a2-tiles a:hover, .a2-chips a:hover { background: #22303f; color: var(--a2-gold); }
+.a2-chips { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.a2-chips a { display: flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border-radius: 6px; background: var(--a2-panel2); color: var(--a2-text); text-decoration: none; font-size: 13px; font-weight: 600; }
+.a2-help { margin: 8px 0 0; max-width: 72ch; line-height: 1.5; }
+.a2-help + .a2-help { color: var(--a2-muted); font-size: 13px; }
+.a2-two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; }
+.a2-panel.a2-two { gap: 0 24px; }
+.a2-panel.a2-two > .a2-sub { grid-column: 1 / -1; }
+.a2-panel.a2-two h2 { font-size: 18px; margin: 4px 0 0; }
+@media (max-width: 820px) { .a2-two { grid-template-columns: 1fr; } }
+.a2-kv { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
+.a2-kv li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 10px; background: var(--a2-panel2); border-radius: 6px; font-size: 14px; }
+.a2-kv b { font-variant-numeric: tabular-nums; }
+.a2-bullets { list-style: disc; margin: 8px 0 0; padding-left: 20px; display: grid; gap: 4px; line-height: 1.45; }
+.a2-pick { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font-weight: 600; color: var(--a2-muted); }
+.a2-tree { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 0 16px; }
+.a2-tree-b.is-off .a2-group-h span { color: var(--a2-muted); }
+.a2-tree-age { display: grid; grid-template-columns: 64px 1fr; gap: 8px; align-items: start; padding: 6px 0; border-top: 1px solid var(--a2-line); }
+.a2-tree-age small { color: var(--a2-muted); font-size: 12px; font-weight: 700; padding-top: 12px; }
+.a2-tree-age ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px; }
+.a2-tree-age a { display: block; border-radius: 4px; outline: 2px solid transparent; }
+.a2-tree-age a:hover { outline-color: var(--a2-gold); }
+.a2-calc-pick { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+.a2-calc-pick label { display: grid; gap: 2px; font-size: 12px; color: var(--a2-muted); font-weight: 700; flex: 1; min-width: 0; }
+.a2-calc-pick select { width: 100%; }
+.a2-calc-h { font-size: 15px; margin: 16px 0 6px; }
+.a2-checks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px; }
+.a2-checks label { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 3px 6px; background: var(--a2-panel2); border-radius: 6px; cursor: pointer; }
+.a2-calc-res h2 { color: var(--a2-gold); }
+@media (max-width: 560px) {
+  .a2-groups, .a2-tree { grid-template-columns: 1fr; }
+  .a2-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.a2-kicker { display: block; color: var(--a2-gold); font-weight: 700; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }

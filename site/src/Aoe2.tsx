@@ -28,6 +28,10 @@ const Aoe2Matches = lazyWithPreload(() => import("./aoe2/matches/Aoe2Matches"));
 const Aoe2Civs = lazyWithPreload(() => import("./aoe2/stats/Aoe2Civs"));
 const Aoe2Matchups = lazyWithPreload(() => import("./aoe2/stats/Aoe2Matchups"));
 const Aoe2Maps = lazyWithPreload(() => import("./aoe2/stats/Aoe2Maps"));
+const Aoe2Units = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2Units"));
+const Aoe2Techs = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2Techs"));
+const Aoe2TechTree = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2TechTree"));
+const Aoe2Calculator = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2Calculator"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `AOE2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `AOE2_TAB_FILES`.
@@ -38,6 +42,10 @@ const TABS: Partial<Record<Aoe2Section, LazyTab>> = {
   civilizations: Aoe2Civs,
   matchups: Aoe2Matchups,
   maps: Aoe2Maps,
+  units: Aoe2Units,
+  technologies: Aoe2Techs,
+  "tech-tree": Aoe2TechTree,
+  calculator: Aoe2Calculator,
 };
 
 const hasPage = (tab: Aoe2Section): boolean => tab === "home" || !!TABS[tab];
@@ -46,7 +54,12 @@ const hasPage = (tab: Aoe2Section): boolean => tab === "home" || !!TABS[tab];
 export const preloadTab = (route: Route): Promise<void> => {
   const sec = route.a2Section ?? "home";
   // El resumen de estadísticas también: así lo prerenderizado y lo que dibuja el navegador al abrir coinciden.
-  return Promise.all([TABS[hasPage(sec) ? sec : "home"]?.preload(), import("./aoe2/stats/data").then((m) => m.preloadAoe2Route(route))]).then(() => undefined);
+  return Promise.all([
+    TABS[hasPage(sec) ? sec : "home"]?.preload(),
+    import("./aoe2/stats/data").then((m) => m.preloadAoe2Route(route)),
+    // La enciclopedia (y los bonos en la ficha de civ): sus datos, para que el prerender dibuje la página entera.
+    import("./aoe2/encyclopedia/data").then((m) => m.preloadEncyclopedia(route)),
+  ]).then(() => undefined);
 };
 
 export default function Aoe2({ route, navigate }: TabProps) {

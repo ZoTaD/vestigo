@@ -473,14 +473,15 @@ export function switchGame(route: Route, to: CohGame): Route {
  * slug en inglés (`franks`, `arabia`), igual en los dos idiomas. Jugador y partida llevan el número de la API y no se
  * prerenderizan; la partida suma `?p=<jugador>` (la API sólo la encuentra dentro del historial de alguien).
  */
-export type Aoe2Tab = "leaderboards" | "players" | "matches" | "civilizations" | "matchups" | "maps";
+export type Aoe2Tab = "leaderboards" | "players" | "matches" | "civilizations" | "matchups" | "maps" | "units" | "technologies" | "tech-tree" | "calculator";
 export type Aoe2Section = "home" | Aoe2Tab;
 export const AOE2_SEGMENT = "aoe2";
-export const AOE2_SECTIONS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "matches"];
+export const AOE2_SECTIONS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "matches", "units", "technologies", "tech-tree", "calculator"];
 /** Las pestañas cuya dirección puede llevar una ficha (`/aoe2/civilizations/franks`). */
-export const AOE2_DETAIL_SECTIONS: Aoe2Tab[] = ["players", "matches", "civilizations", "maps"];
+export const AOE2_DETAIL_SECTIONS: Aoe2Tab[] = ["players", "matches", "civilizations", "maps", "units", "technologies", "tech-tree"];
 export const AOE2_SECTION_ES: Record<Aoe2Tab, string> = {
   leaderboards: "ranking", players: "jugadores", matches: "partidas", civilizations: "civilizaciones", matchups: "matchups", maps: "mapas",
+  units: "unidades", technologies: "tecnologias", "tech-tree": "arbol", calculator: "calculadora",
 };
 const AOE2_SECTION_BY_ES = new Map(Object.entries(AOE2_SECTION_ES).map(([tab, es]) => [es, tab as Aoe2Tab]));
 const isAoe2Tab = (v: string | undefined): v is Aoe2Tab => !!v && (AOE2_SECTIONS as string[]).includes(v);

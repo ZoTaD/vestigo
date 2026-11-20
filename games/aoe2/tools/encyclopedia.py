@@ -173,7 +173,9 @@ def main() -> None:
     args = ap.parse_args()
     res = args.game / "resources"
     textos = {k: parse_strings((res / k / "strings" / "key-value" / "key-value-strings-utf8.txt").read_text(encoding="utf-8")) for k in ("en", "mx")}
-    nombre = lambda i: {"en": textos["en"].get(i, ""), "es": textos["mx"].get(i) or textos["en"].get(i, "")}
+    # Algunos nombres traen un salto de línea escrito (barra y n, para el botón del juego): va un espacio.
+    limpio = lambda x: re.sub(r"\s*\\n\s*", " ", x).strip()
+    nombre = lambda i: {"en": limpio(textos["en"].get(i, "")), "es": limpio(textos["mx"].get(i) or textos["en"].get(i, ""))}
     d = dat.leer(res / "_common" / "dat" / "empires2_x2_p1.dat")
     lista = json.loads((res / "_common" / "dat" / "civilizations.json").read_text(encoding="utf-8"))["civilization_list"]
     nuestras = {c["internal"]: c for c in json.loads((DATA / "civs.json").read_text(encoding="utf-8"))}
@@ -295,7 +297,10 @@ def main() -> None:
 
     # Bonos de cada civ: texto del juego y los efectos que la calculadora aplica (árbol de la civ, técnicas gratis por
     # edad y bono de equipo).
-    civinfo = {}
+    civinfo: dict[str, dict] = {}
+    civfx: dict[str, dict] = {}
+    comunes_u = Counter(int(k[1:]) for e in estado.values() for k, v in e.items() if k[0] == "u" and v != "NotAvailable")
+    comunes_t = Counter(int(k[1:]) for e in estado.values() for k, v in e.items() if k[0] == "t" and v != "NotAvailable")
     for slug, x in arboles.items():
         c = lista[x["i"]]
         dc = d.civs[x["i"]]
@@ -309,22 +314,37 @@ def main() -> None:
         tt = _fx(d.efectos[dc.tech_tree][1]) if 0 <= dc.tech_tree < len(d.efectos) else []
         if tt:
             gratis.insert(0, [1, tt])
+        uu = [u for u in (c.get("unique_unit_id"), c.get("elite_unique_unit_id")) if u is not None and u in unidades]
+        ut = [t for t in (c.get("unique_tech_id_1"), c.get("unique_tech_id_2")) if t is not None and t in techs]
+        civfx[slug] = {"bonus": gratis, "team": _fx(d.efectos[dc.bono_equipo][1]) if 0 <= dc.bono_equipo < len(d.efectos) else []}
         civinfo[slug] = {
             "desc": {"en": partes_civ(textos["en"].get(c["tech_tree_description_string_id"], "")), "es": partes_civ(textos["mx"].get(c["tech_tree_description_string_id"], ""))},
-            "uu": [u for u in (c.get("unique_unit_id"), c.get("elite_unique_unit_id")) if u is not None and u in unidades],
-            "ut": [t for t in (c.get("unique_tech_id_1"), c.get("unique_tech_id_2")) if t is not None and t in techs],
-            "bonus": gratis,
-            "team": _fx(d.efectos[dc.bono_equipo][1]) if 0 <= dc.bono_equipo < len(d.efectos) else [],
+            "uu": uu,
+            "ut": ut,
+            # Lo que le falta de lo común: unidades y tecnologías que casi todas tienen y ésta no.
+            "missU": [f["id"] for f in out_u if f["kind"] in ("Unit", "UnitUpgrade") and estado[slug].get(f"u{f['id']}") == "NotAvailable" and comunes_u.get(f["id"], 0) >= len(arboles) / 2],
+            "missT": [f["id"] for f in out_t if f["kind"] == "Research" and estado[slug].get(f"t{f['id']}") == "NotAvailable" and comunes_t.get(f["id"], 0) >= len(arboles) / 2],
         }
 
-    clases = {c: {"en": textos["en"].get(CLASES_ARMADURA + c, f"Class {c}"), "es": textos["mx"].get(CLASES_ARMADURA + c, f"Clase {c}")} for c in range(0, 64) if (CLASES_ARMADURA + c) in textos["en"]}
+    clases = {c: {"en": textos["en"].get(CLASES_ARMADURA + c, f"Class {c}"), "es": textos["mx"].get(CLASES_ARMADURA + c, f"Clase {c}")} for c in range(0, 64) if (CLASES_ARMADURA + c) in textos["en"] and not textos["en"][CLASES_ARMADURA + c].startswith("Unused")}
     nodos = sorted({k for e in estado.values() for k in e})
     arbol = {"nodes": nodos, "civs": {s: "".join({"ResearchedCompleted": "1", "ResearchRequired": "2"}.get(estado[s].get(k, ""), "0") for k in nodos) for s in sorted(estado)}}
 
     _escribir_json(SALIDA / "units.json", {"classes": clases, "units": sorted(out_u, key=lambda f: (f["building"], f["age"], f["id"]))})
     _escribir_json(SALIDA / "techs.json", sorted(out_t, key=lambda f: (f["building"], f["age"], f["id"])))
     _escribir_json(SALIDA / "tree.json", {"buildings": sorted(out_b, key=lambda b: (b["age"], b["id"])), **arbol})
-    _escribir_json(SALIDA / "civinfo.json", civinfo)
+    _escribir_json(SALIDA / "civfx.json", civfx)
+    # La ficha de cada civ en su archivo (la página de una civ no baja las otras 55). Con nombre e ícono de lo que nombra.
+    chico = lambda f: {"id": f["id"], "slug": f["slug"], "name": f["name"], "pic": f["pic"]}
+    por_u, por_t = {f["id"]: f for f in out_u}, {f["id"]: f for f in out_t}
+    for slug, ci in civinfo.items():
+        _escribir_json(SALIDA / "civ" / f"{slug}.json", {
+            "desc": ci["desc"],
+            "uu": [chico(por_u[i]) for i in ci["uu"]],
+            "ut": [chico(por_t[i]) for i in ci["ut"]],
+            "missU": [chico(por_u[i]) for i in ci["missU"]],
+            "missT": [chico(por_t[i]) for i in ci["missT"]],
+        })
     # La ayuda, por idioma y partida en PARTES pedazos por id: una ficha baja sólo el suyo.
     for idioma, clave in (("en", "en"), ("es", "mx")):
         for parte in range(PARTES):

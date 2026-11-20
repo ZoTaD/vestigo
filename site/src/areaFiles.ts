@@ -174,6 +174,10 @@ export const AOE2_TAB_FILES: Partial<Record<Aoe2Section, string>> = {
   civilizations: "src/aoe2/stats/Aoe2Civs.tsx",
   matchups: "src/aoe2/stats/Aoe2Matchups.tsx",
   maps: "src/aoe2/stats/Aoe2Maps.tsx",
+  units: "src/aoe2/encyclopedia/Aoe2Units.tsx",
+  technologies: "src/aoe2/encyclopedia/Aoe2Techs.tsx",
+  "tech-tree": "src/aoe2/encyclopedia/Aoe2TechTree.tsx",
+  calculator: "src/aoe2/encyclopedia/Aoe2Calculator.tsx",
 };
 
 /**

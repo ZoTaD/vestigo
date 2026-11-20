@@ -6,14 +6,14 @@ import { useLang, type Lang } from "./i18n";
 import type { Aoe2Section, Aoe2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const AOE2_TABS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players"];
+export const AOE2_TABS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "units", "technologies", "tech-tree", "calculator"];
 
 type Seo = { title: string; description: string };
 
 const en = {
   name: "Age of Empires II",
   tagline: "Definitive Edition · stats from every ranked game, updated daily",
-  tabs: { leaderboards: "Leaderboards", players: "Players", matches: "Match", civilizations: "Civilizations", matchups: "Matchups", maps: "Maps" } satisfies Record<Aoe2Tab, string>,
+  tabs: { leaderboards: "Leaderboards", players: "Players", matches: "Match", civilizations: "Civilizations", matchups: "Matchups", maps: "Maps", units: "Units", technologies: "Technologies", "tech-tree": "Tech tree", calculator: "Calculator" } satisfies Record<Aoe2Tab, string>,
   modes: { rm1v1: "Random Map 1v1", rmteam: "Random Map Team", ew1v1: "Empire Wars 1v1", ewteam: "Empire Wars Team", dm1v1: "Death Match 1v1", dmteam: "Death Match Team" },
   t: {
     soon: "Coming soon",
@@ -192,9 +192,19 @@ const en = {
     civilizations: { title: "AoE2 DE civilization win rates by rating, map and patch", description: "Which Age of Empires II civilizations win most in ranked, by rating band, map, mode and patch, with the sample size of every number." },
     matchups: { title: "AoE2 DE civ vs civ matchups", description: "Win rate of every Age of Empires II civilization against every other in ranked 1v1." },
     maps: { title: "AoE2 DE ranked maps and the best civs on each", description: "Age of Empires II ranked map pool: games, average length and the civilizations that win most on each map." },
+    units: { title: "AoE2 DE units: stats, costs, attack bonuses and counters", description: "Every Age of Empires II unit with hit points, attack, armor, range, cost, attack bonuses, the civs that have it and what it beats." },
+    technologies: { title: "AoE2 DE technologies: cost, time and what they do", description: "Every Age of Empires II technology with cost, research time, age, building, the units it upgrades and the civs that have it." },
+    "tech-tree": { title: "AoE2 DE tech trees of every civilization", description: "The full Age of Empires II tech tree of each civilization, with what it is missing, by building and age." },
+    calculator: { title: "AoE2 DE damage calculator: hits to kill with upgrades", description: "Pick two Age of Empires II units, civs and age: damage per hit, hits and seconds to kill, with blacksmith upgrades and civ bonuses." },
   } satisfies Record<Aoe2Section, Seo>,
   detailSeo: (sec: Aoe2Tab, name: string): Seo =>
-    sec === "maps"
+    sec === "units"
+      ? { title: `${name} in AoE2 DE: stats, cost and counters`, description: `${name} in Age of Empires II: hit points, attack, armor, range, cost, upgrades, the civs that have it and what it beats.` }
+      : sec === "technologies"
+      ? { title: `${name} in AoE2 DE: cost and effect`, description: `What ${name} does in Age of Empires II, what it costs, how long it takes and which civs can research it.` }
+      : sec === "tech-tree"
+      ? { title: `${name} tech tree in AoE2 DE`, description: `Everything the ${name} can build and research in Age of Empires II, and what they are missing.` }
+      : sec === "maps"
       ? { title: `${name}: best civs in AoE2 DE`, description: `The Age of Empires II civilizations that win most on ${name}, by rating band.` }
       : { title: `${name} in AoE2 DE: win rate, best maps and matchups`, description: `How the ${name} do in ranked Age of Empires II: win rate by rating, best and worst maps and matchups.` },
 };
@@ -202,7 +212,7 @@ const en = {
 const es: typeof en = {
   name: "Age of Empires II",
   tagline: "Definitive Edition · estadísticas de cada partida de ranking, al día",
-  tabs: { leaderboards: "Ranking", players: "Jugadores", matches: "Partida", civilizations: "Civilizaciones", matchups: "Matchups", maps: "Mapas" },
+  tabs: { leaderboards: "Ranking", players: "Jugadores", matches: "Partida", civilizations: "Civilizaciones", matchups: "Matchups", maps: "Mapas", units: "Unidades", technologies: "Tecnologías", "tech-tree": "Árbol", calculator: "Calculadora" },
   modes: { rm1v1: "Mapa aleatorio 1v1", rmteam: "Mapa aleatorio equipos", ew1v1: "Empire Wars 1v1", ewteam: "Empire Wars equipos", dm1v1: "Death Match 1v1", dmteam: "Death Match equipos" },
   t: {
     soon: "Muy pronto",
@@ -381,9 +391,19 @@ const es: typeof en = {
     civilizations: { title: "Porcentaje de victoria de las civs de AoE2 DE por ELO, mapa y parche", description: "Qué civilizaciones de Age of Empires II ganan más en ranking, por banda de ELO, mapa, modo y parche, con la muestra de cada cifra." },
     matchups: { title: "Matchups de AoE2 DE: civ contra civ", description: "Porcentaje de victoria de cada civilización de Age of Empires II contra cada una de las otras en 1v1." },
     maps: { title: "Mapas de ranking de AoE2 DE y las mejores civs en cada uno", description: "Los mapas de ranking de Age of Empires II: partidas, duración promedio y las civilizaciones que más ganan en cada uno." },
+    units: { title: "Unidades de AoE2 DE: estadísticas, costo, bonus de ataque y counters", description: "Todas las unidades de Age of Empires II con vida, ataque, armadura, alcance, costo, bonus de ataque, las civs que la tienen y contra qué gana." },
+    technologies: { title: "Tecnologías de AoE2 DE: costo, tiempo y qué hacen", description: "Todas las tecnologías de Age of Empires II con costo, tiempo, edad, edificio, las unidades que mejoran y las civs que la tienen." },
+    "tech-tree": { title: "Árboles tecnológicos de cada civilización de AoE2 DE", description: "El árbol tecnológico completo de cada civilización de Age of Empires II, con lo que le falta, por edificio y edad." },
+    calculator: { title: "Calculadora de daño de AoE2 DE: golpes para matar con mejoras", description: "Elegí dos unidades, civs y edad de Age of Empires II: daño por golpe, golpes y segundos para matar, con mejoras de herrería y bonos de civ." },
   },
   detailSeo: (sec, name) =>
-    sec === "maps"
+    sec === "units"
+      ? { title: `${name} en AoE2 DE: estadísticas, costo y counters`, description: `${name} en Age of Empires II: vida, ataque, armadura, alcance, costo, mejoras, las civs que la tienen y contra qué gana.` }
+      : sec === "technologies"
+      ? { title: `${name} en AoE2 DE: costo y efecto`, description: `Qué hace ${name} en Age of Empires II, cuánto cuesta, cuánto tarda y qué civs la pueden investigar.` }
+      : sec === "tech-tree"
+      ? { title: `Árbol tecnológico de los ${name} en AoE2 DE`, description: `Todo lo que pueden construir e investigar los ${name} en Age of Empires II, y lo que les falta.` }
+      : sec === "maps"
       ? { title: `${name}: las mejores civs en AoE2 DE`, description: `Las civilizaciones de Age of Empires II que más ganan en ${name}, por banda de ELO.` }
       : { title: `${name} en AoE2 DE: % de victorias, mejores mapas y matchups`, description: `Cómo les va a los ${name} en el ranking de Age of Empires II: % de victorias por ELO, mejores y peores mapas y matchups.` },
 };
