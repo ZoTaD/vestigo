@@ -1,4 +1,4 @@
-import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section, Coh3Section } from "./route";
+import type { D2rSection, DeadlockSection, PzSection, Route, RustSection, StardewSection, TerrariaSection, ValheimSection, View, WfSection, Cs2Section, Coh3Section, Aoe2Section } from "./route";
 
 /**
  * El archivo de cada vista, para que `vite.config.ts` encuentre su chunk en el
@@ -22,6 +22,7 @@ export const AREA_FILES: Partial<Record<View, string>> = {
   warframe: "src/Warframe.tsx",
   cs2: "src/Cs2.tsx",
   coh3: "src/Coh3.tsx",
+  aoe2: "src/Aoe2.tsx",
   privacy: "src/Privacy.tsx",
   terms: "src/Terms.tsx",
 };
@@ -163,6 +164,13 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
 };
 
 /**
+ * Las pestañas de Age of Empires II que viajan en su propio chunk, igual que `TABS` en `Aoe2.tsx` (2026-11-20; lo
+ * cuida `test/areas.test.ts`). La portada viene con el área.
+ */
+export const AOE2_TAB_FILES: Partial<Record<Aoe2Section, string>> = {
+};
+
+/**
  * Las pestañas de Company of Heroes 3 que viajan en su propio chunk, igual que `TABS` en `Coh3.tsx` (2026-11-04; lo
  * cuida `test/areas.test.ts`). La portada viene con el área.
  */
@@ -244,6 +252,8 @@ export function filesFor(route: Route): string[] {
                     ? CS2_TAB_FILES[route.c2Section ?? "home"]
                     : route.view === "coh3"
                     ? COH3_TAB_FILES[route.c3Section ?? "home"]
+                    : route.view === "aoe2"
+                    ? AOE2_TAB_FILES[route.a2Section ?? "home"]
                     : undefined;
   return tab ? [area, tab] : [area];
 }

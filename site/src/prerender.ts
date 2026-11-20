@@ -3,6 +3,7 @@ import { STARDEW_COPY } from "./stardewCopy";
 import { WF_COPY } from "./warframeCopy";
 import { CS2_COPY } from "./cs2Copy";
 import { COH3_COPY, cohGameSeo } from "./coh3Copy";
+import { AOE2_COPY } from "./aoe2Copy";
 import { isPatchName, patchName } from "./cs2/patches/names";
 import type { Lang } from "./i18n";
 import { copyFor as deadlockCopyFor } from "./deadlockCopy";
@@ -233,6 +234,13 @@ export function metaFor(
     }
     return c.seo[sec];
   }
+  // Age of Empires II (2026-11-20): la portada, cada pestaña y, con nombre, la ficha de civ o de mapa.
+  if (route.view === "aoe2") {
+    const c = AOE2_COPY[lang];
+    const sec = route.a2Section ?? "home";
+    if (sec !== "home" && route.detail && detailName) return c.detailSeo(sec, detailName);
+    return c.seo[sec];
+  }
   // Company of Heroes 3 (2026-11-04): la portada, cada pestaña y, con nombre, la ficha.
   if (route.view === "coh3") {
     // CoH2 y CoH1 (2026-11-06): sus textos propios.
@@ -335,6 +343,8 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const tab of ["units", "weapons", "battlegroups", "maps", "patches"] as const) {
     for (const e of data.c3?.[tab] ?? []) out[`c3-${tab}/${e.slug}`] = e.name[lang] || e.name.en;
   }
+  for (const e of data.a2?.civs ?? []) out[`a2-civilizations/${e.slug}`] = e.name[lang] || e.name.en;
+  for (const e of data.a2?.maps ?? []) out[`a2-maps/${e.slug}`] = e.name[lang] || e.name.en;
   for (const e of data.c2?.esports?.teams ?? []) out[`c2-teams/${e.slug}`] = e.name;
   for (const e of data.c2?.esports?.players ?? []) out[`c2-players/${e.slug}`] = e.id;
   for (const e of data.c2?.esports?.tours ?? []) out[`c2-esports/${e.slug}`] = e.name;
@@ -569,6 +579,20 @@ export function jsonLdFor(
     }
     return out;
   }
+  // Age of Empires II (2026-11-20): migas hasta la ficha, y la portada es una aplicación web gratuita.
+  if (route.view === "aoe2") {
+    const copy = AOE2_COPY[lang];
+    const sec = route.a2Section ?? "home";
+    const trail = [{ name: brand, url: home }, { name: copy.name, url: routeUrl({ ...route, a2Section: "home", detail: undefined }) }];
+    if (sec !== "home") trail.push({ name: copy.tabs[sec], url: routeUrl({ ...route, detail: undefined }) });
+    if (route.detail && detailName) trail.push({ name: detailName, url: page.canonical });
+    if (sec !== "home") return trail.length > 2 ? [crumbs(trail)] : [];
+    return [{
+      "@context": "https://schema.org", "@type": "WebApplication", name: copy.home.h1, description: page.description,
+      url: page.canonical, applicationCategory: "GameApplication", operatingSystem: "Any", inLanguage: lang, isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, about: { "@type": "VideoGame", name: "Age of Empires II: Definitive Edition" },
+    }];
+  }
   // Company of Heroes 3 (2026-11-04): migas hasta la ficha, y la portada es una aplicación web gratuita.
   if (route.view === "coh3") {
     const copy = COH3_COPY[lang];
@@ -753,6 +777,8 @@ export function prerenderPages(data: SitemapData, ogAvailable: OgAvailable = () 
                           ? `c2-${route.c2Section ?? "home"}/${route.detail}`
                           : route.view === "coh3"
                             ? `c3-${route.c3Section ?? "home"}/${route.detail}`
+                            : route.view === "aoe2"
+                            ? `a2-${route.a2Section ?? "home"}/${route.detail}`
                             : null;
     const detail = detailKey ? (names[lang][detailKey] ?? null) : null;
     const { title, description } = metaFor(route, lang, detail, detailKey ? vias.get(detailKey)?.[lang] : null, rsHas.get(detailKey ?? ""), trHas.get(detailKey ?? ""), sdHas.get(detailKey ?? ""), wfHead.get(detailKey ?? ""));

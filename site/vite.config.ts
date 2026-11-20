@@ -53,6 +53,9 @@ const cs2PricesDir = fileURLToPath(new URL("../games/cs2/prices", import.meta.ur
 // Company of Heroes 3 (2026-11-04): lo que escribe `games/coh3/tools/site_data.py`, y las stats de `stats.py`.
 const coh3Dir = fileURLToPath(new URL("../games/coh3/data", import.meta.url));
 const coh3StatsDir = fileURLToPath(new URL("../games/coh3/stats", import.meta.url));
+// Age of Empires II (2026-11-20): lo que escribe `games/aoe2/tools/game_data.py`, y las stats del colector diario.
+const aoe2Dir = fileURLToPath(new URL("../games/aoe2/data", import.meta.url));
+const aoe2StatsDir = fileURLToPath(new URL("../games/aoe2/stats", import.meta.url));
 // CoH2 y CoH1 (2026-11-06): `relic_daily.py` (stats) y `maps.py` (data).
 const cohDir = (g: string, sub: string) => fileURLToPath(new URL(`../games/${g}/${sub}`, import.meta.url));
 
@@ -391,6 +394,16 @@ function readSitemapData(): { data: OgData } {
       wf,
       c2,
       c3,
+      a2: (() => {
+        try {
+          const meta = JSON.parse(readFileSync(`${aoe2Dir}/meta.json`, "utf-8"));
+          const civs = JSON.parse(readFileSync(`${aoe2Dir}/civs.json`, "utf-8")).filter((c: { era: string }) => c.era === "base");
+          return { generatedAt: meta.generatedAt, civs, maps: [] };
+        } catch (e) {
+          console.warn(`[aoe2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
+          return undefined;
+        }
+      })(),
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -405,6 +418,13 @@ function readSitemapData(): { data: OgData } {
         warframe: wf?.generatedAt,
         cs2: c2?.generatedAt,
         coh3: c3?.generatedAt,
+        aoe2: (() => {
+          try {
+            return JSON.parse(readFileSync(`${aoe2Dir}/meta.json`, "utf-8")).generatedAt;
+          } catch {
+            return undefined;
+          }
+        })(),
         coh2: cohStatsDate("coh2"),
         coh1Data: (() => {
           try {
@@ -1232,7 +1252,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir, "@coh2stats": cohDir("coh2", "stats"), "@coh2": cohDir("coh2", "data"), "@coh1stats": cohDir("coh1", "stats"), "@coh1": cohDir("coh1", "data") },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir, "@aoe2stats": aoe2StatsDir, "@aoe2": aoe2Dir, "@coh2stats": cohDir("coh2", "stats"), "@coh2": cohDir("coh2", "data"), "@coh1stats": cohDir("coh1", "stats"), "@coh1": cohDir("coh1", "data") },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

@@ -18,7 +18,7 @@ export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
   { id: "survival", games: ["valheim", "zomboid", "stardew"] },
   { id: "shooters", games: ["deadlock", "cs2"] },
   // RTS (2026-11-04): el género nuevo arranca con Company of Heroes 3.
-  { id: "rts", games: ["coh3"] },
+  { id: "rts", games: ["coh3", "aoe2"] },
 ];
 
 /**
@@ -39,6 +39,7 @@ export const GAME_LOGOS: Record<Game, [w: number, h: number]> = {
   warframe: [116, 30],
   cs2: [88, 34],
   coh3: [66, 40],
+  aoe2: [58, 40],
 };
 
 /** El archivo del logo de un juego en `public/logos/`: casi todos son PNG sacados de la caché de Steam; el de Warframe es un SVG propio. */
