@@ -66,6 +66,23 @@ export interface ImpactModelFile {
  * La consulta: una fila por minuto y estado (las almas en tramos de 2 %), con
  * cuántas partidas y cuántas ganó Hidden King. `source` es lo que va en el `from`.
  */
+/** Las columnas del lake que usa la consulta: cada parte de la unión elige sólo éstas. */
+const COLS = [
+  "match_id", "team", "won", "player_slot", "duration_s", "match_mode", "game_mode", "start_time",
+  '"stats.time_stamp_s"', '"stats.net_worth"', '"death_details.game_time_s"',
+  '"objectives.destroyed_time_s"', '"objectives.team_objective"', '"objectives.team"',
+  '"mid_boss.team_claimed"', '"mid_boss.destroyed_time_s"',
+].join(", ");
+
+/**
+ * La fuente: la unión de las lecturas, cada una con sus columnas y la ventana.
+ * Elegir columnas (y no `select *`) es lo que deja unir las bases con los
+ * deltas, que pueden traer columnas de más o de menos.
+ */
+export function impactSourceSql(reads: string[], from: string): string {
+  return `(${reads.map((r) => `select ${COLS} from ${r} where start_time >= TIMESTAMP '${from}'`).join(" union all ")})`;
+}
+
 export function impactSql(source: string): string {
   return `
 with p as (
@@ -210,6 +227,14 @@ export function smooth(ms: ImpactModelFile["minutes"]): ImpactModelFile["minutes
   });
 }
 
+/** Lo mínimo para publicar un modelo: si no, queda el anterior. */
+export const MIN_MATCHES = 5000;
+export const MIN_MINUTES = 8;
+
+export function modelIsUsable(f: ImpactModelFile): boolean {
+  return f.matches >= MIN_MATCHES && f.minutes.length >= MIN_MINUTES;
+}
+
 const OUT_DIR = "../data";
 const OUT = `${OUT_DIR}/impact-model.json`;
 const WINDOW_DAYS = 7;
@@ -220,16 +245,19 @@ async function main() {
   const hasta = ahora.toISOString().slice(0, 19);
   const desde = new Date(ahora.getTime() - WINDOW_DAYS * 86_400_000).toISOString().slice(0, 19);
   const con = await connect(":memory:");
-  let source: string;
+  // Con IMPACT_PARQUET lee archivos del lake ya bajados (y toma todo lo que
+  // traen); si no, el lake, con la copia local de los deltas en CI.
   const local = process.env.IMPACT_PARQUET;
+  let source: string;
   if (local) {
-    source = `read_parquet('${local.replace(/'/g, "''")}', union_by_name=true)`;
+    source = impactSourceSql([`read_parquet('${local.replace(/'/g, "''")}', union_by_name=true)`], "2000-01-01T00:00:00");
   } else {
     const parts = await listPartitions();
     const ranges = await partitionRanges(con, parts, 10);
-    source = `(${partitionsCovering(ranges, desde + "Z", hasta + "Z")
-      .map((n) => `select * from ${partitionSource(n, { allModes: true })} where start_time >= TIMESTAMP '${desde}'`)
-      .join(" union all ")})`;
+    source = impactSourceSql(
+      partitionsCovering(ranges, desde + "Z", hasta + "Z").map((n) => partitionSource(n)),
+      desde,
+    );
   }
   const raw = (await (await con.runAndReadAll(impactSql(source))).getRowObjects()) as Record<string, unknown>[];
   const rows: ImpactRow[] = raw.map((r) => ({
@@ -242,6 +270,11 @@ async function main() {
   // Cada partida aporta una fila por muestra; la primera muestra (minuto 3) la cuenta una vez.
   const matches = rows.filter((r) => r.minute === 3).reduce((s, r) => s + r.n, 0);
   const file = impactModel(rows, { from: local ? "local" : desde.slice(0, 10), to: hasta.slice(0, 10), generatedAt: ahora.toISOString(), matches });
+  // Un modelo con pocas partidas o pocos minutos rompería el Impacto del sitio:
+  // mejor no escribir nada y que quede el commiteado.
+  if (!modelIsUsable(file)) {
+    throw new Error(`impacto: modelo con ${matches} partidas y ${file.minutes.length} minutos; se mantiene el publicado`);
+  }
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(OUT, JSON.stringify(file));
   console.log(`impacto: ${matches.toLocaleString("es")} partidas, ${file.minutes.length} minutos (${((Date.now() - t0) / 1000).toFixed(0)}s)`);
