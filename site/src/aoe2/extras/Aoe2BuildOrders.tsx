@@ -33,7 +33,7 @@ export default function Aoe2BuildOrders({ route, navigate }: { route: Route; nav
                 {b.name[lang]}
               </RouteLink>
             </h2>
-            <p className="a2-note">{t.feudal(b.feudal.pop, b.feudal.time)}</p>
+            <p className="a2-note">{t.feudal(b.feudal.vils, b.feudal.time)}</p>
             <p>{b.summary[lang]}</p>
           </li>
         ))}
@@ -53,7 +53,7 @@ function Ficha({ b, route, navigate }: { b: BuildOrder; route: Route; navigate: 
         <h1 className="a2-alias">{b.name[lang]}</h1>
         <p className="a2-help">{b.summary[lang]}</p>
         <p className="a2-note">
-          {t.feudal(b.feudal.pop, b.feudal.time)} · {t.maps}: {b.maps.map((m) => mapLabel(m, lang)).join(", ")}
+          {t.feudal(b.feudal.vils, b.feudal.time)} · {t.maps}: {b.maps.map((m) => mapLabel(m, lang)).join(", ")}
         </p>
       </Panel>
       <Panel sub={t.note}>
@@ -69,7 +69,7 @@ function Ficha({ b, route, navigate }: { b: BuildOrder; route: Route; navigate: 
             {b.steps.map((p, i) => (
               <tr key={i}>
                 <td className="num">
-                  <b>{p.pop}</b>
+                  <b>{p.vils}</b>
                 </td>
                 <td className="num">{p.time}</td>
                 <td>{p[lang]}</td>

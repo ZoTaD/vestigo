@@ -158,29 +158,42 @@ CAMPOS_T = ("cost", "time")
 
 
 def foto(units: list[dict], techs: list[dict], civinfo: dict) -> dict:
-    """Lo que se compara entre parches: cifras de unidades y tecnologías y los bonos (en inglés) de cada civ."""
+    """Lo que se compara entre parches: cifras de unidades y tecnologías y los bonos de cada civ en los dos idiomas."""
+    bonos = lambda d: d["bonuses"] + ([d["team"]] if d["team"] else [])
     return {
         "u": {str(f["id"]): {k: f[k] for k in CAMPOS_U if k in f} for f in units},
         "t": {str(f["id"]): {k: f[k] for k in CAMPOS_T} for f in techs},
-        "c": {s: ci["desc"]["en"]["bonuses"] + ([ci["desc"]["en"]["team"]] if ci["desc"]["en"]["team"] else []) for s, ci in civinfo.items()},
+        "c": {s: {"en": bonos(ci["desc"]["en"]), "es": bonos(ci["desc"]["es"])} for s, ci in civinfo.items()},
     }
 
 
 def diferencias(vieja: dict, nueva: dict) -> dict:
-    """Qué cambió de una foto a la siguiente: `[id, campo, antes, después]` por unidad y tecnología, unidades nuevas y
-    bonos de civ que aparecen o se van (un bono que cambia de número figura como uno que se va y otro que llega)."""
+    """Qué cambió de una foto a la siguiente: `[id, campo, antes, después]` por unidad y tecnología (ataque y armadura
+    por clase: `attacks.<clase>`, con `None` si la clase no estaba), unidades nuevas y bonos de civ que aparecen o se
+    van, en inglés y español (un bono que cambia de número figura como uno que se va y otro que llega)."""
     def campos(a: dict, b: dict, nombres) -> list:
         out = []
         for i in sorted(set(a) & set(b), key=int):
             for k in nombres:
-                if k in a[i] and k in b[i] and a[i][k] != b[i][k]:
+                if k not in a[i] or k not in b[i] or a[i][k] == b[i][k]:
+                    continue
+                if k in ("attacks", "armors"):
+                    va, vb = dict(map(tuple, a[i][k])), dict(map(tuple, b[i][k]))
+                    for c in sorted(set(va) | set(vb)):
+                        if va.get(c) != vb.get(c):
+                            out.append([int(i), f"{k}.{c}", va.get(c), vb.get(c)])
+                else:
                     out.append([int(i), k, a[i][k], b[i][k]])
         return out
 
+    def par(x: dict, j: int) -> dict:
+        return {"en": x["en"][j], "es": x["es"][j] if j < len(x["es"]) else x["en"][j]}
+
     civs = {}
     for s in sorted(set(vieja["c"]) & set(nueva["c"])):
-        mas = [x for x in nueva["c"][s] if x not in vieja["c"][s]]
-        menos = [x for x in vieja["c"][s] if x not in nueva["c"][s]]
+        v, n = vieja["c"][s], nueva["c"][s]
+        mas = [par(n, j) for j, x in enumerate(n["en"]) if x not in v["en"]]
+        menos = [par(v, j) for j, x in enumerate(v["en"]) if x not in n["en"]]
         if mas or menos:
             civs[s] = {"added": mas, "removed": menos}
     return {
@@ -208,6 +221,7 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("--game", type=Path, default=JUEGO)
     ap.add_argument("--no-icons", action="store_true")
+    ap.add_argument("--patch", help="el parche del juego instalado (por defecto, el último de patches.py)")
     args = ap.parse_args()
     res = args.game / "resources"
     textos = {k: parse_strings((res / k / "strings" / "key-value" / "key-value-strings-utf8.txt").read_text(encoding="utf-8")) for k in ("en", "mx")}
@@ -388,12 +402,26 @@ def main() -> None:
         for parte in range(PARTES):
             _escribir_json(SALIDA / "help" / idioma / f"{parte}.json", {k: {str(i): x[clave] for i, x in v.items() if i % PARTES == parte} for k, v in ayudas.items()})
 
-    # Una foto por parche (el instalado es el último de `patches.py`) y lo que cambió entre cada par de fotos seguidas.
+    # Una foto por parche y lo que cambió entre cada par de fotos seguidas. El parche del juego instalado es el último de
+    # `patches.py` salvo que se diga con --patch. Para no perder una foto, no se pisa una distinta sin --patch (el juego
+    # se actualizó y falta sumar el parche) ni se guarda una igual a la anterior (se sumó el parche y el juego no bajó).
     from patches import PARCHES
 
-    actual = max(PARCHES, key=lambda n: PARCHES[n])
-    _escribir_json(SALIDA / "snapshots" / f"{actual}.json", foto(out_u, out_t, civinfo))
-    fotos = sorted((SALIDA / "snapshots").glob("*.json"), key=lambda r: PARCHES.get(r.stem, ""))
+    actual = args.patch or max(PARCHES, key=lambda n: PARCHES[n])
+    if actual not in PARCHES:
+        raise SystemExit(f"el parche {actual} no está en patches.py")
+    nueva = foto(out_u, out_t, civinfo)
+    ruta_foto = SALIDA / "snapshots" / f"{actual}.json"
+    previas = sorted((r for r in (SALIDA / "snapshots").glob("*.json") if r.stem in PARCHES and PARCHES[r.stem] < PARCHES[actual]), key=lambda r: PARCHES[r.stem])
+    vieja = json.loads(ruta_foto.read_text(encoding="utf-8")) if ruta_foto.exists() else None
+    anterior = json.loads(previas[-1].read_text(encoding="utf-8")) if previas else None
+    if vieja is not None and vieja != nueva and not args.patch:
+        print(f"AVISO: los datos del juego no son los de la foto {actual}: ¿salió un parche nuevo? Sumalo a patches.py (o pasá --patch). La foto no se tocó.")
+    elif anterior is not None and anterior == nueva:
+        print(f"AVISO: los datos son iguales a los de {previas[-1].stem}: ¿el juego instalado está actualizado? No se guardó la foto {actual}.")
+    else:
+        _escribir_json(ruta_foto, nueva)
+    fotos = sorted((r for r in (SALIDA / "snapshots").glob("*.json") if r.stem in PARCHES), key=lambda r: PARCHES[r.stem])
     cambios = {}
     for antes, despues in zip(fotos, fotos[1:]):
         cambios[despues.stem] = {"from": antes.stem, **diferencias(json.loads(antes.read_text(encoding="utf-8")), json.loads(despues.read_text(encoding="utf-8")))}

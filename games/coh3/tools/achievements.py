@@ -118,8 +118,14 @@ def main(argv: list[str]) -> None:
     if not pct:
         por_clave = porcentajes_pagina(html_en, app)
         pct = {x["api_name"]: por_clave[x["internal_key"]] for x in lista if x.get("internal_key") in por_clave}
-    if a.game in ("coh2", "aoe2"):
+    if a.game == "coh2":
         es = logros_steam(_get(PAGINA.format(app=app, lang="spanish")).decode("utf-8"), app)
+    elif a.game == "aoe2":
+        # AoE2 (2026-11-21): español latino como el resto de la sección; el de España sólo si latam trae el inglés.
+        latam = {x["api_name"]: x for x in logros_steam(_get(PAGINA.format(app=app, lang="latam")).decode("utf-8"), app)}
+        espana = {x["api_name"]: x for x in logros_steam(_get(PAGINA.format(app=app, lang="spanish")).decode("utf-8"), app)}
+        por_en = {x["api_name"]: x for x in lista}
+        es = [latam[k] if k in latam and latam[k].get("name") != por_en[k].get("name") else espana.get(k, por_en[k]) for k in por_en]
     else:
         tags = tags_raw()
         tr = traductor(tags[0]) if tags else (lambda s: None)

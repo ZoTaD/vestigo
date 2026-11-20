@@ -2,7 +2,7 @@
 Los parches de Age of Empires II: DE (2026-11-20): nombre → momento en que salió (UTC), de las noticias de Steam
 (`ISteamNews/GetNewsForApp?appid=813780`, "Age of Empires II: Definitive Edition – Update <número>").
 
-**Parche nuevo → sumar su línea acá y en `NOTAS`** (el número de la noticia, la hora y el id de la noticia). Las estadísticas "desde el
+**Parche nuevo → sumar su línea en `NOTAS`** (el número de la noticia, la hora y el id de la noticia). Las estadísticas "desde el
 parche" empiezan el día siguiente (UTC), así ningún día mezcla los dos.
 """
 #: nombre → (momento UTC, menor, id de la noticia en Steam). Desde agosto de 2025.
@@ -22,17 +22,5 @@ NOTAS = {
 }
 NOTICIA = "https://store.steampowered.com/news/app/813780/view/{gid}"
 
-PARCHES = {
-    "153015": "2025-08-12T17:00:00Z",
-    "153638": "2025-08-20T17:00:00Z",
-    "155976": "2025-09-16T21:00:00Z",
-    "158041": "2025-10-14T17:00:00Z",
-    "160062": "2025-11-06T18:00:00Z",
-    "162286": "2025-12-02T18:00:00Z",
-    "169123": "2026-02-17T17:00:00Z",
-    "170934": "2026-03-12T17:00:00Z",
-    "174992": "2026-04-23T21:00:00Z",
-    "177723": "2026-06-02T17:00:00Z",
-    "185872": "2026-09-22T17:00:00Z",
-    "188329": "2026-10-27T17:00:00Z",
-}
+#: nombre → momento en que salió (UTC), sacado de `NOTAS`.
+PARCHES = {n: cuando for n, (cuando, _menor, _gid) in NOTAS.items()}

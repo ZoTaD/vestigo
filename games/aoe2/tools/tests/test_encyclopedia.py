@@ -63,15 +63,16 @@ def test_diferencias_entre_dos_fotos_de_parche():
     vieja = {
         "u": {"38": {"hp": 100, "attacks": [[4, 10]], "armors": [[3, 2], [4, 2]], "cost": {"food": 60, "gold": 75}, "time": 30, "reload": 1.8, "range": 0, "speed": 1.35}},
         "t": {"67": {"cost": {"food": 150}, "time": 50}},
-        "c": {"franks": ["Foragers work +15% faster", "Castles cost -15%"]},
+        "c": {"franks": {"en": ["Foragers work +15% faster", "Castles cost -15%"], "es": ["Recolectores +15%", "Castillos -15%"]}},
     }
     nueva = {
-        "u": {"38": {**vieja["u"]["38"], "hp": 110, "attacks": [[4, 10], [15, 2]]}, "93": {"hp": 45}},
+        "u": {"38": {**vieja["u"]["38"], "hp": 110, "attacks": [[4, 10], [15, 2]], "armors": [[3, 1], [4, 2]]}, "93": {"hp": 45}},
         "t": {"67": {"cost": {"food": 100}, "time": 50}},
-        "c": {"franks": ["Foragers work +15% faster", "Castles cost -25%"]},
+        "c": {"franks": {"en": ["Foragers work +15% faster", "Castles cost -25%"], "es": ["Recolectores +15%", "Castillos -25%"]}},
     }
     d = e.diferencias(vieja, nueva)
-    assert d["units"] == [[38, "hp", 100, 110], [38, "attacks", [[4, 10]], [[4, 10], [15, 2]]]]
+    # Ataque y armadura por clase: una clase nueva no corre las demás.
+    assert d["units"] == [[38, "hp", 100, 110], [38, "attacks.15", None, 2], [38, "armors.3", 2, 1]]
     assert d["new"] == [93]
     assert d["techs"] == [[67, "cost", {"food": 150}, {"food": 100}]]
-    assert d["civs"] == {"franks": {"added": ["Castles cost -25%"], "removed": ["Castles cost -15%"]}}
+    assert d["civs"] == {"franks": {"added": [{"en": "Castles cost -25%", "es": "Castillos -25%"}], "removed": [{"en": "Castles cost -15%", "es": "Castillos -15%"}]}}

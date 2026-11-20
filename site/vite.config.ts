@@ -419,11 +419,19 @@ function readSitemapData(): { data: OgData } {
           }
           let patches: string[] = [];
           let buildOrders: { slug: string; name: { en: string; es: string } }[] = [];
+          // Sólo los parches con ficha (civs antes y después o cambios de cifras); los demás enlazan a sus notas.
           try {
-            patches = JSON.parse(readFileSync(`${aoe2StatsDir}/patches.json`, "utf-8")).map((p: { name: string }) => p.name);
-            buildOrders = JSON.parse(readFileSync(`${aoe2Dir}/buildorders.json`, "utf-8")).list;
+            const dif = JSON.parse(readFileSync(`${aoe2Dir}/encyclopedia/patchdiff.json`, "utf-8"));
+            patches = JSON.parse(readFileSync(`${aoe2StatsDir}/patches.json`, "utf-8"))
+              .filter((p: { name: string; civs: unknown[] }) => p.civs.length > 0 || dif[p.name])
+              .map((p: { name: string }) => p.name);
           } catch {
             patches = [];
+          }
+          try {
+            buildOrders = JSON.parse(readFileSync(`${aoe2Dir}/buildorders.json`, "utf-8")).list;
+          } catch {
+            buildOrders = [];
           }
           return { generatedAt: meta.generatedAt, civs, maps, units, techs, patches, buildOrders };
         } catch (e) {

@@ -19,11 +19,11 @@ const render = async (path: string, Tab: typeof Aoe2Patches) => {
 };
 
 describe("prerender de Parches, Logros y Build orders de AoE2", () => {
-  it("la lista de parches y la ficha con el link a las notas oficiales", async () => {
-    expect(await render("/es/aoe2/parches", Aoe2Patches)).toContain("Actualización 188329");
-    const html = await render("/en/aoe2/patches/188329", Aoe2Patches);
-    expect(html).toMatch(/<h1[^>]*>Update 188329<\/h1>/);
+  it("la lista de parches: sin datos, directo a las notas oficiales; una ficha inexistente no rompe", async () => {
+    const html = await render("/es/aoe2/parches", Aoe2Patches);
+    expect(html).toContain("Actualización 188329");
     expect(html).toContain("store.steampowered.com/news/app/813780/view/1847286114049735");
+    expect(await render("/en/aoe2/patches/153015", Aoe2Patches)).toContain("We couldn");
   });
   it("los logros salen con nombre y porcentaje", async () => {
     const html = await render("/es/aoe2/logros", Aoe2Achievements);
@@ -33,7 +33,7 @@ describe("prerender de Parches, Logros y Build orders de AoE2", () => {
   it("una build order sale con sus pasos", async () => {
     const html = await render("/es/aoe2/build-orders/fast-castle-knights", Aoe2BuildOrders);
     expect(html).toMatch(/<h1[^>]*>Fast Castle con caballeros<\/h1>/);
-    expect(html).toContain("avanzar a Feudal con 27 de población");
+    expect(html).toContain("Telar y avanzar a la Edad Feudal.");
   });
 });
 

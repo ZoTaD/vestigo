@@ -4,152 +4,635 @@
     {
       "slug": "scouts",
       "opening": "scouts",
-      "name": { "en": "Scouts", "es": "Scouts" },
-      "maps": ["arabia", "gold-rush"],
-      "feudal": { "pop": 21, "time": "8:45" },
+      "name": {
+        "en": "Scouts",
+        "es": "Scouts"
+      },
+      "maps": [
+        "arabia",
+        "gold-rush"
+      ],
+      "feudal": {
+        "vils": 20,
+        "time": "7:30"
+      },
       "summary": {
-        "en": "Up to Feudal fast with 21 villagers and raid the enemy's woodlines and berries with 3 to 6 Scout Cavalry. Good against slower archer openings and to keep the opponent on the back foot.",
-        "es": "Feudal rápido con 21 aldeanos y a molestar madera y bayas del rival con 3 a 6 exploradores. Sirve contra aperturas de arqueros más lentas y para tener al rival a la defensiva."
+        "en": "Feudal Age with 20 villagers and raid the opponent's woodlines and berries with 3 to 6 Scout Cavalry. Good against slower archer openings and to keep the opponent on the back foot.",
+        "es": "Feudal con 20 aldeanos y a molestar madera y bayas del rival con 3 a 6 exploradores. Sirve contra aperturas de arqueros más lentas y para tener al rival a la defensiva."
       },
       "steps": [
-        { "pop": 6, "time": "0:00", "en": "First 6 villagers to sheep. Two of the starting ones build a house each first.", "es": "Los 6 primeros aldeanos a las ovejas. Dos de los iniciales hacen una casa cada uno antes." },
-        { "pop": 10, "time": "2:15", "en": "Villagers 7 to 10 to wood: build a lumber camp on the nearest good woodline.", "es": "Aldeanos 7 a 10 a la madera: campamento maderero en el bosque bueno más cercano." },
-        { "pop": 11, "time": "3:05", "en": "Villager 11 lures the first boar to the Town Center.", "es": "El aldeano 11 atrae el primer jabalí al centro urbano." },
-        { "pop": 14, "time": "3:30", "en": "Villagers 12 to 14 to berries: the first builds the mill. Build a house when you reach 13 population.", "es": "Aldeanos 12 a 14 a las bayas: el primero hace el molino. Una casa al llegar a 13 de población." },
-        { "pop": 15, "time": "4:10", "en": "Villager 15 lures the second boar when the first is almost eaten.", "es": "El aldeano 15 atrae el segundo jabalí cuando el primero está por terminarse." },
-        { "pop": 17, "time": "4:40", "en": "Villagers 16 and 17 to food (sheep or boar under the Town Center).", "es": "Aldeanos 16 y 17 a comida (ovejas o jabalí bajo el centro urbano)." },
-        { "pop": 20, "time": "5:50", "en": "Villagers 18 to 20 to a second woodline. Research Loom before clicking up.", "es": "Aldeanos 18 a 20 a un segundo bosque. Telar antes de avanzar." },
-        { "pop": 21, "time": "8:45", "en": "Click Feudal Age at 21 population. During the age-up, two wood villagers build the barracks and one more goes to food.", "es": "Avanzar a la Edad Feudal con 21 de población. Durante el avance, dos aldeanos de madera hacen el cuartel y uno más pasa a comida." },
-        { "pop": 21, "time": "10:55", "en": "In Feudal: the barracks builders make a stable right away; start Scout Cavalry nonstop and research Double-Bit Axe.", "es": "En Feudal: los que hicieron el cuartel levantan el establo enseguida; exploradores sin parar e investigar Hacha de doble filo." },
-        { "pop": 25, "time": "12:00", "en": "New villagers to farms and gold. Research Horse Collar and Bloodlines when you can afford them.", "es": "Los aldeanos nuevos a granjas y oro. Collera y Pureza de sangre cuando alcance." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep. Two of the starting ones build a house each first.",
+          "es": "Los 6 primeros aldeanos a las ovejas. Dos de los iniciales hacen una casa cada uno antes."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villagers 7 to 10 to wood: lumber camp on the nearest good woodline.",
+          "es": "Aldeanos 7 a 10 a la madera: campamento maderero en el bosque bueno más cercano."
+        },
+        {
+          "vils": 11,
+          "time": "3:20",
+          "en": "Villager 11 lures the first boar to the Town Center.",
+          "es": "El aldeano 11 atrae el primer jabalí al centro urbano."
+        },
+        {
+          "vils": 14,
+          "time": "4:35",
+          "en": "Villagers 12 to 14 to berries: the first builds the mill. A house when you reach 13 population.",
+          "es": "Aldeanos 12 a 14 a las bayas: el primero hace el molino. Una casa al llegar a 13 de población."
+        },
+        {
+          "vils": 15,
+          "time": "5:00",
+          "en": "Villager 15 lures the second boar when the first is almost eaten.",
+          "es": "El aldeano 15 atrae el segundo jabalí cuando el primero está por terminarse."
+        },
+        {
+          "vils": 17,
+          "time": "5:50",
+          "en": "Villagers 16 and 17 to food (sheep or boar under the Town Center).",
+          "es": "Aldeanos 16 y 17 a comida (ovejas o jabalí bajo el centro urbano)."
+        },
+        {
+          "vils": 20,
+          "time": "7:05",
+          "en": "Villagers 18 to 20 to a second woodline.",
+          "es": "Aldeanos 18 a 20 a un segundo bosque."
+        },
+        {
+          "vils": 20,
+          "time": "7:30",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 20,
+          "time": "7:35",
+          "en": "During the age-up, two wood villagers build a barracks and the sheep villagers start farms as the food runs out.",
+          "es": "Durante el avance, dos aldeanos de madera hacen el cuartel y los de las ovejas pasan a granjas a medida que se termina la comida."
+        },
+        {
+          "vils": 20,
+          "time": "9:40",
+          "en": "In Feudal: the barracks builders make a stable; Scout Cavalry nonstop and Double-Bit Axe.",
+          "es": "En Feudal: los del cuartel levantan el establo; exploradores sin parar y Hacha de doble filo."
+        },
+        {
+          "vils": 24,
+          "time": "11:10",
+          "en": "New villagers to farms and gold. Horse Collar and Bloodlines when you can afford them.",
+          "es": "Los aldeanos nuevos a granjas y oro. Collera y Pureza de sangre cuando alcance."
+        }
       ]
     },
     {
       "slug": "archers",
       "opening": "archers",
-      "name": { "en": "Archers", "es": "Arqueros" },
-      "maps": ["arabia", "gold-rush"],
-      "feudal": { "pop": 22, "time": "9:20" },
+      "name": {
+        "en": "Archers",
+        "es": "Arqueros"
+      },
+      "maps": [
+        "arabia",
+        "gold-rush"
+      ],
+      "feudal": {
+        "vils": 21,
+        "time": "7:55"
+      },
       "summary": {
-        "en": "Two archery ranges in Feudal and a steady stream of archers with Fletching. Strong against Men-at-Arms and slow openings; it needs gold early, so place a mining camp before clicking up.",
-        "es": "Dos galerías de tiro en Feudal y arqueros sin parar con Emplumado. Fuerte contra hombres de armas y aperturas lentas; necesita oro temprano, así que va un campamento minero antes de avanzar."
+        "en": "Two archery ranges in Feudal and a steady stream of archers with Fletching. Strong against Men-at-Arms and slow openings; it needs gold early, so a mining camp goes up before clicking.",
+        "es": "Dos galerías de tiro en Feudal y arqueros sin parar con Emplumado de flechas. Fuerte contra hombres de armas y aperturas lentas; necesita oro temprano, así que va un campamento minero antes de avanzar."
       },
       "steps": [
-        { "pop": 6, "time": "0:00", "en": "First 6 villagers to sheep; two starting villagers build houses.", "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas." },
-        { "pop": 10, "time": "2:15", "en": "Villagers 7 to 10 to wood with a lumber camp.", "es": "Aldeanos 7 a 10 a la madera con campamento maderero." },
-        { "pop": 11, "time": "3:05", "en": "Villager 11 lures the first boar.", "es": "El aldeano 11 atrae el primer jabalí." },
-        { "pop": 14, "time": "3:30", "en": "Villagers 12 to 14 to berries with a mill.", "es": "Aldeanos 12 a 14 a las bayas con molino." },
-        { "pop": 15, "time": "4:10", "en": "Villager 15 lures the second boar.", "es": "El aldeano 15 atrae el segundo jabalí." },
-        { "pop": 19, "time": "5:20", "en": "Villagers 16 to 19 to a second woodline.", "es": "Aldeanos 16 a 19 a un segundo bosque." },
-        { "pop": 21, "time": "6:30", "en": "Villagers 20 and 21 build a mining camp on gold and stay there. Research Loom.", "es": "Aldeanos 20 y 21 hacen un campamento minero en el oro y se quedan ahí. Telar." },
-        { "pop": 22, "time": "9:20", "en": "Click Feudal Age at 22 population. During the age-up, build a barracks with a wood villager and move 2 more to gold.", "es": "Avanzar a Feudal con 22 de población. Durante el avance, un aldeano de madera hace el cuartel y 2 más pasan al oro." },
-        { "pop": 22, "time": "11:35", "en": "In Feudal: two archery ranges at once (3 to 4 wood villagers build them). Archers nonstop and Double-Bit Axe.", "es": "En Feudal: dos galerías de tiro a la vez (las hacen 3 o 4 aldeanos de madera). Arqueros sin parar y Hacha de doble filo." },
-        { "pop": 26, "time": "13:00", "en": "Research Fletching at the blacksmith and Horse Collar. New villagers to farms and gold.", "es": "Emplumado en la herrería y Collera. Los aldeanos nuevos a granjas y oro." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep. Two of the starting ones build a house each first.",
+          "es": "Los 6 primeros aldeanos a las ovejas. Dos de los iniciales hacen una casa cada uno antes."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villagers 7 to 10 to wood: lumber camp on the nearest good woodline.",
+          "es": "Aldeanos 7 a 10 a la madera: campamento maderero en el bosque bueno más cercano."
+        },
+        {
+          "vils": 11,
+          "time": "3:20",
+          "en": "Villager 11 lures the first boar to the Town Center.",
+          "es": "El aldeano 11 atrae el primer jabalí al centro urbano."
+        },
+        {
+          "vils": 14,
+          "time": "4:35",
+          "en": "Villagers 12 to 14 to berries with a mill.",
+          "es": "Aldeanos 12 a 14 a las bayas con molino."
+        },
+        {
+          "vils": 15,
+          "time": "5:00",
+          "en": "Villager 15 lures the second boar.",
+          "es": "El aldeano 15 atrae el segundo jabalí."
+        },
+        {
+          "vils": 19,
+          "time": "6:40",
+          "en": "Villagers 16 to 19 to a second woodline.",
+          "es": "Aldeanos 16 a 19 a un segundo bosque."
+        },
+        {
+          "vils": 21,
+          "time": "7:30",
+          "en": "Villagers 20 and 21 build a mining camp on gold and stay there.",
+          "es": "Aldeanos 20 y 21 hacen un campamento minero en el oro y se quedan ahí."
+        },
+        {
+          "vils": 21,
+          "time": "7:55",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 21,
+          "time": "8:00",
+          "en": "During the age-up, a wood villager builds a barracks and 2 more go to gold.",
+          "es": "Durante el avance, un aldeano de madera hace el cuartel y 2 más pasan al oro."
+        },
+        {
+          "vils": 21,
+          "time": "10:05",
+          "en": "In Feudal: two archery ranges at once (3 or 4 wood villagers build them). Archers nonstop and Double-Bit Axe.",
+          "es": "En Feudal: dos galerías de tiro a la vez (las hacen 3 o 4 aldeanos de madera). Arqueros sin parar y Hacha de doble filo."
+        },
+        {
+          "vils": 24,
+          "time": "11:35",
+          "en": "Fletching at the blacksmith and Horse Collar. New villagers to farms and gold.",
+          "es": "Emplumado de flechas en la herrería y Collera. Los aldeanos nuevos a granjas y oro."
+        }
       ]
     },
     {
       "slug": "men-at-arms",
       "opening": "maa",
-      "name": { "en": "Men-at-Arms into Archers", "es": "Hombres de armas y después arqueros" },
-      "maps": ["arabia"],
-      "feudal": { "pop": 21, "time": "9:10" },
+      "name": {
+        "en": "Men-at-Arms into Archers",
+        "es": "Hombres de armas y después arqueros"
+      },
+      "maps": [
+        "arabia"
+      ],
+      "feudal": {
+        "vils": 20,
+        "time": "7:30"
+      },
       "summary": {
-        "en": "A barracks in Dark Age, 3 militia upgraded to Men-at-Arms the moment you reach Feudal, then archery ranges behind them. The Men-at-Arms hit the enemy's woodline while your archers come out.",
-        "es": "Cuartel en la Edad Oscura, 3 milicias que pasan a hombres de armas apenas llegás a Feudal y después galerías de tiro. Los hombres de armas castigan la madera del rival mientras salen tus arqueros."
+        "en": "A barracks in Dark Age and 3 militia trained while you age up, upgraded to Men-at-Arms the moment you reach Feudal, then archery ranges behind them.",
+        "es": "Cuartel en la Edad Oscura y 3 milicias mientras avanzás, que pasan a hombres de armas apenas llegás a Feudal; después, galerías de tiro."
       },
       "steps": [
-        { "pop": 6, "time": "0:00", "en": "First 6 villagers to sheep; two starting villagers build houses.", "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas." },
-        { "pop": 10, "time": "2:15", "en": "Villagers 7 to 10 to wood.", "es": "Aldeanos 7 a 10 a la madera." },
-        { "pop": 11, "time": "3:05", "en": "Villager 11 lures the first boar.", "es": "El aldeano 11 atrae el primer jabalí." },
-        { "pop": 12, "time": "3:20", "en": "Villager 12 builds a barracks, then goes to wood.", "es": "El aldeano 12 hace el cuartel y después va a la madera." },
-        { "pop": 15, "time": "3:50", "en": "Villagers 13 to 15 to berries with a mill. Villager 16 lures the second boar.", "es": "Aldeanos 13 a 15 a las bayas con molino. El 16 atrae el segundo jabalí." },
-        { "pop": 19, "time": "5:30", "en": "Villagers 17 to 19 to wood. Train 3 militia from the barracks as soon as you can.", "es": "Aldeanos 17 a 19 a la madera. Tres milicias del cuartel apenas se pueda." },
-        { "pop": 21, "time": "6:20", "en": "Villagers 20 and 21 to gold with a mining camp. Research Loom.", "es": "Aldeanos 20 y 21 al oro con campamento minero. Telar." },
-        { "pop": 21, "time": "9:10", "en": "Click Feudal Age (militia count toward population). Send the militia toward the enemy during the age-up.", "es": "Avanzar a Feudal (las milicias cuentan en la población). Mandá las milicias hacia el rival durante el avance." },
-        { "pop": 21, "time": "11:20", "en": "In Feudal: research Men-at-Arms first, then build two archery ranges and start archers. Double-Bit Axe and Fletching next.", "es": "En Feudal: primero la mejora a hombres de armas, después dos galerías de tiro y arqueros. Hacha de doble filo y Emplumado a continuación." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep. Two of the starting ones build a house each first.",
+          "es": "Los 6 primeros aldeanos a las ovejas. Dos de los iniciales hacen una casa cada uno antes."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villagers 7 to 10 to wood: lumber camp on the nearest good woodline.",
+          "es": "Aldeanos 7 a 10 a la madera: campamento maderero en el bosque bueno más cercano."
+        },
+        {
+          "vils": 11,
+          "time": "3:20",
+          "en": "Villager 11 lures the first boar to the Town Center.",
+          "es": "El aldeano 11 atrae el primer jabalí al centro urbano."
+        },
+        {
+          "vils": 12,
+          "time": "3:45",
+          "en": "Villager 12 builds a barracks, then goes to wood.",
+          "es": "El aldeano 12 hace el cuartel y después va a la madera."
+        },
+        {
+          "vils": 15,
+          "time": "5:00",
+          "en": "Villagers 13 to 15 to berries with a mill.",
+          "es": "Aldeanos 13 a 15 a las bayas con molino."
+        },
+        {
+          "vils": 16,
+          "time": "5:25",
+          "en": "Villager 16 lures the second boar.",
+          "es": "El aldeano 16 atrae el segundo jabalí."
+        },
+        {
+          "vils": 18,
+          "time": "6:15",
+          "en": "Villagers 17 and 18 to wood.",
+          "es": "Aldeanos 17 y 18 a la madera."
+        },
+        {
+          "vils": 20,
+          "time": "7:05",
+          "en": "Villagers 19 and 20 to gold with a mining camp.",
+          "es": "Aldeanos 19 y 20 al oro con campamento minero."
+        },
+        {
+          "vils": 20,
+          "time": "7:30",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 20,
+          "time": "7:30",
+          "en": "As you click Feudal, queue 3 militia at the barracks and send them toward the opponent.",
+          "es": "Al pedir Feudal, encolá 3 milicias en el cuartel y mandalas hacia el rival."
+        },
+        {
+          "vils": 20,
+          "time": "9:40",
+          "en": "In Feudal: research Men-at-Arms first, then two archery ranges and archers. Double-Bit Axe and Fletching next.",
+          "es": "En Feudal: primero la mejora a hombres de armas, después dos galerías de tiro y arqueros. Hacha de doble filo y Emplumado de flechas a continuación."
+        }
       ]
     },
     {
       "slug": "drush-fast-castle",
       "opening": "drush_fc",
-      "name": { "en": "Drush into Fast Castle", "es": "Drush y Fast Castle" },
-      "maps": ["arabia", "hideout"],
-      "feudal": { "pop": 22, "time": "9:30" },
+      "name": {
+        "en": "Drush into Fast Castle",
+        "es": "Drush y Fast Castle"
+      },
+      "maps": [
+        "arabia",
+        "hideout"
+      ],
+      "feudal": {
+        "vils": 21,
+        "time": "7:55"
+      },
       "summary": {
-        "en": "Three militia to annoy the opponent's woodline and gold, then straight to the Castle Age. You trade a small early army for a safer and earlier Castle Age.",
-        "es": "Tres milicias para molestar la madera y el oro del rival y después directo a la Edad de los Castillos. Cambiás un ejército chico temprano por llegar antes y más seguro a Castillos."
+        "en": "Three militia in Dark Age to annoy the opponent's woodline and gold, then straight to the Castle Age. You trade a small early army for a safer Castle Age.",
+        "es": "Tres milicias en la Edad Oscura para molestar la madera y el oro del rival y después directo a la Edad de los Castillos. Cambiás un ejército chico temprano por llegar más seguro a Castillos."
       },
       "steps": [
-        { "pop": 6, "time": "0:00", "en": "First 6 villagers to sheep; two starting villagers build houses.", "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas." },
-        { "pop": 9, "time": "2:00", "en": "Villagers 7 to 9 to wood.", "es": "Aldeanos 7 a 9 a la madera." },
-        { "pop": 10, "time": "2:30", "en": "Villager 10 lures the first boar. Villager 11 builds a barracks, then goes to wood.", "es": "El aldeano 10 atrae el primer jabalí. El 11 hace el cuartel y después va a la madera." },
-        { "pop": 14, "time": "3:40", "en": "Villagers 12 to 14 to berries with a mill. Villager 15 lures the second boar. Train 3 militia.", "es": "Aldeanos 12 a 14 a las bayas con molino. El 15 atrae el segundo jabalí. Tres milicias." },
-        { "pop": 19, "time": "5:30", "en": "Villagers 16 to 19 to wood; militia go to the enemy's woodline.", "es": "Aldeanos 16 a 19 a la madera; las milicias van a la madera del rival." },
-        { "pop": 22, "time": "6:40", "en": "Villagers 20 to 22 to gold. Loom, then click Feudal Age at 22 population (militia included).", "es": "Aldeanos 20 a 22 al oro. Telar y avanzar a Feudal con 22 de población (milicias incluidas)." },
-        { "pop": 25, "time": "9:30", "en": "During the age-up, 2 or 3 villagers go from sheep to farms and one more to gold.", "es": "Durante el avance, 2 o 3 aldeanos pasan de las ovejas a granjas y uno más al oro." },
-        { "pop": 25, "time": "11:40", "en": "In Feudal: build a market and a blacksmith, research Double-Bit Axe and Horse Collar, and click Castle Age as soon as you have 800 food and 200 gold.", "es": "En Feudal: mercado y herrería, Hacha de doble filo y Collera, y avanzar a Castillos apenas tengas 800 de comida y 200 de oro." },
-        { "pop": 28, "time": "14:30", "en": "In Castle Age: stable or archery ranges for your main unit, a second Town Center and Bow Saw and Wheelbarrow.", "es": "En Castillos: establo o galerías para tu unidad principal, un segundo centro urbano y Sierra de arco y Carretilla." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep; two starting villagers build houses.",
+          "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas."
+        },
+        {
+          "vils": 9,
+          "time": "2:30",
+          "en": "Villagers 7 to 9 to wood.",
+          "es": "Aldeanos 7 a 9 a la madera."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villager 10 lures the first boar.",
+          "es": "El aldeano 10 atrae el primer jabalí."
+        },
+        {
+          "vils": 11,
+          "time": "3:20",
+          "en": "Villager 11 builds a barracks, then goes to wood. Train 3 militia as soon as it's up.",
+          "es": "El aldeano 11 hace el cuartel y después va a la madera. Tres milicias apenas esté."
+        },
+        {
+          "vils": 14,
+          "time": "4:35",
+          "en": "Villagers 12 to 14 to berries with a mill.",
+          "es": "Aldeanos 12 a 14 a las bayas con molino."
+        },
+        {
+          "vils": 15,
+          "time": "5:00",
+          "en": "Villager 15 lures the second boar; the militia go to the opponent's woodline.",
+          "es": "El aldeano 15 atrae el segundo jabalí; las milicias van a la madera del rival."
+        },
+        {
+          "vils": 18,
+          "time": "6:15",
+          "en": "Villagers 16 to 18 to wood.",
+          "es": "Aldeanos 16 a 18 a la madera."
+        },
+        {
+          "vils": 21,
+          "time": "7:30",
+          "en": "Villagers 19 to 21 to gold.",
+          "es": "Aldeanos 19 a 21 al oro."
+        },
+        {
+          "vils": 21,
+          "time": "7:55",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 21,
+          "time": "8:00",
+          "en": "During the age-up, 2 or 3 sheep villagers start farms and one more goes to gold.",
+          "es": "Durante el avance, 2 o 3 aldeanos de las ovejas pasan a granjas y uno más al oro."
+        },
+        {
+          "vils": 21,
+          "time": "10:05",
+          "en": "In Feudal: market and blacksmith, and Double-Bit Axe. Click Castle Age as soon as both are up and you have 800 food and 200 gold.",
+          "es": "En Feudal: mercado, herrería y Hacha de doble filo. Avanzar a Castillos apenas estén los dos y tengas 800 de comida y 200 de oro."
+        },
+        {
+          "vils": 21,
+          "time": "11:15",
+          "en": "Click Castle Age. Horse Collar during the age-up.",
+          "es": "Avanzar a Castillos. Collera durante el avance."
+        },
+        {
+          "vils": 22,
+          "time": "13:55",
+          "en": "In Castle Age: stable or archery ranges for your main unit, a second Town Center, Bow Saw and Wheelbarrow.",
+          "es": "En Castillos: establo o galerías para tu unidad principal, un segundo centro urbano, Sierra de arco y Carretilla."
+        }
       ]
     },
     {
       "slug": "fast-castle-knights",
       "opening": "fc",
-      "name": { "en": "Fast Castle into Knights", "es": "Fast Castle con caballeros" },
-      "maps": ["arena", "hideout", "black-forest"],
-      "feudal": { "pop": 27, "time": "11:00" },
+      "name": {
+        "en": "Fast Castle into Knights",
+        "es": "Fast Castle con caballeros"
+      },
+      "maps": [
+        "arena",
+        "hideout",
+        "black-forest"
+      ],
+      "feudal": {
+        "vils": 27,
+        "time": "10:25"
+      },
       "summary": {
-        "en": "No army in Dark or Feudal Age: 27 villagers, Feudal, then straight to Castle Age with two stables pumping knights. Best on closed maps or when the opponent can't punish you early.",
+        "en": "No army in Dark or Feudal Age: 27 villagers, Feudal, then straight to Castle Age with two stables making knights. Best on closed maps or when the opponent can't punish you early.",
         "es": "Sin ejército en Oscura ni en Feudal: 27 aldeanos, Feudal y directo a Castillos con dos establos sacando caballeros. Ideal en mapas cerrados o cuando el rival no puede castigarte temprano."
       },
       "steps": [
-        { "pop": 6, "time": "0:00", "en": "First 6 villagers to sheep; two starting villagers build houses.", "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas." },
-        { "pop": 10, "time": "2:15", "en": "Villagers 7 to 10 to wood.", "es": "Aldeanos 7 a 10 a la madera." },
-        { "pop": 11, "time": "3:05", "en": "Villager 11 lures the first boar.", "es": "El aldeano 11 atrae el primer jabalí." },
-        { "pop": 15, "time": "3:50", "en": "Villagers 12 to 15 to berries with a mill. Villager 16 lures the second boar.", "es": "Aldeanos 12 a 15 a las bayas con molino. El 16 atrae el segundo jabalí." },
-        { "pop": 20, "time": "6:00", "en": "Villagers 17 to 20 to wood; start farms with the sheep villagers as the food runs out.", "es": "Aldeanos 17 a 20 a la madera; los de las ovejas pasan a granjas a medida que se termina la comida." },
-        { "pop": 24, "time": "7:40", "en": "Villagers 21 to 24 to gold with a mining camp.", "es": "Aldeanos 21 a 24 al oro con campamento minero." },
-        { "pop": 27, "time": "8:50", "en": "Villagers 25 to 27 to food (farms). Loom, then click Feudal Age at 27 population.", "es": "Aldeanos 25 a 27 a comida (granjas). Telar y avanzar a Feudal con 27 de población." },
-        { "pop": 27, "time": "11:00", "en": "During the age-up, move 2 villagers from wood to build a market and a blacksmith the moment you reach Feudal.", "es": "Durante el avance, 2 aldeanos de madera se preparan para hacer mercado y herrería apenas llegás a Feudal." },
-        { "pop": 29, "time": "11:10", "en": "In Feudal: market and blacksmith, then click Castle Age right away (800 food, 200 gold). Research Double-Bit Axe and Horse Collar during the age-up.", "es": "En Feudal: mercado y herrería y avanzar a Castillos enseguida (800 de comida y 200 de oro). Hacha de doble filo y Collera durante el avance." },
-        { "pop": 31, "time": "13:50", "en": "In Castle Age: two stables, knights nonstop, Bloodlines and Forging. More villagers to gold.", "es": "En Castillos: dos establos, caballeros sin parar, Pureza de sangre y Forja. Más aldeanos al oro." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep. Two of the starting ones build a house each first.",
+          "es": "Los 6 primeros aldeanos a las ovejas. Dos de los iniciales hacen una casa cada uno antes."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villagers 7 to 10 to wood: lumber camp on the nearest good woodline.",
+          "es": "Aldeanos 7 a 10 a la madera: campamento maderero en el bosque bueno más cercano."
+        },
+        {
+          "vils": 11,
+          "time": "3:20",
+          "en": "Villager 11 lures the first boar to the Town Center.",
+          "es": "El aldeano 11 atrae el primer jabalí al centro urbano."
+        },
+        {
+          "vils": 15,
+          "time": "5:00",
+          "en": "Villagers 12 to 15 to berries with a mill.",
+          "es": "Aldeanos 12 a 15 a las bayas con molino."
+        },
+        {
+          "vils": 16,
+          "time": "5:25",
+          "en": "Villager 16 lures the second boar.",
+          "es": "El aldeano 16 atrae el segundo jabalí."
+        },
+        {
+          "vils": 20,
+          "time": "7:05",
+          "en": "Villagers 17 to 20 to wood; the sheep villagers start farms as the food runs out.",
+          "es": "Aldeanos 17 a 20 a la madera; los de las ovejas pasan a granjas a medida que se termina la comida."
+        },
+        {
+          "vils": 24,
+          "time": "8:45",
+          "en": "Villagers 21 to 24 to gold with a mining camp.",
+          "es": "Aldeanos 21 a 24 al oro con campamento minero."
+        },
+        {
+          "vils": 27,
+          "time": "10:00",
+          "en": "Villagers 25 to 27 to farms.",
+          "es": "Aldeanos 25 a 27 a granjas."
+        },
+        {
+          "vils": 27,
+          "time": "10:25",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 27,
+          "time": "12:35",
+          "en": "In Feudal: two wood villagers build a market and a blacksmith at once. Double-Bit Axe.",
+          "es": "En Feudal: dos aldeanos de madera hacen mercado y herrería a la vez. Hacha de doble filo."
+        },
+        {
+          "vils": 27,
+          "time": "13:35",
+          "en": "Click Castle Age (800 food, 200 gold). Horse Collar during the age-up.",
+          "es": "Avanzar a Castillos (800 de comida y 200 de oro). Collera durante el avance."
+        },
+        {
+          "vils": 27,
+          "time": "16:15",
+          "en": "In Castle Age: two stables, knights nonstop, Bloodlines and Forging. More villagers to gold.",
+          "es": "En Castillos: dos establos, caballeros sin parar, Pureza de sangre y Forja. Más aldeanos al oro."
+        }
       ]
     },
     {
       "slug": "fast-castle-boom",
       "opening": "boom",
-      "name": { "en": "Fast Castle boom", "es": "Fast Castle con boom" },
-      "maps": ["arena", "black-forest", "hideout"],
-      "feudal": { "pop": 27, "time": "11:00" },
+      "name": {
+        "en": "Fast Castle boom",
+        "es": "Fast Castle con boom"
+      },
+      "maps": [
+        "arena",
+        "black-forest",
+        "hideout"
+      ],
+      "feudal": {
+        "vils": 27,
+        "time": "10:25"
+      },
       "summary": {
-        "en": "Same Fast Castle, but the first Castle Age resources go into two or three extra Town Centers. You aim to out-produce the opponent and reach Imperial Age first; it only works if they can't attack you right away.",
+        "en": "The same Fast Castle, but the first Castle Age resources go into two or three extra Town Centers. You aim to out-produce the opponent and reach Imperial Age first; it only works if they can't attack you right away.",
         "es": "El mismo Fast Castle, pero lo primero en Castillos son dos o tres centros urbanos más. Buscás producir más que el rival y llegar antes a Imperial; sólo funciona si no puede atacarte enseguida."
       },
       "steps": [
-        { "pop": 27, "time": "11:00", "en": "Follow Fast Castle into Knights up to the Castle Age click (27 population in Dark Age, market and blacksmith in Feudal).", "es": "Igual que el Fast Castle con caballeros hasta el avance a Castillos (27 de población en Oscura, mercado y herrería en Feudal)." },
-        { "pop": 29, "time": "11:10", "en": "During the Castle Age age-up, send 4 or 5 villagers to stone.", "es": "Durante el avance a Castillos, 4 o 5 aldeanos a la piedra." },
-        { "pop": 31, "time": "13:50", "en": "In Castle Age: two extra Town Centers on woodlines or gold, built by 3 to 4 villagers each. Wheelbarrow and Bow Saw.", "es": "En Castillos: dos centros urbanos más en madera u oro, los hacen 3 o 4 aldeanos cada uno. Carretilla y Sierra de arco." },
-        { "pop": 60, "time": "18:00", "en": "Villagers from every Town Center nonstop, to farms and wood. A castle or a few defensive units if the opponent moves out.", "es": "Aldeanos de todos los centros urbanos sin parar, a granjas y madera. Un castillo o algunas unidades de defensa si el rival sale." },
-        { "pop": 100, "time": "24:00", "en": "Around 100 population: army buildings for your civ's strongest unit, University and Imperial Age.", "es": "Cerca de 100 de población: edificios militares para la mejor unidad de tu civ, universidad e Imperial." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep. Two of the starting ones build a house each first.",
+          "es": "Los 6 primeros aldeanos a las ovejas. Dos de los iniciales hacen una casa cada uno antes."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villagers 7 to 10 to wood: lumber camp on the nearest good woodline.",
+          "es": "Aldeanos 7 a 10 a la madera: campamento maderero en el bosque bueno más cercano."
+        },
+        {
+          "vils": 11,
+          "time": "3:20",
+          "en": "Villager 11 lures the first boar to the Town Center.",
+          "es": "El aldeano 11 atrae el primer jabalí al centro urbano."
+        },
+        {
+          "vils": 15,
+          "time": "5:00",
+          "en": "Villagers 12 to 15 to berries with a mill.",
+          "es": "Aldeanos 12 a 15 a las bayas con molino."
+        },
+        {
+          "vils": 16,
+          "time": "5:25",
+          "en": "Villager 16 lures the second boar.",
+          "es": "El aldeano 16 atrae el segundo jabalí."
+        },
+        {
+          "vils": 20,
+          "time": "7:05",
+          "en": "Villagers 17 to 20 to wood; the sheep villagers start farms.",
+          "es": "Aldeanos 17 a 20 a la madera; los de las ovejas pasan a granjas."
+        },
+        {
+          "vils": 24,
+          "time": "8:45",
+          "en": "Villagers 21 to 24 to gold.",
+          "es": "Aldeanos 21 a 24 al oro."
+        },
+        {
+          "vils": 27,
+          "time": "10:00",
+          "en": "Villagers 25 to 27 to farms.",
+          "es": "Aldeanos 25 a 27 a granjas."
+        },
+        {
+          "vils": 27,
+          "time": "10:25",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 27,
+          "time": "12:35",
+          "en": "In Feudal: market and blacksmith at once, Double-Bit Axe.",
+          "es": "En Feudal: mercado y herrería a la vez, Hacha de doble filo."
+        },
+        {
+          "vils": 27,
+          "time": "13:35",
+          "en": "Click Castle Age. During the age-up, 4 or 5 villagers go to stone.",
+          "es": "Avanzar a Castillos. Durante el avance, 4 o 5 aldeanos a la piedra."
+        },
+        {
+          "vils": 27,
+          "time": "16:15",
+          "en": "In Castle Age: two extra Town Centers on woodlines or gold, 3 or 4 villagers each. Wheelbarrow and Bow Saw.",
+          "es": "En Castillos: dos centros urbanos más en madera u oro, con 3 o 4 aldeanos cada uno. Carretilla y Sierra de arco."
+        },
+        {
+          "vils": 45,
+          "time": "21:15",
+          "en": "Villagers from every Town Center nonstop, to farms and wood. A castle or a few defensive units if the opponent moves out.",
+          "es": "Aldeanos de todos los centros urbanos sin parar, a granjas y madera. Un castillo o algunas unidades de defensa si el rival sale."
+        }
       ]
     },
     {
       "slug": "tower-rush",
       "opening": "tower",
-      "name": { "en": "Tower rush", "es": "Rush de torres" },
-      "maps": ["arabia"],
-      "feudal": { "pop": 20, "time": "8:30" },
+      "name": {
+        "en": "Tower rush",
+        "es": "Rush de torres"
+      },
+      "maps": [
+        "arabia"
+      ],
+      "feudal": {
+        "vils": 19,
+        "time": "7:05"
+      },
       "summary": {
         "en": "Forward villagers build towers on the opponent's food and gold in early Feudal. All-in: if the towers don't kill villagers or win resources, you're far behind.",
         "es": "Aldeanos adelantados hacen torres sobre la comida y el oro del rival al inicio de Feudal. Todo o nada: si las torres no matan aldeanos ni ganan recursos, quedás muy atrás."
       },
       "steps": [
-        { "pop": 6, "time": "0:00", "en": "First 6 villagers to sheep; two starting villagers build houses.", "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas." },
-        { "pop": 9, "time": "2:00", "en": "Villagers 7 to 9 to wood. Villager 10 lures the boar.", "es": "Aldeanos 7 a 9 a la madera. El 10 atrae el jabalí." },
-        { "pop": 13, "time": "3:20", "en": "Villagers 11 to 13 to stone with a mining camp.", "es": "Aldeanos 11 a 13 a la piedra con campamento minero." },
-        { "pop": 16, "time": "4:30", "en": "Villagers 14 to 16 to berries with a mill; second boar.", "es": "Aldeanos 14 a 16 a las bayas con molino; segundo jabalí." },
-        { "pop": 20, "time": "5:40", "en": "Villagers 17 to 20 to wood. Loom and click Feudal Age at 20 population.", "es": "Aldeanos 17 a 20 a la madera. Telar y avanzar a Feudal con 20 de población." },
-        { "pop": 20, "time": "8:30", "en": "During the age-up, send 3 or 4 villagers forward with the stone, hidden near the enemy's gold or berries.", "es": "Durante el avance, 3 o 4 aldeanos van adelante con la piedra y se esconden cerca del oro o las bayas del rival." },
-        { "pop": 20, "time": "10:40", "en": "In Feudal: towers covering their resources, one at a time and close together; keep villagers repairing. Barracks for spearmen if scouts show up.", "es": "En Feudal: torres que cubran sus recursos, de a una y juntas; aldeanos reparando. Cuartel con lanceros si aparecen exploradores." }
+        {
+          "vils": 6,
+          "time": "1:15",
+          "en": "First 6 villagers to sheep; two starting villagers build houses.",
+          "es": "Los 6 primeros a las ovejas; dos de los iniciales hacen casas."
+        },
+        {
+          "vils": 9,
+          "time": "2:30",
+          "en": "Villagers 7 to 9 to wood.",
+          "es": "Aldeanos 7 a 9 a la madera."
+        },
+        {
+          "vils": 10,
+          "time": "2:55",
+          "en": "Villager 10 lures the first boar.",
+          "es": "El aldeano 10 atrae el primer jabalí."
+        },
+        {
+          "vils": 13,
+          "time": "4:10",
+          "en": "Villagers 11 to 13 to stone with a mining camp.",
+          "es": "Aldeanos 11 a 13 a la piedra con campamento minero."
+        },
+        {
+          "vils": 16,
+          "time": "5:25",
+          "en": "Villagers 14 to 16 to berries with a mill; the second boar.",
+          "es": "Aldeanos 14 a 16 a las bayas con molino; segundo jabalí."
+        },
+        {
+          "vils": 19,
+          "time": "6:40",
+          "en": "Villagers 17 to 19 to wood.",
+          "es": "Aldeanos 17 a 19 a la madera."
+        },
+        {
+          "vils": 19,
+          "time": "7:05",
+          "en": "Research Loom, then click Feudal Age.",
+          "es": "Telar y avanzar a la Edad Feudal."
+        },
+        {
+          "vils": 19,
+          "time": "7:10",
+          "en": "During the age-up, 3 or 4 villagers walk forward with stone and hide near the opponent's gold or berries.",
+          "es": "Durante el avance, 3 o 4 aldeanos van adelante con la piedra y se esconden cerca del oro o las bayas del rival."
+        },
+        {
+          "vils": 19,
+          "time": "9:15",
+          "en": "In Feudal: towers covering their resources, one at a time and close together; keep villagers repairing. A barracks for spearmen if scouts show up.",
+          "es": "En Feudal: torres que cubran sus recursos, de a una y juntas; aldeanos reparando. Cuartel con lanceros si aparecen exploradores."
+        }
       ]
     }
   ]

@@ -245,3 +245,12 @@ def test_civs_antes_y_despues_de_cada_parche():
     # Un parche sin días a los dos lados no trae civs.
     assert next(x for x in ps if x["name"] == "185872")["civs"] == []
     assert ps[0]["name"] == "188329"
+
+
+def test_el_despues_de_un_parche_termina_antes_del_siguiente(monkeypatch):
+    monkeypatch.setattr(d, "NOTAS", {"1": ("2026-11-01T17:00:00Z", False, "a"), "2": ("2026-11-04T17:00:00Z", True, "b")})
+    dias = {f"2026-11-0{i}": d._dia_vacio(f"2026-11-0{i}") for i in range(1, 9)}
+    ps = {p["name"]: p for p in d.parches_json(dias)}
+    # 1: después = 2 y 3 (el 4 es del parche siguiente); 2: antes = 28/10..3, después = 5..8.
+    assert ps["1"]["days"][1] == 2
+    assert ps["2"]["days"] == [3, 4]

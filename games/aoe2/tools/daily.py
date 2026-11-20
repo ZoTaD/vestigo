@@ -281,10 +281,14 @@ def parches_json(dias: dict[str, dict], ventana: int = 7, min_partidas: int = 20
     hasta `ventana` días antes (sin el día del parche, que mezcla los dos) y después: `[civ, %antes, partidas antes,
     %después, partidas después]`, sólo con `min_partidas` de cada lado, de la que más subió a la que más bajó."""
     out = []
-    for nombre, (cuando, menor, gid) in sorted(NOTAS.items(), key=lambda x: x[1][0], reverse=True):
+    orden = sorted(NOTAS.items(), key=lambda x: x[1][0])
+    siguiente = {n: datetime.fromisoformat(orden[i + 1][1][0].replace("Z", "+00:00")).date() for i, (n, _) in enumerate(orden[:-1])}
+    for nombre, (cuando, menor, gid) in reversed(orden):
         dia = datetime.fromisoformat(cuando.replace("Z", "+00:00")).date()
+        # El "después" termina antes del parche siguiente (un arreglo rápido no se mezcla con éste).
+        hasta = min(dia + timedelta(days=ventana), siguiente[nombre] - timedelta(days=1)) if nombre in siguiente else dia + timedelta(days=ventana)
         antes = [dias[f] for f in sorted(dias) if dia - timedelta(days=ventana) <= date.fromisoformat(f) < dia]
-        despues = [dias[f] for f in sorted(dias) if dia < date.fromisoformat(f) <= dia + timedelta(days=ventana)]
+        despues = [dias[f] for f in sorted(dias) if dia < date.fromisoformat(f) <= hasta]
         filas = []
         if antes and despues:
             def por_civ(ds):
