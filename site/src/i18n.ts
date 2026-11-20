@@ -94,6 +94,7 @@ const EN = {
     signIn: "Sign in",
     menu: (name: string) => `Account: ${name}`,
     deadlockProfile: "My Deadlock profile",
+    aoe2Profile: "My Age of Empires II profile",
     signOut: "Sign out",
   },
 
@@ -429,6 +430,7 @@ const ES: typeof EN = {
     signIn: "Entrar",
     menu: (name: string) => `Cuenta: ${name}`,
     deadlockProfile: "Mi perfil de Deadlock",
+    aoe2Profile: "Mi perfil de Age of Empires II",
     signOut: "Salir",
   },
 

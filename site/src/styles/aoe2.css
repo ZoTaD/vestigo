@@ -153,6 +153,9 @@
   .a2-hist-civs { grid-column: 2 / 4; justify-content: flex-start; max-width: none; }
 }
 
+.a2-who-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 6px; }
+.a2-btn.is-on { background: var(--a2-gold); color: #16120a; border-color: var(--a2-gold); }
+
 @media (max-width: 1000px) { .a2-hide-m { display: none; } }
 @media (max-width: 760px) { .a2-hide-s { display: none; } .a2-table { font-size: 13px; } }
 @media (max-width: 560px) { .a2-table th { white-space: normal; } .a2-table td a { display: inline-block; max-width: 8.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; } .a2-panel { padding: 14px 12px; } .a2-mode button { height: 58px; } .a2-mode button span { font-size: 12px; padding: 12px 8px 5px; } }

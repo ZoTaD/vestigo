@@ -131,6 +131,18 @@ export default function NavAccount({ route, onNavigate }: { route: Route; onNavi
           >
             {copy.deadlockProfile}
           </RouteLink>
+          {/* AoE2 (2026-11-20): el perfil se busca por el SteamID de la cuenta (`/aoe2/players/steam-<id>`). */}
+          <RouteLink
+            className="top-account-item"
+            role="menuitem"
+            to={{ ...route, view: "aoe2", a2Section: "players", detail: `steam-${account.steamId}` }}
+            onNavigate={(r) => {
+              setOpen(false);
+              onNavigate(r);
+            }}
+          >
+            {copy.aoe2Profile}
+          </RouteLink>
           <button type="button" className="top-account-item" role="menuitem" onClick={signOut}>
             {copy.signOut}
           </button>

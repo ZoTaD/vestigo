@@ -4,7 +4,7 @@
  * sale de `/api/aoe2/player` (≈ 64 partidas) y de los cálculos de `profileStats.ts`. El perfil no se prerenderiza,
  * lleva `noindex` y está fuera del sitemap. El historial, la ficha de partida y el cara a cara llegan en la Task 6.
  */
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import RouteLink from "../../RouteLink";
 import type { Route } from "../../route";
 import { useLang } from "../../i18n";
@@ -20,6 +20,9 @@ import EloChart from "./EloChart";
 import MatchHistory from "./MatchHistory";
 import HeadToHead from "./HeadToHead";
 import { mapName } from "./mapName";
+import ShareCard from "./ShareCard";
+import { useAoe2Me } from "./me";
+import { civById as civ } from "../ui";
 
 export type PlayerData = { profile: Aoe2Profile; standings: Aoe2Standing[]; matches: Aoe2Match[] };
 
@@ -28,6 +31,8 @@ const pct = (w: number, g: number) => `${Math.round((w / Math.max(1, g)) * 100)}
 export default function Aoe2Players({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
   const id = route.detail && /^\d{1,12}$/.test(route.detail) ? route.detail : null;
+  const steam = /^steam-(\d{17})$/.exec(route.detail ?? "")?.[1];
+  if (steam) return <PorSteam steamId={steam} route={route} navigate={navigate} />;
   if (!id) {
     return (
       <>
@@ -45,6 +50,7 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
   const t = useAoe2Copy();
   const { lang } = useLang();
   useNoindex();
+  const yo = useAoe2Me();
   const { data, error, retry } = useApi<PlayerData>(`/api/aoe2/player?id=${id}`);
   useDocTitle(data ? `${data.profile.alias} · Age of Empires II · Vestigo` : null);
   const modos = useMemo(
@@ -70,6 +76,7 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
   const serie = eloSeries(matches, id, curva);
   const perfil = (pid: number): Route => ({ ...route, view: "aoe2", a2Section: "players", detail: String(pid) });
   const durTxt = dur != null ? `${Math.round(dur / 60)} min` : "–";
+  const cartaElo = standings.find((s) => s.leaderboard === 3) ?? [...standings].sort((a, b) => b.elo - a.elo)[0];
 
   return (
     <>
@@ -77,6 +84,26 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
         <div className="a2-who-row">
           {p.country && <img src={flagUrl(p.country)} srcSet={`${flagUrl(p.country, "64x48")} 2x`} alt={countryName(p.country, lang) ?? p.country} width={32} height={24} />}
           <h1 className="a2-alias">{p.alias}</h1>
+        </div>
+        <div className="a2-who-actions">
+          <button type="button" className={`a2-btn${yo.me === id ? " is-on" : ""}`} onClick={() => yo.setMe(yo.me === id ? null : id)} aria-pressed={yo.me === id}>
+            {yo.me === id ? `✓ ${t.me.itsYou}` : t.me.isMe}
+          </button>
+          {yo.me !== id && (
+            <button type="button" className={`a2-btn${yo.follows.includes(id) ? " is-on" : ""}`} onClick={() => yo.toggleFollow(id)} aria-pressed={yo.follows.includes(id)}>
+              {yo.follows.includes(id) ? `★ ${t.me.following}` : `☆ ${t.me.follow}`}
+            </button>
+          )}
+          <ShareCard
+            data={{
+              alias: p.alias,
+              country: p.country,
+              elo: cartaElo?.elo ?? null,
+              eloLabel: cartaElo ? (t.pl.leaderboards[cartaElo.leaderboard] ?? "") : "",
+              civ: civs[0] && civ(civs[0].civ) ? { slug: civ(civs[0].civ)!.slug, name: civ(civs[0].civ)!.name[lang] } : null,
+              form: ultimas,
+            }}
+          />
         </div>
         <p className="a2-note">
           {[p.country ? countryName(p.country, lang) : null, p.clan ? t.pl.clan(p.clan) : null, p.level ? t.pl.level(p.level) : null].filter(Boolean).join(" · ")}
@@ -280,4 +307,20 @@ function Actividad({ grilla }: { grilla: number[][] }) {
       </div>
     </div>
   );
+}
+
+/** `/aoe2/players/steam-<SteamID64>` (el link del menú de la cuenta): busca el perfil de ese Steam y lo abre. */
+function PorSteam({ steamId, route, navigate }: { steamId: string; route: Route; navigate: Nav }) {
+  const t = useAoe2Copy();
+  const yo = useAoe2Me();
+  const { data, error } = useApi<{ results: { id: number }[] }>(`/api/aoe2/search?q=${steamId}`);
+  const encontrado = data?.results[0]?.id;
+  useEffect(() => {
+    if (!encontrado) return;
+    if (yo.me == null) yo.setMe(encontrado);
+    navigate({ ...route, view: "aoe2", a2Section: "players", detail: String(encontrado) });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [encontrado]);
+  if (error != null || (data && !encontrado)) return <Panel><p>{t.me.noSteam}</p></Panel>;
+  return <Panel><p aria-busy="true">{t.me.resolving}</p></Panel>;
 }
