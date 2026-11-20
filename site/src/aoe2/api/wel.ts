@@ -197,7 +197,11 @@ export type Aoe2Match = {
   matchType: number;
   mode: MatchMode;
   observers: number;
+  /** El base64 crudo; el intermediario lo decodifica (`mapSize`, `build`) y lo manda en null. */
   options: string | null;
+  /** Tamaño del mapa en casillas y build del juego (de las opciones). */
+  mapSize?: number;
+  build?: number;
   players: Aoe2Player[];
 };
 

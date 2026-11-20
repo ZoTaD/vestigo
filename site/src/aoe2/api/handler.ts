@@ -23,7 +23,12 @@ import {
   normalizeMatch,
   normalizePersonal,
   normalizeSearch,
+  type Aoe2Match,
 } from "./wel";
+import { decodeOptions, namedOptions } from "../matches/options";
+
+/** Las opciones decodificadas en lugar del base64 crudo. */
+const conOpciones = (m: Aoe2Match): Aoe2Match => ({ ...m, ...namedOptions(decodeOptions(m.options ?? "")), options: null });
 
 const ID_MAX = 1e10;
 /** "Perfil desconocido": 6 en `GetPersonalStat` y 7 en `getRecentMatchHistory` (los dos dicen UNKNOWN_PROFILE_IDS, 20/11). */
@@ -45,7 +50,7 @@ async function player(p: URLSearchParams, f: typeof fetch) {
   const [stat, hist] = await Promise.all([getPersonalStat(f, id), getRecentMatches(f, id)]);
   const personal = normalizePersonal(stat, id);
   if (!personal) return notFound();
-  return json({ ...personal, matches: normalizeHistory(hist) }, 200, cache(60, 60));
+  return json({ ...personal, matches: normalizeHistory(hist).map(conOpciones) }, 200, cache(60, 60));
 }
 
 async function match(p: URLSearchParams, f: typeof fetch) {
@@ -55,7 +60,7 @@ async function match(p: URLSearchParams, f: typeof fetch) {
   if (jugador == null) return bad("p");
   const m = normalizeMatch(await getRecentMatches(f, jugador), id);
   // Una partida terminada no cambia: se guarda una hora.
-  return m ? json(m, 200, cache(3600, 3600)) : notFound();
+  return m ? json(conOpciones(m), 200, cache(3600, 3600)) : notFound();
 }
 
 async function search(p: URLSearchParams, f: typeof fetch) {

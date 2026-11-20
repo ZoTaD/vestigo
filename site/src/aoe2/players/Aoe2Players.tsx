@@ -17,10 +17,12 @@ import { Buscador } from "../leaderboards/Aoe2Leaderboards";
 import { LEADERBOARD_OF, type Aoe2Match, type Aoe2Mode, type Aoe2Profile, type Aoe2Standing } from "../api/wel";
 import { activity, avgDuration, byCiv, byMap, eloSeries, form, mates, rivals } from "./profileStats";
 import EloChart from "./EloChart";
+import MatchHistory from "./MatchHistory";
+import HeadToHead from "./HeadToHead";
+import { mapName } from "./mapName";
 
 export type PlayerData = { profile: Aoe2Profile; standings: Aoe2Standing[]; matches: Aoe2Match[] };
 
-export const mapName = (slug: string) => slug.split("-").map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w)).join(" ");
 const pct = (w: number, g: number) => `${Math.round((w / Math.max(1, g)) * 100)}%`;
 
 export default function Aoe2Players({ route, navigate }: { route: Route; navigate: Nav }) {
@@ -157,6 +159,9 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
           <Panel h={t.pl.activityH} sub={t.pl.activitySub(durTxt)}>
             <Actividad grilla={act} />
           </Panel>
+
+          <MatchHistory matches={matches} id={id} route={route} navigate={navigate} />
+          <HeadToHead matches={matches} id={id} route={route} navigate={navigate} />
         </>
       )}
     </>

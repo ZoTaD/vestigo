@@ -170,6 +170,7 @@ export const CS2_TAB_FILES: Partial<Record<Cs2Section, string>> = {
 export const AOE2_TAB_FILES: Partial<Record<Aoe2Section, string>> = {
   leaderboards: "src/aoe2/leaderboards/Aoe2Leaderboards.tsx",
   players: "src/aoe2/players/Aoe2Players.tsx",
+  matches: "src/aoe2/matches/Aoe2Matches.tsx",
 };
 
 /**
