@@ -2288,3 +2288,180 @@
   opacity: 0.6;
   cursor: default;
 }
+
+/* ---------- Impacto en "Tu informe" (2026-11-20) ----------
+   La columna del marcador y el resumen de tu sección. Mismos números que la
+   pestaña Repetición (`deadlockMatchImpact.ts`). */
+[data-theme="codex"] .dl-rep-impact {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  font-variant-numeric: tabular-nums;
+}
+[data-theme="codex"] .dl-rep-impact.is-up,
+[data-theme="codex"] .dl-rep-impact-line.is-up b,
+[data-theme="codex"] .dl-rep-impact-moments .is-up { color: var(--good); }
+[data-theme="codex"] .dl-rep-impact.is-down,
+[data-theme="codex"] .dl-rep-impact-line.is-down b,
+[data-theme="codex"] .dl-rep-impact-moments .is-down { color: var(--bad); }
+[data-theme="codex"] .dl-rep-impact-tag {
+  padding: 1px 4px;
+  border-radius: 3px;
+  font: 700 0.55rem/1.2 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+[data-theme="codex"] .dl-rep-impact-tag.is-mvp { background: var(--cns-paper, #f7e9d5); color: #1e1a14; }
+[data-theme="codex"] .dl-rep-impact-tag.is-sink { background: rgba(239, 91, 75, 0.18); color: var(--bad); }
+[data-theme="codex"] .dl-rep-impact-box { margin: 4px 0 18px; }
+[data-theme="codex"] .dl-rep-impact-line { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 4px; flex-wrap: wrap; }
+[data-theme="codex"] .dl-rep-impact-line b { font: 800 2rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-rep-impact-line span { color: var(--text-dim); }
+[data-theme="codex"] .dl-rep-impact-note { margin: 0 0 6px; color: var(--text-dim); font-size: 0.9rem; }
+[data-theme="codex"] .dl-rep-impact-sub {
+  margin: 10px 0 4px;
+  font: 700 0.72rem/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+[data-theme="codex"] .dl-rep-impact-moments { list-style: none; margin: 0 0 10px; padding: 0; max-width: 34rem; }
+[data-theme="codex"] .dl-rep-impact-moments li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 5px 0;
+  border-top: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+[data-theme="codex"] .dl-rep-impact-moments b { font: 700 0.95rem/1.2 var(--font-display); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-rep-impact-t { color: var(--text-faint); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-rep-impact-open { font-weight: 600; color: var(--accent-lit); }
+[data-theme="codex"] .dl-rp-beta {
+  font: 700 0.62rem/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--accent-lit);
+  vertical-align: middle;
+}
+
+/* ---------- "Por qué ganó…" (2026-11-20) ----------
+   El resumen de la partida, arriba de la Repetición y en "Tu informe". */
+[data-theme="codex"] .dl-story { margin: 4px 0 14px; }
+[data-theme="codex"] .dl-story-title {
+  margin: 0 0 8px;
+  font: 800 1.35rem/1.05 var(--font-display);
+  text-transform: uppercase;
+  color: var(--lead-amber, #f0a34a);
+}
+[data-theme="codex"] .dl-story[data-side="sapphire"] .dl-story-title { color: var(--lead-sapphire, #6fa8e6); }
+[data-theme="codex"] .dl-story-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+[data-theme="codex"] .dl-story-list li {
+  position: relative;
+  padding: 5px 0 5px 16px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+[data-theme="codex"] .dl-story-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.85em;
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  background: var(--accent-lit);
+}
+[data-theme="codex"] .dl-story-list button {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+[data-theme="codex"] .dl-story-list button:hover { color: var(--accent-lit); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- "Cómo jugó" (2026-11-20) ---------- */
+[data-theme="codex"] .dl-coach { margin: 12px 0 16px; max-width: 40rem; }
+[data-theme="codex"] .dl-coach-title {
+  margin: 0 0 8px;
+  font: 700 0.75rem/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+[data-theme="codex"] .dl-coach-bar { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--surface-2); }
+[data-theme="codex"] .dl-coach-bar i,
+[data-theme="codex"] .dl-coach-legend i { display: block; }
+[data-theme="codex"] .dl-coach .is-fighting { background: #ff5d47; }
+[data-theme="codex"] .dl-coach .is-farming { background: var(--lead-amber, #f0a34a); }
+[data-theme="codex"] .dl-coach .is-moving { background: rgba(247, 233, 213, 0.35); }
+[data-theme="codex"] .dl-coach .is-dead { background: rgba(247, 233, 213, 0.12); }
+[data-theme="codex"] .dl-coach-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; list-style: none; margin: 6px 0 10px; padding: 0; font-size: 0.8rem; color: var(--text-dim); }
+[data-theme="codex"] .dl-coach-legend li { display: flex; align-items: center; gap: 5px; }
+[data-theme="codex"] .dl-coach-legend i { width: 9px; height: 9px; border-radius: 2px; }
+[data-theme="codex"] .dl-coach-legend b { color: var(--text); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-coach-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+[data-theme="codex"] .dl-coach-lines li { padding: 6px 0 6px 10px; border-top: 1px solid var(--line); font-size: 0.88rem; line-height: 1.35; }
+[data-theme="codex"] .dl-coach-lines li.is-good { color: var(--good); }
+[data-theme="codex"] .dl-coach-lines li.is-bad { color: var(--bad); }
+[data-theme="codex"] .dl-coach-note { margin: 6px 0 0; font-size: 0.75rem; color: var(--text-faint); }
+
+/* ---------- Tu impacto, partida a partida (perfil, 2026-11-20) ---------- */
+[data-theme="codex"] .dl-imph .is-good { color: var(--good); }
+[data-theme="codex"] .dl-imph .is-bad { color: var(--bad); }
+[data-theme="codex"] .dl-imph-sum { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 6px 0 12px; }
+[data-theme="codex"] .dl-imph-sum p { margin: 0; display: grid; gap: 2px; }
+[data-theme="codex"] .dl-imph-k { font: 700 0.7rem/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+[data-theme="codex"] .dl-imph-sum b { font: 800 1.8rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-imph-sum small { font-size: 0.75rem; color: var(--text-faint); }
+[data-theme="codex"] .dl-imph-go { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 6px 0 12px; }
+[data-theme="codex"] .dl-imph-go button {
+  border: 0; border-radius: 4px; padding: 9px 14px; background: var(--accent-lit); color: #1e1a14;
+  font: 800 0.85rem/1 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer;
+}
+[data-theme="codex"] .dl-imph-go button:disabled { opacity: 0.7; cursor: progress; }
+[data-theme="codex"] .dl-imph-go small { color: var(--text-faint); font-size: 0.78rem; }
+[data-theme="codex"] .dl-imph-list, [data-theme="codex"] .dl-imph-heroes { list-style: none; margin: 0; padding: 0; }
+[data-theme="codex"] .dl-imph-row {
+  display: grid; grid-template-columns: 26px minmax(6rem, 10rem) minmax(0, 1fr) 4rem auto; gap: 10px; align-items: center;
+  width: 100%; padding: 5px 4px; border: 0; border-top: 1px solid var(--line); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+[data-theme="codex"] .dl-imph-row:hover { background: var(--surface-2); }
+[data-theme="codex"] .dl-imph-row img, [data-theme="codex"] .dl-imph-heroes img { border-radius: 50%; }
+[data-theme="codex"] .dl-imph-who { display: grid; font-size: 0.85rem; }
+[data-theme="codex"] .dl-imph-who small { font-size: 0.72rem; }
+[data-theme="codex"] .dl-imph-bar { position: relative; height: 8px; border-radius: 4px; background: var(--surface-2); }
+[data-theme="codex"] .dl-imph-bar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; }
+[data-theme="codex"] .dl-imph-bar i.is-good { background: var(--good); }
+[data-theme="codex"] .dl-imph-bar i.is-bad { background: var(--bad); }
+[data-theme="codex"] .dl-imph-row > b { text-align: right; font: 700 0.95rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-imph-heroes li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 5px 4px; border-top: 1px solid var(--line); font-size: 0.88rem; }
+[data-theme="codex"] .dl-imph-heroes small { color: var(--text-faint); }
+[data-theme="codex"] .dl-imph-heroes b { font: 700 0.95rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+@media (max-width: 34rem) {
+  [data-theme="codex"] .dl-imph-row { grid-template-columns: 26px minmax(0, 1fr) 3.6rem auto; }
+  [data-theme="codex"] .dl-imph-bar { display: none; }
+}
+
+/* ---------- Compararte con un jugador top (2026-11-20) ---------- */
+[data-theme="codex"] .dl-cmp-go { margin: 10px 0; }
+[data-theme="codex"] .dl-cmp-go button {
+  border: 1px solid var(--accent-lit); border-radius: 4px; padding: 7px 11px; background: none; color: var(--accent-lit);
+  font: 700 0.75rem/1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer;
+}
+[data-theme="codex"] .dl-cmp-go button:disabled { opacity: 0.7; cursor: progress; }
+[data-theme="codex"] .dl-cmp-none { margin: 10px 0; font-size: 0.82rem; color: var(--text-faint); }
+[data-theme="codex"] .dl-cmp { margin: 12px 0 16px; }
+[data-theme="codex"] .dl-cmp table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-bottom: 8px; }
+[data-theme="codex"] .dl-cmp th, [data-theme="codex"] .dl-cmp td { padding: 5px 4px; border-top: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+[data-theme="codex"] .dl-cmp th[scope="row"] { text-align: left; font-weight: 500; color: var(--text-dim); }
+[data-theme="codex"] .dl-cmp thead th { border-top: 0; font: 700 0.68rem/1 var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+[data-theme="codex"] .dl-cmp td.is-good { color: var(--good); font-weight: 700; }
+[data-theme="codex"] .dl-cmp td.is-bad { color: var(--bad); font-weight: 700; }

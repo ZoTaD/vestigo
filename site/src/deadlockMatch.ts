@@ -12,6 +12,7 @@
  * `parseMatch` lo baja a lo mínimo antes de que nada más lo toque.
  */
 
+import { parseReplay, type RawReplayInfo, type Replay } from "./deadlockReplay";
 import { scoreOf, type RankPoint } from "./deadlockRankHistory";
 
 const API = "https://api.deadlock-api.com/v1";
@@ -683,6 +684,8 @@ export interface ParsedMatch {
   players: MatchPlayer[];
   /** Los jefes del medio: cuándo cayó y qué equipo se llevó el premio. */
   midBoss: { t: number; team: number }[];
+  /** Posiciones segundo a segundo, muertes y estructuras. `null` si la partida no las trae. */
+  replay: Replay | null;
 }
 
 interface RawPlayer {
@@ -806,6 +809,7 @@ export function parseMatch(raw: RawMatch): ParsedMatch {
     midBoss: (mi.mid_boss ?? [])
       .filter((b) => (b.destroyed_time_s ?? 0) > 0)
       .map((b) => ({ t: b.destroyed_time_s ?? 0, team: b.team_claimed ?? -1 })),
+    replay: parseReplay(mi as unknown as RawReplayInfo),
   };
 }
 

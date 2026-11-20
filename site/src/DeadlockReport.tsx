@@ -31,6 +31,10 @@ import { ItemIcon } from "./DeadlockItemTip";
 import GameImg from "./GameImg";
 import DeadlockTraits from "./DeadlockTraitList";
 import { matchTraits } from "./deadlockTraits";
+import { impactOf } from "./deadlockMatchImpact";
+import DeadlockStoryCard from "./DeadlockStoryCard";
+import DeadlockCoachCard from "./DeadlockCoachCard";
+import { objectiveKind } from "./deadlockReplay";
 
 const DeadlockMatchTabs = lazy(() => import("./DeadlockMatchTabs"));
 
@@ -477,6 +481,8 @@ export default function DeadlockReport({
     [match, jugador, file]
   );
   const nota = match && jugador && file ? gradeOf(jugador, match, file) : null;
+  // El impacto de cada uno (beta): el mismo cálculo que la Repetición, compartido.
+  const impacto = useMemo(() => (match ? impactOf(match) : null), [match]);
 
   if (error)
     return (
@@ -502,6 +508,86 @@ export default function DeadlockReport({
   const nombreHeroe = (heroId: number) => {
     const n = heroName(heroId);
     return n ? text(n, lang, "") : String(heroId);
+  };
+
+  const ic = MATCH_TABS_COPY[lang].impact;
+  const rc = MATCH_TABS_COPY[lang].replay;
+  const pts = (v: number) =>
+    `${v >= 0 ? "+" : "−"}${(Math.round(Math.abs(v) * 10) / 10).toLocaleString(lang, { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`;
+  const heroeDe = (slot: number) => {
+    const p = match.players.find((x) => x.slot === slot);
+    return p ? nombreHeroe(p.heroId) : "?";
+  };
+
+  /** La celda de impacto de una fila del marcador, con MVP y "Hundió". */
+  const impactCell = (slot: number) => {
+    const v = impacto?.totals.get(slot);
+    if (v === undefined)
+      return (
+        <span className="dl-rep-cell">
+          <span className="dl-rep-dash">—</span>
+        </span>
+      );
+    const tag = impacto?.mvp === slot ? "mvp" : impacto?.sink === slot ? "sink" : null;
+    return (
+      <span className={`dl-rep-cell is-num dl-rep-impact ${v >= 0 ? "is-up" : "is-down"}`} title={ic.colTitle(pts(v))}>
+        {pts(v)}
+        {tag && (
+          <span className={`dl-rep-impact-tag is-${tag}`} title={tag === "mvp" ? ic.mvpTitle : ic.sinkTitle}>
+            {tag === "mvp" ? ic.mvp : ic.sink}
+          </span>
+        )}
+      </span>
+    );
+  };
+
+  /** Tu impacto: el total, el puesto, tus 3 momentos y el enlace a la Repetición. */
+  const yourImpact = (slot: number) => {
+    if (!impacto) return null;
+    const v = impacto.totals.get(slot) ?? 0;
+    const orden = [...impacto.totals].sort((a, b) => b[1] - a[1]);
+    const puesto = orden.findIndex(([s]) => s === slot) + 1;
+    const momentos = impacto.ledger
+      .filter((e) => e.slot === slot && e.kind !== "farm" && e.kind !== "objectiveLost" && e.kind !== "bossLost")
+      .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+      .slice(0, 3)
+      .sort((a, b) => a.t - b.t);
+    const que = (e: (typeof momentos)[number]) => {
+      if (e.kind === "kill" && e.death) return rc.mKill(heroeDe(e.death.victim));
+      if (e.kind === "assist" && e.death) return rc.mAssist(heroeDe(e.death.victim));
+      if (e.kind === "death" && e.death) return e.death.killer ? rc.mDeath(heroeDe(e.death.killer)) : rc.mDeathAlone;
+      if (e.kind === "objective" && e.objective) return rc.mObjective(rc.objectives[objectiveKind(e.objective.id)]);
+      return rc.mBoss;
+    };
+    return (
+      <div className="dl-rep-impact-box">
+        <h3 className="dl-rep-sub">
+          {ic.title} <span className="dl-rp-beta">{rc.beta}</span>
+        </h3>
+        <p className={`dl-rep-impact-line ${v >= 0 ? "is-up" : "is-down"}`}>
+          <b>{pts(v)}</b> <span>{ic.rank(puesto, orden.length)}</span>
+        </p>
+        {impacto.mvp === slot && <p className="dl-rep-impact-note">{ic.isMvp}</p>}
+        {impacto.sink === slot && <p className="dl-rep-impact-note">{ic.isSink}</p>}
+        {momentos.length > 0 && (
+          <>
+            <p className="dl-rep-impact-sub">{ic.moments}</p>
+            <ul className="dl-rep-impact-moments">
+              {momentos.map((e, i) => (
+                <li key={i}>
+                  <span className="dl-rep-impact-t">{mmss(e.t)}</span>
+                  <span>{que(e)}</span>
+                  <b className={e.value >= 0 ? "is-up" : "is-down"}>{pts(e.value)}</b>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        <RouteLink className="dl-rep-impact-open" to={tabRoute("replay")} onNavigate={navigate}>
+          {ic.open}
+        </RouteLink>
+      </div>
+    );
   };
 
   return (
@@ -565,6 +651,7 @@ export default function DeadlockReport({
               <li className="dl-rep-row is-head">
                 <span>{c.cols.player}</span>
                 <span>{c.grade}</span>
+                <span>{ic.col}</span>
                 <span>{c.cols.souls}</span>
                 <span>{c.cols.kda}</span>
                 <span>{c.cols.damage}</span>
@@ -620,6 +707,7 @@ export default function DeadlockReport({
                           <span className="dl-rep-dash">—</span>
                         )}
                       </span>
+                      {impactCell(p.slot)}
                       <span className="dl-rep-cell is-num" title={p.netWorth.toLocaleString(lang)}>
                         {corto(p.netWorth, lang)}
                       </span>
@@ -652,6 +740,15 @@ export default function DeadlockReport({
         ))}
       </div>
 
+      {impacto && impacto.story.length > 0 && (
+        <section className="box dl-rep-block">
+          <DeadlockStoryCard match={match} story={impacto.story} lang={lang} />
+          <RouteLink className="dl-rep-impact-open" to={tabRoute("replay")} onNavigate={navigate}>
+            {MATCH_TABS_COPY[lang].impact.open}
+          </RouteLink>
+        </section>
+      )}
+
       <section className="box dl-rep-block">
         <div className="box-head">
           <h2 className="box-title">{c.soulsTitle}</h2>
@@ -678,6 +775,11 @@ export default function DeadlockReport({
           {/* Los rasgos de este jugador en esta partida, antes de la nota: son
               la lectura rápida, la nota es la medición. */}
           <DeadlockTraits traits={matchTraits(jugador, match)} />
+
+          {impacto && yourImpact(jugador.slot)}
+          {impacto?.coaching.get(jugador.slot) && (
+            <DeadlockCoachCard coach={impacto.coaching.get(jugador.slot)!} all={impacto.coaching} lang={lang} />
+          )}
 
           {nota ? (
             <>
