@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useMasonry } from "./useMasonry";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
@@ -58,6 +58,9 @@ import { rankSteps, trailOf, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
 import GameImg from "./GameImg";
 import DeadlockTraits from "./DeadlockTraitList";
+
+/** El impacto partida a partida: en su pedazo, porque trae el cálculo de la Repetición. */
+const DeadlockImpactHistory = lazy(() => import("./DeadlockImpactHistory"));
 import { profileTraits } from "./deadlockTraits";
 import { useVsBand } from "./deadlockVsBand";
 import { flagUrl } from "./flags";
@@ -1180,6 +1183,20 @@ export default function DeadlockPlayer({
           {pestana === "performance" && (
             <Piso>
               <DeadlockPerformance state={vs} />
+              {id != null && historial && (
+                <Suspense fallback={null}>
+                  <DeadlockImpactHistory
+                    accountId={id}
+                    history={historialTodo}
+                    lang={lang}
+                    matchLink={(matchId, label) => (
+                      <button type="button" className="dl-imph-row" onClick={() => onOpenMatch(matchId)}>
+                        {label}
+                      </button>
+                    )}
+                  />
+                </Suspense>
+              )}
             </Piso>
           )}
 

@@ -16,6 +16,7 @@ import {
   type Moment,
 } from "./deadlockWinChance";
 import comebacksJson from "@deadlock/comebacks.json";
+import DeadlockMatchReplay from "./DeadlockMatchReplay";
 
 /**
  * Las pestañas de una partida que no son el informe: chance de ganar, líneas y
@@ -453,6 +454,7 @@ export default function DeadlockMatchTabs({
   lang: Lang;
   link: PlayerLink;
 }) {
+  if (tab === "replay") return <DeadlockMatchReplay match={match} lang={lang} />;
   if (tab === "win-chance") return <WinChance match={match} lang={lang} />;
   if (tab === "lanes") return <Lanes match={match} names={names} lang={lang} link={link} />;
   return <Numbers match={match} names={names} lang={lang} link={link} />;

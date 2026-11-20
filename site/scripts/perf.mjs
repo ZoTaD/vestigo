@@ -54,6 +54,8 @@ export const PAGES = [
   "/en/deadlock/builder",
   "/es/deadlock/builder?b=6.mooubd.d8ayd5.13tj3yn.1lqlbms.1e2xkjv.koefiz.13zcvf5.15w8ect.rhp3m2.wcghbv.if5ene.1jit4ls&g=12x4.lg0lm5.mooubd.koefiz.1e2xkjv.d8ayd5.13zcvf5.wcghbv.13tj3yn_Core%20L-R_~12x4.rhp3m2.15w8ect_Lane_&a=3214122224433311",
   "/en/deadlock/graves",
+  // Repetición de una partida (2026-11-20): pide la metadata a la API y dibuja el mapa en canvas.
+  "/en/deadlock/match/138041748/replay",
   "/en/poe2/economy",
   "/en/poe2/encyclopedia",
   "/en/valheim",

@@ -243,9 +243,10 @@ export const LOCAL_FILTER = () => `match_mode = '${PLAYED_MODE}' and game_mode =
  */
 export const LOCAL_COLUMNS = [
   "ability_points", "ability_stats", "account_id", "assists", "average_badge", "average_badge_team0",
-  "average_badge_team1", "banned_hero_ids", "deaths", "duration_s", "game_mode", "game_mode_version",
+  "average_badge_team1", "banned_hero_ids", "death_details.game_time_s", "deaths", "duration_s", "game_mode", "game_mode_version",
   "hero_id", "items.game_time_s", "items.imbued_ability_id", "items.item_id", "items.sold_time_s",
-  "items.upgrade_info", "kills", "last_hits", "match_id", "match_mode", "net_worth", "player_rank_consumed_demotion_protection",
+  "items.upgrade_info", "kills", "last_hits", "match_id", "match_mode", "mid_boss.destroyed_time_s", "mid_boss.team_claimed",
+  "net_worth", "objectives.destroyed_time_s", "objectives.team", "objectives.team_objective", "player_slot", "player_rank_consumed_demotion_protection",
   "player_rank_desired_progress_change", "player_rank_final_flat_progress", "player_rank_initial_calibration_games",
   "player_rank_initial_display_rank", "player_rank_initial_flat_progress", "player_rank_initial_win_streak",
   "rank_interval", "ranked_type", "start_time", "stats.boss_damage", "stats.deaths", "stats.net_worth",

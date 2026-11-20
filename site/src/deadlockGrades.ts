@@ -75,6 +75,7 @@ function toMatch(raw: RawMatch): ParsedMatch {
     badge: 0,
     players,
     midBoss: [],
+    replay: null,
   };
 }
 
