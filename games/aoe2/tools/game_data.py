@@ -63,9 +63,12 @@ def _slug(nombre: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", nombre.lower()).strip("-")
 
 
-def civ_table(lista: list[dict], en: dict[int, str], es: dict[int, str]) -> list[dict]:
-    """Las civs jugables (con escudo en el árbol tecnológico), con id = índice en `civilization_list`. El slug sale del
-    nombre en inglés (`hindustanis`, no `indians`) y `file` es el nombre del escudo en el juego."""
+def civ_table(lista: list[dict], en: dict[int, str], es: dict[int, str], api: dict[int, int] | None = None) -> list[dict]:
+    """Las civs jugables (con escudo en el árbol tecnológico). `internal` es su índice en `civilization_list` (el número
+    del juego y de las grabaciones); `id` es el `civilization_id` de la API, que va con otra numeración (tabla de
+    `civ_ids.py`; sin tabla, el índice). Una civ que la tabla no cubre recibe 1000 + índice, que no choca con la API.
+    El slug sale del nombre en inglés (`hindustanis`, no `indians`) y `file` es el nombre del escudo en el juego."""
+    de_api = {interno: api_id for api_id, interno in (api or {}).items()}
     out = []
     for i, c in enumerate(lista):
         img = c.get("tech_tree_image_path")
@@ -73,7 +76,8 @@ def civ_table(lista: list[dict], en: dict[int, str], es: dict[int, str]) -> list
             continue
         nombre_en = en.get(c.get("name_string_id", -1)) or c["internal_name"]
         out.append({
-            "id": i,
+            "id": (de_api.get(i, 1000 + i) if api else i),
+            "internal": i,
             "slug": _slug(nombre_en),
             "file": Path(img).stem.removeprefix("menu_techtree_"),
             "name": {"en": nombre_en, "es": es.get(c.get("name_string_id", -1)) or nombre_en},
@@ -142,7 +146,9 @@ def main() -> None:
     wpfg = res / "_common" / "wpfg" / "resources"
     textos = lambda idioma: parse_strings((res / idioma / "strings" / "key-value" / "key-value-strings-utf8.txt").read_text(encoding="utf-8"))
     lista = json.loads((res / "_common" / "dat" / "civilizations.json").read_text(encoding="utf-8"))["civilization_list"]
-    civs = civ_table(lista, textos("en"), textos("mx"))
+    tabla = DATA / "api_civs.json"
+    api = {int(k): v for k, v in json.loads(tabla.read_text(encoding="utf-8")).items()} if tabla.exists() else None
+    civs = civ_table(lista, textos("en"), textos("mx"), api)
 
     escritas = 0
     for c in civs:
@@ -159,7 +165,7 @@ def main() -> None:
             con_icono.append(m["slug"])
     escritas += _webp(wpfg / "mapicons" / "cm_generic.png", PUBLIC / "map" / "_generic.webp", 96, cuadrado=96)
     _escribir_json(DATA / "maps.json", [{"slug": m["slug"], "name": m["name"], "icon": m["slug"] in con_icono} for m in mapas])
-    _escribir_json(DATA / "civs.json", [{k: c[k] for k in ("id", "slug", "name", "era")} for c in civs])
+    _escribir_json(DATA / "civs.json", sorted(({k: c[k] for k in ("id", "internal", "slug", "name", "era")} for c in civs), key=lambda c: c["id"]))
     _escribir_json(DATA / "meta.json", {"generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "civs": len(civs)})
     print(f"{len(civs)} civs; {escritas} imágenes nuevas o cambiadas")
 

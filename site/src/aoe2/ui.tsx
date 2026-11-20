@@ -30,7 +30,7 @@ export function Aoe2Header({ home, route, navigate }: { home: boolean; route: Ro
     <header className={`a2-head${home ? " is-home" : ""}`}>
       <div className="a2-strip" aria-hidden="true">
         {STRIP.map((n) => (
-          <img key={n} src={`/aoe2/ui/strip-${n}.webp`} alt="" width={800} height={373} decoding="async" fetchPriority={n === 1 ? "high" : "low"} />
+          <img key={n} src={`/aoe2/ui/strip-${n}.webp`} alt="" width={800} height={373} decoding="async" loading={n === 1 ? undefined : "lazy"} />
         ))}
       </div>
       <div className="a2-title">

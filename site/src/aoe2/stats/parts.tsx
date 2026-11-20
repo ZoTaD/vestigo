@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useLang, type Lang } from "../../i18n";
 import { useAoe2Copy } from "../../aoe2Copy";
 import { CivShield, ModePicker, civBySlug } from "../ui";
-import { BANDS, loadSummary, type BandOrAll, type StatMode, type Summary, type WindowKey } from "./data";
+import { BANDS, loadSummary, peekSummary, type BandOrAll, type StatMode, type Summary, type WindowKey } from "./data";
 import maps from "@aoe2/maps.json";
 import { mapName as prettify } from "../players/mapName";
 
@@ -15,8 +15,9 @@ export const mapLabel = (slug: string, lang: Lang): string => MAPAS.get(slug)?.n
 export const mapIcon = (slug: string): string => (MAPAS.get(slug)?.icon ? `/aoe2/map/${slug}.webp` : "/aoe2/map/_generic.webp");
 
 export function useSummary(): Summary | null | undefined {
-  const [s, setS] = useState<Summary | null | undefined>(undefined);
+  const [s, setS] = useState<Summary | null | undefined>(peekSummary);
   useEffect(() => {
+    if (s !== undefined) return;
     let vivo = true;
     void loadSummary().then((x) => vivo && setS(x));
     return () => {

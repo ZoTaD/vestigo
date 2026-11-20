@@ -3,7 +3,7 @@
  * con "Cargar más"), filtro por país sobre lo cargado y el buscador de jugadores. Los datos salen de `/api/aoe2/*`.
  * "Subieron hoy" y la distribución de ELO llegan con las fotos diarias del colector (Task 8).
  */
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import RouteLink from "../../RouteLink";
 import { LazyRows } from "../../LazyRows";
 import type { Route } from "../../route";
@@ -13,7 +13,7 @@ import { countryName } from "../../coh3/live/ui";
 import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, ModePicker, Panel, type Aoe2Mode, type Nav } from "../ui";
 import { LEADERBOARD_OF, type Aoe2Row, type SearchResult } from "../api/wel";
-import { climbers, countriesOf, percentileOf, type Bucket } from "./logic";
+import { aplicarRespuesta, climbers, countriesOf, percentileOf, type Bucket, type Tabla } from "./logic";
 
 /** La foto diaria del colector (`games/aoe2/stats/ladder/<id>.json`). */
 type LadderSnap = { date: string; total: number; hist: Bucket[]; top: [number, number, string?][]; prev?: { date: string; top: [number, number, string?][] } };
@@ -37,26 +37,29 @@ export default function Aoe2Leaderboards({ route, navigate }: { route: Route; na
   const t = useAoe2Copy();
   const { lang } = useLang();
   const [mode, setMode] = useState<Aoe2Mode>("rm1v1");
-  const [rows, setRows] = useState<Aoe2Row[]>([]);
-  const [total, setTotal] = useState(0);
+  const [tabla, setTabla] = useState<Tabla>({ gen: 0, rows: [], total: 0 });
+  const { rows, total } = tabla;
+  // La generación del pedido vigente: sube con cada cambio de modo y descarta respuestas que vuelven tarde.
+  const gen = useRef(0);
   const [estado, setEstado] = useState<"cargando" | "ok" | "error">("cargando");
   const [intento, setIntento] = useState(0);
   const [pais, setPais] = useState("");
   const { sort, th } = useSort<Key>({ key: "rank", dir: 1 }, ["rank", "player"]);
 
   const cargar = (desde: number, reemplazar: boolean) => {
+    const g = gen.current;
     setEstado("cargando");
     return fetch(`/api/aoe2/leaderboard?id=${LEADERBOARD_OF[mode]}&start=${desde}&count=${PAGINA}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((d: { total: number; rows: Aoe2Row[] }) => {
-        setTotal(d.total);
-        setRows((prev) => (reemplazar ? d.rows : [...prev, ...d.rows]));
-        setEstado("ok");
+        setTabla((t) => aplicarRespuesta(t, { gen: g, rows: d.rows, total: d.total, append: !reemplazar }));
+        if (g === gen.current) setEstado("ok");
       })
-      .catch(() => setEstado("error"));
+      .catch(() => g === gen.current && setEstado("error"));
   };
   useEffect(() => {
-    setRows([]);
+    gen.current += 1;
+    setTabla({ gen: gen.current, rows: [], total: 0 });
     setPais("");
     void cargar(1, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps

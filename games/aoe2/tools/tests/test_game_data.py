@@ -22,7 +22,7 @@ def test_parse_strings_lee_id_y_texto_e_ignora_comentarios():
 
 def test_civ_table_usa_el_indice_como_id_y_deja_afuera_gaia_y_las_sin_escudo():
     civs = gd.civ_table(LISTA, EN, ES)
-    assert civs[0] == {"id": 1, "slug": "britons", "file": "britons", "name": {"en": "Britons", "es": "Britanos"}, "era": "base"}
+    assert civs[0] == {"id": 1, "internal": 1, "slug": "britons", "file": "britons", "name": {"en": "Britons", "es": "Britanos"}, "era": "base"}
     assert [c["id"] for c in civs] == [1, 3, 4]
 
 
@@ -52,3 +52,36 @@ def test_maps_table_slug_del_script_como_el_de_la_api():
     assert m[0] == {"slug": "arabia", "icon": "rm_arabia", "name": {"en": "Arabia", "es": "Arabia"}}
     assert m[1]["slug"] == "coastalforest" and m[1]["name"]["es"] == "Bosque costero"
     assert len(m) == 2
+
+
+def test_el_id_es_el_de_la_api_segun_la_tabla():
+    """La API numera las civs distinto que el juego (1 = Aztecs): `api_civs.json` = {id API: índice interno}."""
+    lista = [{"internal_name": "Gaia", "name_string_id": 1}] + [
+        {"internal_name": f"C{i}", "tech_tree_image_path": f"/x/menu_techtree_c{i}.png", "name_string_id": 100 + i} for i in range(1, 16)
+    ]
+    en = {100 + i: f"Civ{i}" for i in range(1, 16)}
+    civs = gd.civ_table(lista, en, {}, api={1: 15, 11: 6})
+    por_slug = {c["slug"]: c for c in civs}
+    assert por_slug["civ15"]["id"] == 1 and por_slug["civ15"]["internal"] == 15
+    assert por_slug["civ6"]["id"] == 11
+    # Sin id de la API (no se juega en ranking o la tabla no lo cubre): un id que no choca con ninguno de la API.
+    assert por_slug["civ2"]["id"] == 1002
+
+
+def test_sin_tabla_usa_el_indice():
+    assert gd.civ_table(LISTA, EN, ES)[0]["id"] == 1
+
+
+def civs_mal_numeradas(civs: list[dict], api: dict[str, int]) -> list[str]:
+    """Las civs cuyo `id` no es el de la API según `api_civs.json` (o que siendo de ranking no tienen id de la API)."""
+    return [c["slug"] for c in civs if (c["era"] == "base" and c["id"] >= 1000) or (c["id"] < 1000 and api.get(str(c["id"])) != c.get("internal"))]
+
+
+def test_toda_civ_de_ranking_tiene_su_id_de_la_api():
+    """Con los datos reales: cada civ lleva el `civilization_id` de la API (no el índice del juego: 1 = Aztecs)."""
+    import json
+    raiz = Path(__file__).resolve().parents[2] / "data"
+    civs = json.loads((raiz / "civs.json").read_text(encoding="utf-8"))
+    api = json.loads((raiz / "api_civs.json").read_text(encoding="utf-8"))
+    assert civs_mal_numeradas(civs, api) == []
+    assert len({c["id"] for c in civs}) == len(civs)

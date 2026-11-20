@@ -74,13 +74,13 @@ def _accion(tipo: int, b: bytes) -> tuple[str, int, int] | None:
 
 
 def read_actions(data: bytes, hasta: float = 25 * 60) -> list[Accion]:
-    """Las acciones de los primeros `hasta` segundos de juego."""
-    (hlen,) = struct.unpack_from("<I", data)
-    d = data
-    i = _meta(d, hlen)
+    """Las acciones de los primeros `hasta` segundos de juego. Una grabación rota devuelve lo que se pudo leer (o [])."""
     ms = 0
     out: list[Accion] = []
     try:
+        (hlen,) = struct.unpack_from("<I", data)
+        d = data
+        i = _meta(d, hlen)
         while i + 4 <= len(d):
             (op,) = struct.unpack_from("<I", d, i)
             i += 4

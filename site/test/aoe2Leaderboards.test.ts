@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { climbers, countriesOf, eloHistogram, percentileOf } from "../src/aoe2/leaderboards/logic";
+import { aplicarRespuesta, climbers, countriesOf, eloHistogram, percentileOf, type Tabla } from "../src/aoe2/leaderboards/logic";
 
 describe("ranking de AoE2: lógica", () => {
   it("el histograma junta de a 100 puntos", () => {
@@ -28,5 +28,13 @@ describe("ranking de AoE2: lógica", () => {
   });
   it("países presentes, de más a menos jugadores", () => {
     expect(countriesOf([{ country: "ar" }, { country: "br" }, { country: "ar" }, { country: null }])).toEqual(["ar", "br"]);
+  });
+  it("una respuesta de un pedido viejo (otro modo) no pisa la tabla", () => {
+    const fila = (n: number) => ({ rank: n, profileId: n, alias: `j${n}`, country: null, elo: 1000, maxElo: 1000, wins: 1, losses: 1, streak: 0, lastMatch: 0 });
+    const t: Tabla = { gen: 2, rows: [], total: 0 };
+    expect(aplicarRespuesta(t, { gen: 1, rows: [fila(1)], total: 9, append: false })).toBe(t);
+    const nueva = aplicarRespuesta(t, { gen: 2, rows: [fila(1)], total: 9, append: false });
+    expect(nueva.rows).toHaveLength(1);
+    expect(aplicarRespuesta(nueva, { gen: 2, rows: [fila(2)], total: 9, append: true }).rows.map((r) => r.rank)).toEqual([1, 2]);
   });
 });

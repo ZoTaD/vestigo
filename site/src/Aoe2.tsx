@@ -45,7 +45,8 @@ const hasPage = (tab: Aoe2Section): boolean => tab === "home" || !!TABS[tab];
 /** Baja el chunk de la pestaña de una ruta de AoE2. */
 export const preloadTab = (route: Route): Promise<void> => {
   const sec = route.a2Section ?? "home";
-  return Promise.resolve(TABS[hasPage(sec) ? sec : "home"]?.preload()).then(() => undefined);
+  // El resumen de estadísticas también: así lo prerenderizado y lo que dibuja el navegador al abrir coinciden.
+  return Promise.all([TABS[hasPage(sec) ? sec : "home"]?.preload(), import("./aoe2/stats/data").then((m) => m.preloadAoe2Route(route))]).then(() => undefined);
 };
 
 export default function Aoe2({ route, navigate }: TabProps) {

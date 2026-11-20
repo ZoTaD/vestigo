@@ -173,3 +173,22 @@ def test_home_json_resume_lo_que_muestra_la_portada():
     assert h["best"] == {"1800+": ["franks", 0.6, 300]}
     assert h["maps"] == [["arabia", 50], ["arena", 20]]
     assert h["patch"] == {"name": "188329", "since": "2026-10-28"}
+
+
+def test_dias_a_escribir_nuevos_o_con_mas_partidas_dentro_de_la_ventana():
+    acc = d.Acumulador(CIVS)
+    for dia, n in (("2026-11-19", 5), ("2026-11-18", 3), ("2026-10-01", 4)):
+        acc.dias[dia] = {**d._dia_vacio(dia), "games": n}
+    guardados = {"2026-11-19": 10, "2026-11-18": 1}
+    # 19/11 ya tiene más guardadas: queda; 18/11 juntó más ahora: se reescribe; 1/10 está fuera de los 28 días.
+    assert d.dias_a_escribir(acc, HOY, guardados, 28) == {"2026-11-18"}
+    assert d.dias_a_escribir(acc, HOY, {}, 28) == {"2026-11-19", "2026-11-18"}
+
+
+def test_memoria_de_elo_partida_por_perfil_y_con_la_hora_de_la_corrida():
+    assert d.shard_of(9423131) == 9423131 % 16
+    mem = {"5": [[100, 1000]]}
+    nueva = d.memoria_elo([(5, 1100), (21, 900)], {d.shard_of(5): mem}, ahora=200 * 86400, dias=90)
+    # Cada perfil va a su pedazo; el punto viejo de 5 (hace más de 90 días) se cae; el nuevo lleva la hora de la corrida.
+    assert nueva[d.shard_of(5)]["5"] == [[200 * 86400, 1100]]
+    assert nueva[d.shard_of(21)]["21"] == [[200 * 86400, 900]]

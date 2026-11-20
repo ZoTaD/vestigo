@@ -59,3 +59,10 @@ def test_sin_feudal_o_sin_datos_es_otra():
 def test_solo_cuentan_las_acciones_del_jugador():
     acc = [A(500, "research", op.FEUDAL, 1), A(600, "queue", op.SCOUT, 2), A(650, "queue", op.ARCHER, 1)]
     assert op.classify(acc, 1) == "archers"
+
+
+def test_una_grabacion_rota_da_vacio_sin_tirar():
+    import struct as st
+    assert replay.read_actions(b"") == []
+    assert replay.read_actions(b"abc") == []
+    assert replay.read_actions(st.pack("<I", 0x7FFFFFFF) + b"\x00" * 20) == []

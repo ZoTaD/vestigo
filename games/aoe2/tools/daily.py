@@ -7,7 +7,8 @@ docs/superpowers/specs/2026-11-20-aoe2-design.md; plan: docs/superpowers/plans/2
 Qué hace:
   1. Baja los rankings (RM, EW y DM, 1v1 y equipos) entero, de a 200 filas, y escribe `stats/ladder/<id>.json`: la
      foto del día (top 2000 + histograma de ELO de todo el ranking) y la de ayer (`prev`) para "Subieron hoy".
-  2. Memoria de ELO del top 1000 de RM 1v1 y RM equipos (`stats/elo/<id>.json`, 90 días): la curva del perfil.
+  2. Memoria de ELO del top 1000 de RM 1v1 y RM equipos (`stats/elo/<id>/<perfil % 16>.json`, 90 días): la curva del
+     perfil, que baja sólo su pedazo.
   3. Pide los historiales (≈ 64 partidas) de jugadores activos elegidos **repartiendo el presupuesto entre bandas de
      ELO** (no sólo el top), hasta `--budget` pedidos o `--deadline` segundos.
   4. Cada partida de ranking cuenta una sola vez; los días completos (UTC) sin resumen van a `stats/days/<fecha>.json`
@@ -191,6 +192,32 @@ class Acumulador:
                 yield f, d
 
 
+SHARDS = 16
+
+
+def shard_of(perfil: int) -> int:
+    """El pedazo de la memoria de ELO de un perfil (`stats/elo/<ranking>/<n>.json`): el perfil baja sólo el suyo."""
+    return perfil % SHARDS
+
+
+def memoria_elo(filas: list[tuple[int, float]], viejas: dict[int, dict], ahora: int, dias: int = 90) -> dict[int, dict]:
+    """La memoria de ELO del top: por pedazo, `{perfil: [[ts, elo], …]}` con el punto de hoy (hora de la corrida) y sin
+    los de hace más de `dias`. Los perfiles que salieron del top se caen."""
+    out: dict[int, dict] = {n: {} for n in range(SHARDS)}
+    for p, e in filas:
+        n = shard_of(p)
+        previa = [x for x in viejas.get(n, {}).get(str(p), []) if x[0] >= ahora - dias * DIA and x[0] // DIA != ahora // DIA]
+        out[n][str(p)] = previa + [[ahora, int(e)]]
+    return out
+
+
+def dias_a_escribir(acc: "Acumulador", hoy: date, guardados: dict[str, int], dias: int) -> set[str]:
+    """Los días completos de la ventana que no están guardados o que esta corrida juntó con más partidas (los primeros
+    días del arranque salen con pocas: se corrigen solos en las corridas siguientes)."""
+    desde = (hoy - timedelta(days=dias)).isoformat()
+    return {f for f, d in acc.completos(hoy) if f >= desde and d["games"] > guardados.get(f, 0)}
+
+
 def pick_players(ladder: list[tuple[int, float]], budget: int) -> list[tuple[int, float]]:
     """`budget` jugadores repartidos en partes iguales entre las bandas de ELO (lo que sobra de una banda chica pasa a
     las otras); dentro de cada banda, espaciados a lo largo del ranking."""
@@ -371,14 +398,11 @@ def main() -> None:
         _escribir(ruta, ladder_snapshot([(p, e, a_) for p, e, _, a_ in filas], hoy, prev=_leer(ruta)))
         activos[lb] = [(p, e) for p, e, u, _ in filas if ahora - u < 7 * DIA]
         if lb in (3, 4):
-            ruta = STATS / "elo" / f"{lb}.json"
-            mem = _leer(ruta) or {}
-            ts = int(datetime(hoy.year, hoy.month, hoy.day, tzinfo=timezone.utc).timestamp())
-            nueva = {}
-            for p, e, *_ in filas[:TOP_MEMORIA]:
-                serie = [x for x in mem.get(str(p), []) if x[0] >= ts - DIAS_MEMORIA * DIA and x[0] != ts]
-                nueva[str(p)] = serie + [[ts, int(e)]]
-            _escribir(ruta, nueva)
+            carpeta = STATS / "elo" / str(lb)
+            viejas = {n: _leer(carpeta / f"{n}.json") or {} for n in range(SHARDS)}
+            for n, mem in memoria_elo([(p, e) for p, e, *_ in filas[:TOP_MEMORIA]], viejas, ahora, DIAS_MEMORIA).items():
+                _escribir(carpeta / f"{n}.json", mem)
+            (STATS / "elo" / f"{lb}.json").unlink(missing_ok=True)
 
     # 3: historiales.
     acc = Acumulador(civs)
@@ -403,7 +427,9 @@ def main() -> None:
     print(f"historiales: {hechos}; partidas vistas: {len(acc.vistas)}", flush=True)
 
     # 3b: aperturas. Grabaciones de una muestra de RM 1v1 de días completos, repartida entre bandas de ELO.
-    candidatas = [m for m in acc.muestras if m["fecha"] < hoy.isoformat() and not (STATS / "days" / f"{m['fecha']}.json").exists()]
+    guardados = {r.stem: (_leer(r) or {}).get("games", 0) for r in (STATS / "days").glob("*.json")}
+    a_escribir = dias_a_escribir(acc, hoy, guardados, a.days)
+    candidatas = [m for m in acc.muestras if m["fecha"] in a_escribir]
     por_banda = {b: [m for m in candidatas if m["band"] == b] for b in BANDAS}
     elegidas = []
     for b, ms in por_banda.items():
@@ -421,15 +447,17 @@ def main() -> None:
                 break
             datos = f.result()
             if datos:
-                acc.aperturas(futs[f], _aperturas(read_actions(datos)))
-                hechas += 1
+                try:
+                    acc.aperturas(futs[f], _aperturas(read_actions(datos)))
+                    hechas += 1
+                except Exception as e:  # una grabación rara no puede dejar el día sin escribir
+                    print(f"grabación {futs[f]['id']} salteada: {e}", flush=True)
     print(f"grabaciones leídas: {hechas} de {len(elegidas)}", flush=True)
 
     # 4: días nuevos y resumen.
     for f, d in acc.completos(hoy):
-        ruta = STATS / "days" / f"{f}.json"
-        if not ruta.exists() and f >= (hoy - timedelta(days=a.days)).isoformat():
-            _escribir(ruta, d)
+        if f in a_escribir:
+            _escribir(STATS / "days" / f"{f}.json", d)
     limite = (hoy - timedelta(days=DIAS_GUARDADOS)).isoformat()
     dias = {}
     for r in sorted((STATS / "days").glob("*.json")):

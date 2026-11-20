@@ -45,3 +45,12 @@ export function countriesOf(rows: readonly { country: string | null }[]): string
   for (const r of rows) if (r.country) c.set(r.country, (c.get(r.country) ?? 0) + 1);
   return [...c.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k]) => k);
 }
+
+/** La tabla del Ranking y la generación del pedido vigente (sube al cambiar de modo). */
+export type Tabla<R = import("../api/wel").Aoe2Row> = { gen: number; rows: R[]; total: number };
+
+/** Aplica una respuesta sólo si es de la generación vigente: si se cambió de modo mientras volvía, se descarta. */
+export function aplicarRespuesta<R>(t: Tabla<R>, r: { gen: number; rows: R[]; total: number; append: boolean }): Tabla<R> {
+  if (r.gen !== t.gen) return t;
+  return { gen: t.gen, total: r.total, rows: r.append ? [...t.rows, ...r.rows] : r.rows };
+}

@@ -25,6 +25,23 @@ import TheirOpenings from "./TheirOpenings";
 import { useAoe2Me } from "./me";
 import { civById as civ } from "../ui";
 
+/** La memoria diaria de ELO del colector, partida por perfil (`games/aoe2/stats/elo/<ranking>/<perfil % 16>.json`). */
+const MEMORIA = import.meta.glob<{ default: Record<string, [number, number][]> }>("../../../../games/aoe2/stats/elo/*/*.json");
+function useMemoria(id: number, mode: Aoe2Mode): [number, number][] {
+  const [m, setM] = useState<[number, number][]>([]);
+  useEffect(() => {
+    const cargar = MEMORIA[`../../../../games/aoe2/stats/elo/${LEADERBOARD_OF[mode]}/${id % 16}.json`];
+    setM([]);
+    if (!cargar) return;
+    let vivo = true;
+    void cargar().then((x) => vivo && setM(x.default[String(id)] ?? []), () => undefined);
+    return () => {
+      vivo = false;
+    };
+  }, [id, mode]);
+  return m;
+}
+
 export type PlayerData = { profile: Aoe2Profile; standings: Aoe2Standing[]; matches: Aoe2Match[] };
 
 const pct = (w: number, g: number) => `${Math.round((w / Math.max(1, g)) * 100)}%`;
@@ -60,6 +77,7 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
   );
   const [modo, setModo] = useState<Aoe2Mode | null>(null);
   const curva = modo ?? modos[0] ?? "rm1v1";
+  const memoria = useMemoria(id, curva);
 
   if (error === 404) return <Panel h={t.pl.notFound}><Buscador route={route} navigate={navigate} /></Panel>;
   if (error != null) return <Aoe2Loading onRetry={retry} />;
@@ -74,7 +92,7 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
   const tz = -new Date().getTimezoneOffset();
   const act = activity(matches, id, tz);
   const dur = avgDuration(matches, id);
-  const serie = eloSeries(matches, id, curva);
+  const serie = eloSeries(matches, id, curva, memoria);
   const perfil = (pid: number): Route => ({ ...route, view: "aoe2", a2Section: "players", detail: String(pid) });
   const durTxt = dur != null ? `${Math.round(dur / 60)} min` : "–";
   const cartaElo = standings.find((s) => s.leaderboard === 3) ?? [...standings].sort((a, b) => b.elo - a.elo)[0];

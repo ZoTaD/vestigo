@@ -4,6 +4,9 @@
  */
 import { inflateRawSync } from "node:zlib";
 
+/** Una grabación de 1v1 de una hora pesa ~8 MB; más de esto no es una grabación (y no se descomprime). */
+export const MAX_GRABACION = 32 * 1024 * 1024;
+
 export function unzipFirst(z: Uint8Array): Uint8Array | null {
   try {
     const b = Buffer.from(z.buffer, z.byteOffset, z.byteLength);
@@ -17,8 +20,10 @@ export function unzipFirst(z: Uint8Array): Uint8Array | null {
       if (cd < 0) return null;
       comp = b.readUInt32LE(cd + 20);
     }
+    if (b.readUInt32LE(22) > MAX_GRABACION) return null;
     const datos = b.subarray(ini, ini + comp);
-    return metodo === 0 ? new Uint8Array(datos) : new Uint8Array(inflateRawSync(datos));
+    if (metodo === 0) return datos.length > MAX_GRABACION ? null : new Uint8Array(datos);
+    return new Uint8Array(inflateRawSync(datos, { maxOutputLength: MAX_GRABACION }));
   } catch {
     return null;
   }

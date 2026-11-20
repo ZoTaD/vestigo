@@ -90,7 +90,7 @@ export function avgDuration(matches: readonly Aoe2Match[], id: number): number |
 
 /**
  * La curva de ELO de un modo: `[fin de la partida, ELO nuevo]` del más viejo al más nuevo. `memory` es la memoria
- * diaria del colector (`[ts, elo]`), que va más atrás que el historial; un punto que el historial ya trae no se repite.
+ * diaria del colector (`[ts, elo]`), que va más atrás que el historial; de los días con partidas manda el historial.
  */
 export function eloSeries(matches: readonly Aoe2Match[], id: number, mode: Aoe2Mode, memory: readonly [number, number][] = []): [number, number][] {
   const propios = matches
@@ -98,8 +98,10 @@ export function eloSeries(matches: readonly Aoe2Match[], id: number, mode: Aoe2M
     .map((m) => [m.end, yo(m, id)?.newElo] as const)
     .filter((x): x is readonly [number, number] => x[1] != null)
     .map(([t, e]) => [t, e] as [number, number]);
-  const tiempos = new Set(propios.map(([t]) => t));
-  return [...memory.filter(([t]) => !tiempos.has(t)).map(([t, e]) => [t, e] as [number, number]), ...propios].sort((a, b) => a[0] - b[0]);
+  // Un día (UTC) con partidas en el historial ya está dicho por ellas: el punto de la memoria de ese día sobra.
+  const dia = (t: number) => Math.floor(t / 86400);
+  const dias = new Set(propios.map(([t]) => dia(t)));
+  return [...memory.filter(([t]) => !dias.has(dia(t))).map(([t, e]) => [t, e] as [number, number]), ...propios].sort((a, b) => a[0] - b[0]);
 }
 
 /** Las partidas donde están los dos jugadores. */

@@ -65,11 +65,19 @@ describe("perfil de AoE2: cálculos", () => {
       [5800, 1040],
       [7800, 1050],
     ]);
-    expect(eloSeries(H, YO, "rm1v1", [[500, 990]])[0]).toEqual([500, 990]);
+    expect(eloSeries(H, YO, "rm1v1", [[-86400, 990]])[0]).toEqual([-86400, 990]);
   });
 
   it("curva de ELO: no repite un punto de la memoria que ya trae el historial", () => {
     expect(eloSeries(H, YO, "rm1v1", [[2200, 1050]]).filter(([t]) => t === 2200)).toHaveLength(1);
+  });
+
+  it("curva de ELO: un día con partidas en el historial no repite el punto de la memoria de ese día", () => {
+    const DIA = 86400;
+    const hist = [M(9, 10 * DIA + 3600, "rm1v1", "arabia", [p(YO, 0, "win", 2, 1000, 1010), p(7, 1, "loss", 2)])];
+    // La memoria tiene un punto el día 10 (otra hora) y otro el día 8: sólo queda el del 8.
+    const serie = eloSeries(hist, YO, "rm1v1", [[10 * DIA + 7 * 3600, 990], [8 * DIA + 7 * 3600, 980]]);
+    expect(serie).toEqual([[8 * DIA + 7 * 3600, 980], [10 * DIA + 3600 + 1800, 1010]]);
   });
 
   it("cara a cara: sólo partidas donde están los dos", () => {

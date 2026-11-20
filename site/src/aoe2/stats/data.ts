@@ -21,9 +21,19 @@ export const SMALL = 200;
 /** Cuántas civs hay por partida en cada modo, para pasar de "civs jugadas" a partidas (los de equipo varían: 2v2 a 4v4). */
 const CIVS_POR_PARTIDA: Record<StatMode, number> = { rm1v1: 2, ew1v1: 2, rmteam: 6, ewteam: 6 };
 
-/** Carga el resumen (en su propio chunk, regla 4). */
+let resumen: Summary | null | undefined;
+let pedido: Promise<Summary | null> | null = null;
+/** Carga el resumen una sola vez (en su propio chunk, regla 4). */
 export const loadSummary = (): Promise<Summary | null> =>
-  import("../../../../games/aoe2/stats/summary.json").then((m) => m.default as unknown as Summary).catch(() => null);
+  (pedido ??= import("../../../../games/aoe2/stats/summary.json")
+    .then((m) => (resumen = m.default as unknown as Summary))
+    .catch(() => (resumen = null)));
+/** Lo ya cargado (undefined si todavía no): así el prerender dibuja la tabla en vez de "Cargando". */
+export const peekSummary = (): Summary | null | undefined => resumen;
+/** Lo que el prerender tiene que esperar para una ruta de AoE2 (las pestañas de estadísticas). */
+export const preloadAoe2Route = async (route: { a2Section?: string }): Promise<void> => {
+  if (route.a2Section === "civilizations" || route.a2Section === "matchups" || route.a2Section === "maps") await loadSummary();
+};
 
 export type CivRow = { civ: string; games: number; wins: number; wr: number; pick: number; trend: number | null; small: boolean };
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { localFollows, mergeFollows, saveLocalFollows, toggle } from "../src/aoe2/players/me";
+import { localFollows, mergeFollows, resolveFollows, saveLocalFollows, toggle } from "../src/aoe2/players/me";
 
 /** Un localStorage de mentira. */
 const fakeStorage = () => {
@@ -28,5 +28,12 @@ describe("seguidos y soy yo", () => {
   it("la estrella agrega o saca", () => {
     expect(toggle([1, 2], 3)).toEqual([1, 2, 3]);
     expect(toggle([1, 2], 1)).toEqual([2]);
+  });
+  it("con sesión, lo del navegador se junta sólo la primera vez; después manda la cuenta", () => {
+    const local = { me: 5, follows: [1, 2] };
+    const cuenta = { me: null, follows: [2, 3] };
+    expect(resolveFollows(local, cuenta, false)).toEqual({ me: 5, follows: [2, 3, 1] });
+    // Ya se juntó antes en este navegador: lo que se dejó de seguir en otro equipo no vuelve.
+    expect(resolveFollows(local, cuenta, true)).toEqual(cuenta);
   });
 });

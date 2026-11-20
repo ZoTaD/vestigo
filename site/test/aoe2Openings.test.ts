@@ -86,6 +86,23 @@ describe("grabación por la función", () => {
     expect(r.status).toBe(200);
     expect(await r.json()).toEqual({ id: 521948686, players: { 9423131: "archers", 196310: "drush" } });
   });
+  it("parámetros de más (para saltear la caché) son 400", async () => {
+    const f: typeof fetch = async () => new Response("no", { status: 500 });
+    expect((await handleAoe2(new URL("http://x/api/aoe2/opening?id=5&p=9&z=123"), f)).status).toBe(400);
+  });
+  it("si el historial falla o no trae la partida, no se guarda un resultado vacío por 30 días", async () => {
+    const conRec = (hist: Response): typeof fetch => async (input) => (String(input).includes("replay") ? new Response(zip("r.aoe2record", body)) : hist.clone());
+    const caido = await handleAoe2(new URL("http://x/api/aoe2/opening?id=521948686&p=9423131"), conRec(new Response("x", { status: 500 })));
+    expect(caido.status).toBe(502);
+    expect(caido.headers.get("Cache-Control")).not.toContain("2592000");
+    const sinPartida = await handleAoe2(new URL("http://x/api/aoe2/opening?id=521948686&p=9423131"), conRec(new Response(JSON.stringify({ result: { code: 0 }, matchHistoryStats: [], profiles: [] }))));
+    expect(sinPartida.status).toBe(404);
+    expect(sinPartida.headers.get("Cache-Control")).not.toContain("2592000");
+  });
+  it("una grabación enorme no se descomprime", () => {
+    expect(unzipFirst(zip("r", new Uint8Array(40 * 1024 * 1024)))).toBeNull();
+  });
+
   it("sin grabación (todavía no subida o vencida) es 404", async () => {
     const f: typeof fetch = async (input) => (String(input).includes("replay") ? new Response("", { status: 404 }) : new Response(JSON.stringify({ result: { code: 0 }, matchHistoryStats: [], profiles: [] })));
     expect((await handleAoe2(new URL("http://x/api/aoe2/opening?id=5&p=9"), f)).status).toBe(404);
