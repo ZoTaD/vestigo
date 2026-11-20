@@ -32,11 +32,33 @@
   },
   "asksvin-hatchling": {
    "name": "Asksvin Hatchling",
-   "src": null
+   "src": "/valheim/wiki/creature-asksvin-hatchling.webp",
+   "file": "Asksvin hatchling.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Asksvin_hatchling.png",
+   "author": "ErmacLich",
+   "w": 512,
+   "h": 487,
+   "orig": {
+    "w": 512,
+    "h": 487
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Asksvin_Hatchling"
   },
   "baby-seal": {
    "name": "Baby Seal",
-   "src": null
+   "src": "/valheim/wiki/creature-baby-seal.webp",
+   "file": "Baby Seal.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Baby_Seal.png",
+   "author": "ErmacLich",
+   "w": 567,
+   "h": 440,
+   "orig": {
+    "w": 567,
+    "h": 440
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Baby_Seal"
   },
   "barka": {
    "name": "Barka",
@@ -152,7 +174,18 @@
   },
   "captive-fuling": {
    "name": "Captive Fuling",
-   "src": null
+   "src": "/valheim/wiki/creature-captive-fuling.webp",
+   "file": "Captive Fuling.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Captive_Fuling.png",
+   "author": "ErmacLich",
+   "w": 521,
+   "h": 479,
+   "orig": {
+    "w": 521,
+    "h": 479
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Captive_Fuling"
   },
   "charred-marksman": {
    "name": "Charred Marksman",
@@ -294,6 +327,21 @@
    },
    "wiki": "https://valheim.fandom.com/wiki/Draugr"
   },
+  "draugr-archer": {
+   "src": "/valheim/wiki/creature-draugr-archer.webp",
+   "file": "Draugr archer.jpg",
+   "page": "https://valheim.weirdgloop.org/w/File:Draugr_archer.jpg",
+   "author": "Black Soulstone",
+   "w": 360,
+   "h": 292,
+   "orig": {
+    "w": 360,
+    "h": 292
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Draugr_Archer",
+   "name": "Draugr Archer"
+  },
   "draugr-elite": {
    "name": "Draugr Elite",
    "src": "/valheim/wiki/creature-draugr-elite.webp",
@@ -352,11 +400,33 @@
   },
   "elaking": {
    "name": "Elaking",
-   "src": null
+   "src": "/valheim/wiki/creature-elaking.webp",
+   "file": "Elaking.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Elaking.png",
+   "author": "ErmacLich",
+   "w": 400,
+   "h": 400,
+   "orig": {
+    "w": 400,
+    "h": 400
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Elaking"
   },
   "eyeless-one": {
    "name": "Eyeless One",
-   "src": null
+   "src": "/valheim/wiki/creature-eyeless-one.webp",
+   "file": "Eyeless One.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Eyeless_One.png",
+   "author": "ErmacLich",
+   "w": 539,
+   "h": 463,
+   "orig": {
+    "w": 539,
+    "h": 463
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Eyeless_One"
   },
   "fader": {
    "name": "Fader",
@@ -388,7 +458,18 @@
   },
   "fallen-warrior": {
    "name": "Fallen Warrior",
-   "src": null
+   "src": "/valheim/wiki/creature-fallen-warrior.webp",
+   "file": "Fallen Warrior.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Fallen_Warrior.png",
+   "author": "ErmacLich",
+   "w": 434,
+   "h": 575,
+   "orig": {
+    "w": 434,
+    "h": 575
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Fallen_Warrior"
   },
   "fenring": {
    "name": "Fenring",
@@ -463,6 +544,21 @@
     "h": 1000
    },
    "wiki": "https://valheim.fandom.com/wiki/Fuling_Shaman"
+  },
+  "gammeltroll": {
+   "src": "/valheim/wiki/creature-gammeltroll.webp",
+   "file": "Gammeltroll.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Gammeltroll.png",
+   "author": "ErmacLich",
+   "w": 501,
+   "h": 498,
+   "orig": {
+    "w": 501,
+    "h": 498
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Gammeltroll",
+   "name": "Gammeltroll"
   },
   "geirrhafa": {
    "name": "Geirrhafa",
@@ -606,19 +702,63 @@
   },
   "hexen": {
    "name": "Hexen",
-   "src": null
+   "src": "/valheim/wiki/creature-hexen.webp",
+   "file": "Hexen.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Hexen.png",
+   "author": "ErmacLich",
+   "w": 455,
+   "h": 548,
+   "orig": {
+    "w": 455,
+    "h": 548
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Hexen"
   },
   "imprisoned-dvergr": {
    "name": "Imprisoned Dvergr",
-   "src": null
+   "src": "/valheim/wiki/creature-imprisoned-dvergr.webp",
+   "file": "Imprisoned Dvergr.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Imprisoned_Dvergr.png",
+   "author": "ErmacLich",
+   "w": 458,
+   "h": 545,
+   "orig": {
+    "w": 458,
+    "h": 545
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Imprisoned_Dvergr"
   },
   "kall-fimbulbringer": {
    "name": "Kall Fimbulbringer",
-   "src": null
+   "src": "/valheim/wiki/creature-kall-fimbulbringer.webp",
+   "file": "Kall Fimbulbringer.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Kall_Fimbulbringer.png",
+   "author": "ErmacLich",
+   "w": 507,
+   "h": 493,
+   "orig": {
+    "w": 507,
+    "h": 493
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Kall_Fimbulbringer"
   },
   "krigen": {
    "name": "Krigen",
-   "src": null
+   "src": "/valheim/wiki/creature-krigen.webp",
+   "file": "Krigen.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Krigen.png",
+   "author": "ErmacLich",
+   "w": 423,
+   "h": 589,
+   "orig": {
+    "w": 423,
+    "h": 589
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Krigen"
   },
   "kvastur": {
    "name": "Kvastur",
@@ -692,7 +832,18 @@
   },
   "lox-calf": {
    "name": "Lox Calf",
-   "src": null
+   "src": "/valheim/wiki/creature-lox-calf.webp",
+   "file": "LoxCalf.png",
+   "page": "https://valheim.weirdgloop.org/w/File:LoxCalf.png",
+   "author": "Teneksi",
+   "w": 640,
+   "h": 639,
+   "orig": {
+    "w": 1037,
+    "h": 1036
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Lox_Calf"
   },
   "mistile": {
    "name": "Mistile",
@@ -724,7 +875,18 @@
   },
   "moose": {
    "name": "Moose",
-   "src": null
+   "src": "/valheim/wiki/creature-moose.webp",
+   "file": "Moose.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Moose.png",
+   "author": "ErmacLich",
+   "w": 487,
+   "h": 512,
+   "orig": {
+    "w": 487,
+    "h": 512
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Moose"
   },
   "morgen": {
    "name": "Morgen",
@@ -788,7 +950,18 @@
   },
   "seal": {
    "name": "Seal",
-   "src": null
+   "src": "/valheim/wiki/creature-seal.webp",
+   "file": "Seal.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Seal.png",
+   "author": "ErmacLich",
+   "w": 578,
+   "h": 432,
+   "orig": {
+    "w": 578,
+    "h": 432
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Seal"
   },
   "seeker": {
    "name": "Seeker",
@@ -848,11 +1021,33 @@
   },
   "shadow": {
    "name": "Shadow",
-   "src": null
+   "src": "/valheim/wiki/creature-shadow.webp",
+   "file": "Shadow.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Shadow.png",
+   "author": "Cuikui",
+   "w": 512,
+   "h": 512,
+   "orig": {
+    "w": 512,
+    "h": 512
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Shadow"
   },
   "shapeless-pulp": {
    "name": "Shapeless Pulp",
-   "src": null
+   "src": "/valheim/wiki/creature-shapeless-pulp.webp",
+   "file": "Shapeless Pulp.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Shapeless_Pulp.png",
+   "author": "Cuikui",
+   "w": 512,
+   "h": 512,
+   "orig": {
+    "w": 512,
+    "h": 512
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Shapeless_Pulp"
   },
   "skeleton": {
    "name": "Skeleton",
@@ -972,7 +1167,18 @@
   },
   "tiny-pulp": {
    "name": "Tiny Pulp",
-   "src": null
+   "src": "/valheim/wiki/creature-tiny-pulp.webp",
+   "file": "Tiny Pulp.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Tiny_Pulp.png",
+   "author": "Cuikui",
+   "w": 400,
+   "h": 400,
+   "orig": {
+    "w": 512,
+    "h": 512
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Tiny_Pulp"
   },
   "troll": {
    "name": "Troll",
@@ -1060,7 +1266,18 @@
   },
   "writhan": {
    "name": "Writhan",
-   "src": null
+   "src": "/valheim/wiki/creature-writhan.webp",
+   "file": "Writhan.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Writhan.png",
+   "author": "ErmacLich",
+   "w": 447,
+   "h": 558,
+   "orig": {
+    "w": 447,
+    "h": 558
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Writhan"
   },
   "yagluth": {
    "name": "Yagluth",
@@ -1150,7 +1367,18 @@
   },
   "kall-fimbulbringer": {
    "name": "Kall Fimbulbringer",
-   "src": null
+   "src": "/valheim/wiki/creature-kall-fimbulbringer.webp",
+   "file": "Kall Fimbulbringer.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Kall_Fimbulbringer.png",
+   "author": "ErmacLich",
+   "w": 507,
+   "h": 493,
+   "orig": {
+    "w": 507,
+    "h": 493
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Kall_Fimbulbringer"
   },
   "moder": {
    "name": "Moder",
@@ -2476,6 +2704,21 @@
    },
    "wiki": "https://valheim.fandom.com/wiki/Monument_of_Torment"
   },
+  "morkhalla": {
+   "src": "/valheim/wiki/place-morkhalla.webp",
+   "file": "Mörkhalla.png",
+   "page": "https://valheim.weirdgloop.org/w/File:M%C3%B6rkhalla.png",
+   "author": "Cuikui",
+   "w": 640,
+   "h": 616,
+   "orig": {
+    "w": 1113,
+    "h": 1071
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/M%C3%B6rkhalla",
+   "title": "Mörkhalla"
+  },
   "mountain-grave": {
    "title": "Mountain grave",
    "type": "Structure",
@@ -3097,6 +3340,30 @@
     "h": 358
    },
    "wiki": "https://valheim.fandom.com/wiki/Volture_Nest"
+  },
+  "winding-tunnels": {
+   "src": "/valheim/wiki/place-winding-tunnels.webp",
+   "file": "Winding Tunnels.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Winding_Tunnels.png",
+   "author": "Cuikui",
+   "w": 640,
+   "h": 360,
+   "orig": {
+    "w": 2238,
+    "h": 1259
+   },
+   "source": "https://valheim.weirdgloop.org",
+   "wiki": "https://valheim.weirdgloop.org/w/Winding_Tunnels",
+   "title": "Winding Tunnels"
+  }
+ },
+ "biomes": {
+  "deepnorth": {
+   "src": "/valheim/art/biome_deepnorth.webp",
+   "file": "Wfd Frozenmeadows.png",
+   "page": "https://valheim.weirdgloop.org/w/File:Wfd_Frozenmeadows.png",
+   "author": "Cuikui",
+   "source": "https://valheim.weirdgloop.org"
   }
  }
 }

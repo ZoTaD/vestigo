@@ -245,6 +245,117 @@ def to_webp(data: bytes, dest: str) -> tuple[int, int]:
     return cur.width, cur.height
 
 
+# Las fotos que Fandom no tiene (el Norte profundo, sobre todo) salen de la otra
+# wiki, valheim.weirdgloop.org, cuyo CDN sí deja bajar por script. Sus autores
+# (ErmacLich y Cuikui) dieron permiso para usarlas en Vestigo el 2026-11-20.
+# Las de la cría de asksvin, el arquero draugr y la cría de lox son las mismas
+# de Fandom (CC BY-SA), copiadas allá.
+EXTRA_SITE = "https://valheim.weirdgloop.org"
+EXTRA_API = EXTRA_SITE + "/api.php"
+EXTRA = {
+    "creatures": {
+        "asksvin-hatchling": "Asksvin hatchling.png", "baby-seal": "Baby Seal.png",
+        "captive-fuling": "Captive Fuling.png", "draugr-archer": "Draugr archer.jpg",
+        "elaking": "Elaking.png", "eyeless-one": "Eyeless One.png", "fallen-warrior": "Fallen Warrior.png",
+        "gammeltroll": "Gammeltroll.png", "hexen": "Hexen.png", "imprisoned-dvergr": "Imprisoned Dvergr.png",
+        "kall-fimbulbringer": "Kall Fimbulbringer.png", "krigen": "Krigen.png", "lox-calf": "LoxCalf.png",
+        "moose": "Moose.png", "seal": "Seal.png", "shadow": "Shadow.png", "shapeless-pulp": "Shapeless Pulp.png",
+        "tiny-pulp": "Tiny Pulp.png", "writhan": "Writhan.png",
+    },
+    "bosses": {"kall-fimbulbringer": "Kall Fimbulbringer.png"},
+    # Los lugares van con el título de su página: `places.build` los busca por ahí.
+    "places": {"morkhalla": ("Mörkhalla.png", "Mörkhalla"), "winding-tunnels": ("Winding Tunnels.png", "Winding Tunnels")},
+}
+# Paisaje del bioma (Cuikui), recortado al formato de las ilustraciones del juego.
+BIOME_PHOTO = {"deepnorth": "Wfd Frozenmeadows.png"}
+ART = os.path.normpath(os.path.join(PUBLIC, "..", "art"))
+ART_SIZE = (822, 471)
+
+
+def extra_url(f: str) -> str:
+    return EXTRA_SITE + "/images/" + urllib.parse.quote(f.replace(" ", "_"))
+
+
+def extra_info(files: list[str]) -> dict[str, dict]:
+    """archivo → {page, author, ow, oh} en weirdgloop."""
+    q = urllib.parse.urlencode({"action": "query", "prop": "imageinfo", "iiprop": "user|size|url", "format": "json",
+                                "titles": "|".join("File:" + f for f in files)})
+    d = json.loads(fetch(EXTRA_API + "?" + q))["query"]
+    final = {f: "File:" + f for f in files}
+    for x in d.get("normalized", []):
+        final = {f: (x["to"] if t == x["from"] else t) for f, t in final.items()}
+    out = {}
+    for p in d.get("pages", {}).values():
+        ii = (p.get("imageinfo") or [None])[0]
+        for f, t in final.items():
+            if ii and t == p["title"]:
+                out[f] = {"page": ii["descriptionurl"], "author": ii.get("user", ""), "ow": ii["width"], "oh": ii["height"]}
+    return out
+
+
+def apply_extra(out: dict) -> None:
+    """Completa con las fotos de `EXTRA` lo que quedó sin foto; si Fandom la suma algún día, gana Fandom."""
+    todo = []
+    for group, rows in EXTRA.items():
+        for slug, v in rows.items():
+            f, title = v if isinstance(v, tuple) else (v, None)
+            if not (out[group].get(slug) or {}).get("src"):
+                todo.append((group, slug, f, title))
+    if not todo:
+        return
+    info = extra_info(sorted({f for _, _, f, _ in todo}))
+    prefix = {"creatures": "creature", "bosses": "boss", "places": "place"}
+    # `site.py` cruza las fotos por nombre: una entrada nueva necesita el de su ficha.
+    names = {(g, c["slug"]): c["name"]["en"] for g in ("creatures", "bosses")
+             for c in load_json(os.path.join(DATA, "site", f"{g}.json"))}
+    done = {}
+    for group, slug, f, title in todo:
+        if group != "places" and (group, slug) in names:
+            out[group].setdefault(slug, {})["name"] = names[(group, slug)]
+        if f not in info:
+            print(f"  weirdgloop no tiene {f}", file=sys.stderr)
+            continue
+        if f not in done:
+            name = f"{prefix[group]}-{slug}.webp"
+            w, h = to_webp(fetch(extra_url(f)), os.path.join(PUBLIC, name))
+            i = info[f]
+            done[f] = {"src": SRC_PREFIX + name, "file": f, "page": i["page"], "author": i["author"],
+                       "w": w, "h": h, "orig": {"w": i["ow"], "h": i["oh"]}, "source": EXTRA_SITE}
+            time.sleep(0.3)
+        page = title or (out[group].get(slug) or {}).get("name") or f.rsplit(".", 1)[0]
+        entry = {**(out[group].get(slug) or {}), **done[f], "wiki": EXTRA_SITE + "/w/" + urllib.parse.quote(page.replace(" ", "_"))}
+        if title:
+            entry["title"] = title
+        out[group][slug] = entry
+    for group in EXTRA:
+        out[group] = dict(sorted(out[group].items()))
+
+
+def biome_art(out: dict) -> None:
+    """
+    La ilustración de un bioma que el juego no trae, hecha de una foto: recortada
+    a 822×471 y con el borde que se desvanece en óvalo, como las del juego.
+    """
+    from PIL import ImageDraw, ImageFilter
+
+    info = extra_info(sorted(BIOME_PHOTO.values()))
+    out.setdefault("biomes", {})
+    for biome, f in BIOME_PHOTO.items():
+        im = Image.open(io.BytesIO(fetch(extra_url(f)))).convert("RGB")
+        tw, th = ART_SIZE
+        scale = max(tw / im.width, th / im.height)
+        im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
+        left, top = (im.width - tw) // 2, (im.height - th) // 2
+        im = im.crop((left, top, left + tw, top + th)).convert("RGBA")
+        mask = Image.new("L", ART_SIZE, 0)
+        ImageDraw.Draw(mask).ellipse((40, 30, tw - 40, th - 30), fill=255)
+        im.putalpha(mask.filter(ImageFilter.GaussianBlur(28)))
+        im.save(os.path.join(ART, f"biome_{biome}.webp"), "WEBP", quality=85, method=6)
+        i = info.get(f, {})
+        out["biomes"][biome] = {"src": f"/valheim/art/biome_{biome}.webp", "file": f, "page": i.get("page"),
+                                "author": i.get("author"), "source": EXTRA_SITE}
+
+
 def load_json(path):
     with open(path, encoding="utf-8") as f:
         return json.load(f)
@@ -381,6 +492,8 @@ def main() -> None:
         out["places"].setdefault(slug, {**meta, "src": None, "wiki": wiki_url(meta["title"])})
     for group in ("creatures", "bosses", "places"):
         out[group] = dict(sorted(out[group].items()))
+    apply_extra(out)
+    biome_art(out)
 
     with open(OUT_JSON, "w", encoding="utf-8") as fh:
         json.dump(out, fh, ensure_ascii=False, indent=1)
@@ -402,5 +515,16 @@ def main() -> None:
         print("archivos que la wiki no tiene: " + "; ".join(missing_file))
 
 
+def main_extra() -> None:
+    """`--extra`: sólo las fotos de weirdgloop y el paisaje del bioma, sobre el JSON que ya está."""
+    out = load_json(OUT_JSON)
+    apply_extra(out)
+    biome_art(out)
+    with open(OUT_JSON, "w", encoding="utf-8") as fh:
+        json.dump(out, fh, ensure_ascii=False, indent=1)
+    print(f"con foto: " + ", ".join(f"{g} {sum(1 for e in out[g].values() if e.get('src'))}"
+                                    for g in ("creatures", "bosses", "places")))
+
+
 if __name__ == "__main__":
-    main()
+    main_extra() if "--extra" in sys.argv else main()
