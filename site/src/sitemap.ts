@@ -149,6 +149,9 @@ export interface Aoe2SitemapData {
   /** Enciclopedia (2026-11-21): fichas de unidades y tecnologías; el árbol va por cada civ de `civs`. */
   units?: { slug: string; name: { en: string; es: string } }[];
   techs?: { slug: string; name: { en: string; es: string } }[];
+  /** Parches (número) y build orders (2026-11-21). */
+  patches?: string[];
+  buildOrders?: { slug: string; name: { en: string; es: string } }[];
 }
 
 export interface Coh3SitemapData {
@@ -618,6 +621,8 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const u of data.a2.units ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "units", detail: u.slug }));
       for (const x of data.a2.techs ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "technologies", detail: x.slug }));
       for (const c of data.a2.civs) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "tech-tree", detail: c.slug }));
+      for (const p of data.a2.patches ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "patches", detail: p }));
+      for (const b of data.a2.buildOrders ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "build-orders", detail: b.slug }));
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {

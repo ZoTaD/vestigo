@@ -32,6 +32,9 @@ const Aoe2Units = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2Units"))
 const Aoe2Techs = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2Techs"));
 const Aoe2TechTree = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2TechTree"));
 const Aoe2Calculator = lazyWithPreload(() => import("./aoe2/encyclopedia/Aoe2Calculator"));
+const Aoe2Patches = lazyWithPreload(() => import("./aoe2/extras/Aoe2Patches"));
+const Aoe2Achievements = lazyWithPreload(() => import("./aoe2/extras/Aoe2Achievements"));
+const Aoe2BuildOrders = lazyWithPreload(() => import("./aoe2/extras/Aoe2BuildOrders"));
 
 /** Las pestañas con página, cada una en su chunk. Una nueva suma su línea acá y en `AOE2_TAB_FILES`. */
 // Una línea por pestaña (no en una sola): `areas.test.ts` lee este bloque para compararlo con `AOE2_TAB_FILES`.
@@ -46,6 +49,9 @@ const TABS: Partial<Record<Aoe2Section, LazyTab>> = {
   technologies: Aoe2Techs,
   "tech-tree": Aoe2TechTree,
   calculator: Aoe2Calculator,
+  patches: Aoe2Patches,
+  achievements: Aoe2Achievements,
+  "build-orders": Aoe2BuildOrders,
 };
 
 const hasPage = (tab: Aoe2Section): boolean => tab === "home" || !!TABS[tab];
@@ -59,6 +65,7 @@ export const preloadTab = (route: Route): Promise<void> => {
     import("./aoe2/stats/data").then((m) => m.preloadAoe2Route(route)),
     // La enciclopedia (y los bonos en la ficha de civ): sus datos, para que el prerender dibuje la página entera.
     import("./aoe2/encyclopedia/data").then((m) => m.preloadEncyclopedia(route)),
+    import("./aoe2/extras/data").then((m) => m.preloadExtras(route)),
   ]).then(() => undefined);
 };
 

@@ -303,6 +303,9 @@ export const PAGES = [
   "/es/aoe2/tecnologias/forging",
   "/en/aoe2/tech-tree/franks",
   "/es/aoe2/calculadora",
+  "/en/aoe2/patches/188329",
+  "/es/aoe2/logros",
+  "/en/aoe2/build-orders/scouts",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */

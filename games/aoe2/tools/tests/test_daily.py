@@ -228,3 +228,20 @@ def test_ventana_sin_cuenta_de_partidas_en_algun_dia_no_la_usa():
     viejo = {k: v for k, v in d._dia_vacio("2026-11-18").items() if k != "n"}
     dias["2026-11-18"] = viejo
     assert d.resumen(dias, HOY)["windows"]["7"]["n"] == {}
+
+
+def test_civs_antes_y_despues_de_cada_parche():
+    # 188329 salió el 27/10: "antes" son los días hasta el 26 (el 27 mezcla los dos); "después", desde el 28.
+    def dia(f, franks):
+        x = d._dia_vacio(f)
+        x["civ"] = {"rm1v1|1400-1800|franks": franks, "rm1v1|1800+|mongols": [200, 100]}
+        return x
+    dias = {"2026-10-26": dia("2026-10-26", [100, 40]), "2026-10-27": dia("2026-10-27", [100, 40]), "2026-10-28": dia("2026-10-28", [200, 120])}
+    ps = d.parches_json(dias, min_partidas=100)
+    p = next(x for x in ps if x["name"] == "188329")
+    assert p["url"].endswith("1847286114049735") and p["minor"] is False
+    franks = next(r for r in p["civs"] if r[0] == "franks")
+    assert franks == ["franks", 0.4, 100, 0.6, 200]
+    # Un parche sin días a los dos lados no trae civs.
+    assert next(x for x in ps if x["name"] == "185872")["civs"] == []
+    assert ps[0]["name"] == "188329"

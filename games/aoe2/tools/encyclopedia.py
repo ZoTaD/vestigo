@@ -153,6 +153,44 @@ def _fx(efecto: list[tuple]) -> list[list]:
     return [[t, a, b, c, round(d, 4)] for t, a, b, c, d in efecto if t in MODIFICA and c in ATRIBUTOS]
 
 
+CAMPOS_U = ("hp", "attacks", "armors", "cost", "time", "reload", "range", "speed", "los", "accuracy")
+CAMPOS_T = ("cost", "time")
+
+
+def foto(units: list[dict], techs: list[dict], civinfo: dict) -> dict:
+    """Lo que se compara entre parches: cifras de unidades y tecnologías y los bonos (en inglés) de cada civ."""
+    return {
+        "u": {str(f["id"]): {k: f[k] for k in CAMPOS_U if k in f} for f in units},
+        "t": {str(f["id"]): {k: f[k] for k in CAMPOS_T} for f in techs},
+        "c": {s: ci["desc"]["en"]["bonuses"] + ([ci["desc"]["en"]["team"]] if ci["desc"]["en"]["team"] else []) for s, ci in civinfo.items()},
+    }
+
+
+def diferencias(vieja: dict, nueva: dict) -> dict:
+    """Qué cambió de una foto a la siguiente: `[id, campo, antes, después]` por unidad y tecnología, unidades nuevas y
+    bonos de civ que aparecen o se van (un bono que cambia de número figura como uno que se va y otro que llega)."""
+    def campos(a: dict, b: dict, nombres) -> list:
+        out = []
+        for i in sorted(set(a) & set(b), key=int):
+            for k in nombres:
+                if k in a[i] and k in b[i] and a[i][k] != b[i][k]:
+                    out.append([int(i), k, a[i][k], b[i][k]])
+        return out
+
+    civs = {}
+    for s in sorted(set(vieja["c"]) & set(nueva["c"])):
+        mas = [x for x in nueva["c"][s] if x not in vieja["c"][s]]
+        menos = [x for x in vieja["c"][s] if x not in nueva["c"][s]]
+        if mas or menos:
+            civs[s] = {"added": mas, "removed": menos}
+    return {
+        "units": campos(vieja["u"], nueva["u"], CAMPOS_U),
+        "new": sorted(int(i) for i in set(nueva["u"]) - set(vieja["u"])),
+        "techs": campos(vieja["t"], nueva["t"], CAMPOS_T),
+        "civs": civs,
+    }
+
+
 def _slugs_unicos(filas: list[dict]) -> None:
     """Dos cosas con el mismo nombre en inglés: la de id más bajo se queda el slug y las demás llevan su id."""
     vistos: set[str] = set()
@@ -349,6 +387,17 @@ def main() -> None:
     for idioma, clave in (("en", "en"), ("es", "mx")):
         for parte in range(PARTES):
             _escribir_json(SALIDA / "help" / idioma / f"{parte}.json", {k: {str(i): x[clave] for i, x in v.items() if i % PARTES == parte} for k, v in ayudas.items()})
+
+    # Una foto por parche (el instalado es el último de `patches.py`) y lo que cambió entre cada par de fotos seguidas.
+    from patches import PARCHES
+
+    actual = max(PARCHES, key=lambda n: PARCHES[n])
+    _escribir_json(SALIDA / "snapshots" / f"{actual}.json", foto(out_u, out_t, civinfo))
+    fotos = sorted((SALIDA / "snapshots").glob("*.json"), key=lambda r: PARCHES.get(r.stem, ""))
+    cambios = {}
+    for antes, despues in zip(fotos, fotos[1:]):
+        cambios[despues.stem] = {"from": antes.stem, **diferencias(json.loads(antes.read_text(encoding="utf-8")), json.loads(despues.read_text(encoding="utf-8")))}
+    _escribir_json(SALIDA / "patchdiff.json", cambios)
 
     escritas = 0
     if not args.no_icons:

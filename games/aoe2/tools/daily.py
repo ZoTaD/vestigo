@@ -38,7 +38,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from patches import PARCHES  # noqa: E402
+from patches import NOTAS, NOTICIA, PARCHES  # noqa: E402
 from openings import openings as _aperturas  # noqa: E402
 from replay import read_actions  # noqa: E402
 
@@ -276,6 +276,36 @@ def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
     return out
 
 
+def parches_json(dias: dict[str, dict], ventana: int = 7, min_partidas: int = 200) -> list[dict]:
+    """Los parches de `NOTAS`, del más nuevo al más viejo, con cómo le fue a cada civ en RM 1v1 (todas las bandas) en
+    hasta `ventana` días antes (sin el día del parche, que mezcla los dos) y después: `[civ, %antes, partidas antes,
+    %después, partidas después]`, sólo con `min_partidas` de cada lado, de la que más subió a la que más bajó."""
+    out = []
+    for nombre, (cuando, menor, gid) in sorted(NOTAS.items(), key=lambda x: x[1][0], reverse=True):
+        dia = datetime.fromisoformat(cuando.replace("Z", "+00:00")).date()
+        antes = [dias[f] for f in sorted(dias) if dia - timedelta(days=ventana) <= date.fromisoformat(f) < dia]
+        despues = [dias[f] for f in sorted(dias) if dia < date.fromisoformat(f) <= dia + timedelta(days=ventana)]
+        filas = []
+        if antes and despues:
+            def por_civ(ds):
+                c: dict[str, list[int]] = {}
+                for k, (g, v) in _suma(ds, "civ").items():
+                    modo, _banda, civ = k.split("|")
+                    if modo == "rm1v1":
+                        x = c.setdefault(civ, [0, 0])
+                        x[0] += g
+                        x[1] += v
+                return c
+            a, b = por_civ(antes), por_civ(despues)
+            for civ in sorted(set(a) & set(b)):
+                (ga, va), (gb, vb) = a[civ], b[civ]
+                if ga >= min_partidas and gb >= min_partidas:
+                    filas.append([civ, round(va / ga, 4), ga, round(vb / gb, 4), gb])
+            filas.sort(key=lambda r: -(r[3] - r[1]))
+        out.append({"name": nombre, "date": cuando, "minor": menor, "url": NOTICIA.format(gid=gid), "civs": filas, "days": [len(antes), len(despues)]})
+    return out
+
+
 def ladder_snapshot(filas: list[tuple], hoy: date, top: int = TOP_FOTO, prev: dict | None = None) -> dict:
     """La foto de un ranking: top `top` como `[perfil, ELO]` o `[perfil, ELO, alias]`, histograma de a 100 de todo el
     ranking y la foto de ayer."""
@@ -478,6 +508,10 @@ def main() -> None:
     sumario = resumen({k: v for k, v in dias.items() if v}, hoy) if dias else None
     if sumario:
         _escribir(STATS / "summary.json", sumario)
+    # Parches: los días viejos se borran, así que lo ya calculado con más días se conserva.
+    viejos = {p["name"]: p for p in (_leer(STATS / "patches.json") or [])}
+    parches = [p if sum(p["days"]) >= sum(viejos.get(p["name"], {}).get("days", [0, 0])) else {**p, "civs": viejos[p["name"]]["civs"], "days": viejos[p["name"]]["days"]} for p in parches_json({k: v for k, v in dias.items() if v})]
+    _escribir(STATS / "patches.json", parches)
     _escribir(STATS / "home.json", home_json(_leer(STATS / "ladder" / "3.json"), sumario or _leer(STATS / "summary.json")))
     print(f"días guardados: {len(dias)}", flush=True)
 

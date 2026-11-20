@@ -272,3 +272,20 @@
 @media (max-width: 560px) { .a2-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; } .a2-calc-res .a2-table td:first-child { font-size: 12px; } }
 /* Nombres de unidad y tecnología: pueden ser largos ("Caballero teutónico de élite"); bajan de renglón entre palabras. */
 .a2-ico + .a2-alias { white-space: normal; min-width: 0; font-size: clamp(20px, 6cqi, 36px); line-height: 1.15; }
+/* Logros, parches y build orders (2026-11-21). */
+.a2-ach { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.a2-ach li { display: grid; grid-template-columns: 48px minmax(0, 1fr) 150px; gap: 12px; align-items: center; padding: 6px 8px; background: var(--a2-panel2); border-radius: 6px; min-height: 64px; box-sizing: border-box; }
+.a2-ach-empty { width: 48px; height: 48px; }
+.a2-ach-t { display: grid; gap: 2px; min-width: 0; }
+.a2-ach-t small { color: var(--a2-muted); font-size: 13px; }
+.a2-ach-t .a2-small { margin-left: 8px; font-style: normal; }
+.a2-ach-pct { position: relative; height: 26px; border-radius: 4px; background: #0e151d; overflow: hidden; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; }
+.a2-ach-bar { position: absolute; inset: 0 auto 0 0; background: rgba(240, 191, 76, 0.28); }
+.a2-ach-pct b { position: relative; font-variant-numeric: tabular-nums; font-size: 13px; }
+.a2-bo-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0 20px; }
+.a2-bo-list h2 { font-size: 20px; margin: 0; }
+.a2-bo-list h2 a { color: var(--a2-text); text-decoration: none; }
+.a2-bo-list h2 a:hover { color: var(--a2-gold); }
+.a2-bo td:first-child, .a2-bo td:nth-child(2) { white-space: nowrap; vertical-align: top; }
+.a2-bo td { line-height: 1.45; }
+@media (max-width: 560px) { .a2-ach li { grid-template-columns: 40px minmax(0, 1fr); } .a2-ach-pct { grid-column: 2; } .a2-ach .a2-ico { width: 40px; height: 40px; } .a2-bo-list { grid-template-columns: 1fr; } }

@@ -10,7 +10,7 @@ y sus íconos en `site/public/<juego>/a/<hash>.jpg`. El CoH1 relanzado (228200) 
 - En español:
   - CoH3: los textos del juego (`raw/<tag>/locales/`, los baja `fetch.py`), buscando el inglés de Steam entre los
     textos en inglés del juego. Lo que no aparece queda en inglés.
-  - CoH2: la misma página de Steam en español (`?l=spanish`), unida por `api_name`.
+  - CoH2 y AoE2 DE (2026-11-21): la misma página de Steam en español (`?l=spanish`), unida por `api_name`.
 
 Salida: `{generatedAt, list: [{slug, name:{en,es}, desc:{en,es}, icon, hidden, pct}]}`, de más común a más rara.
 """
@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from coh3 import UA, tags_raw, write_json  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[3]
-APPS = {"coh3": 1677280, "coh2": 231430}
+APPS = {"coh3": 1677280, "coh2": 231430, "aoe2": 813780}
 PAGINA = "https://steamcommunity.com/achievements/{app}?l={lang}"
 PORCENTAJES = "https://api.steampowered.com/ISteamUserStats/GetGlobalAchievementPercentagesForApp/v2/?gameid={app}"
 ICONO = "https://cdn.fastly.steamstatic.com/steamcommunity/public/images/apps/{app}/{h}"
@@ -118,7 +118,7 @@ def main(argv: list[str]) -> None:
     if not pct:
         por_clave = porcentajes_pagina(html_en, app)
         pct = {x["api_name"]: por_clave[x["internal_key"]] for x in lista if x.get("internal_key") in por_clave}
-    if a.game == "coh2":
+    if a.game in ("coh2", "aoe2"):
         es = logros_steam(_get(PAGINA.format(app=app, lang="spanish")).decode("utf-8"), app)
     else:
         tags = tags_raw()
@@ -132,7 +132,7 @@ def main(argv: list[str]) -> None:
         if x["icon"] and not (destino / f"{x['icon']}.jpg").exists():
             try:
                 datos = _get(ICONO.format(app=app, h=f"{x['icon']}.jpg"))
-            except urllib.error.URLError as e:
+            except (urllib.error.URLError, OSError) as e:  # un corte de Steam no frena el resto
                 print(f"  sin ícono {x['slug']}: {e}")
                 x["icon"] = None
                 continue

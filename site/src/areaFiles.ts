@@ -178,6 +178,9 @@ export const AOE2_TAB_FILES: Partial<Record<Aoe2Section, string>> = {
   technologies: "src/aoe2/encyclopedia/Aoe2Techs.tsx",
   "tech-tree": "src/aoe2/encyclopedia/Aoe2TechTree.tsx",
   calculator: "src/aoe2/encyclopedia/Aoe2Calculator.tsx",
+  patches: "src/aoe2/extras/Aoe2Patches.tsx",
+  achievements: "src/aoe2/extras/Aoe2Achievements.tsx",
+  "build-orders": "src/aoe2/extras/Aoe2BuildOrders.tsx",
 };
 
 /**

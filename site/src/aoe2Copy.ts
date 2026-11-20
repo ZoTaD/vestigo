@@ -6,14 +6,14 @@ import { useLang, type Lang } from "./i18n";
 import type { Aoe2Section, Aoe2Tab } from "./route";
 
 /** El orden de las pestañas en la barra. */
-export const AOE2_TABS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "units", "technologies", "tech-tree", "calculator"];
+export const AOE2_TABS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "units", "technologies", "tech-tree", "calculator", "build-orders", "patches", "achievements"];
 
 type Seo = { title: string; description: string };
 
 const en = {
   name: "Age of Empires II",
   tagline: "Definitive Edition · stats from every ranked game, updated daily",
-  tabs: { leaderboards: "Leaderboards", players: "Players", matches: "Match", civilizations: "Civilizations", matchups: "Matchups", maps: "Maps", units: "Units", technologies: "Technologies", "tech-tree": "Tech tree", calculator: "Calculator" } satisfies Record<Aoe2Tab, string>,
+  tabs: { leaderboards: "Leaderboards", players: "Players", matches: "Match", civilizations: "Civilizations", matchups: "Matchups", maps: "Maps", units: "Units", technologies: "Technologies", "tech-tree": "Tech tree", calculator: "Calculator", patches: "Patches", achievements: "Achievements", "build-orders": "Build orders" } satisfies Record<Aoe2Tab, string>,
   modes: { rm1v1: "Random Map 1v1", rmteam: "Random Map Team", ew1v1: "Empire Wars 1v1", ewteam: "Empire Wars Team", dm1v1: "Death Match 1v1", dmteam: "Death Match Team" },
   t: {
     soon: "Coming soon",
@@ -34,7 +34,7 @@ const en = {
     followH: "Players you follow",
     followEmpty: "Open a profile and press Follow to keep it here.",
     goH: "Everything in the section",
-    go: { leaderboards: "Every ladder, with a filter by country", civilizations: "Win rate of each civ by rating, map and opening", matchups: "Civ against civ in 1v1", maps: "The maps and the civs that win on each", players: "Profile, match history and openings of any player", units: "Stats, attack bonuses and counters of every unit", technologies: "Cost and effect of every technology", "tech-tree": "Each civ's tech tree and what it's missing", calculator: "Hits to kill with upgrades and civ bonuses" } as Record<string, string>,
+    go: { leaderboards: "Every ladder, with a filter by country", civilizations: "Win rate of each civ by rating, map and opening", matchups: "Civ against civ in 1v1", maps: "The maps and the civs that win on each", players: "Profile, match history and openings of any player", units: "Stats, attack bonuses and counters of every unit", "build-orders": "Openings step by step and the civs that win with them", patches: "Every update and how each civ changed", achievements: "Every achievement and how many players have it", technologies: "Cost and effect of every technology", "tech-tree": "Each civ's tech tree and what it's missing", calculator: "Hits to kill with upgrades and civ bonuses" } as Record<string, string>,
     civsH: "Civilizations",
     patch: (n: string, d: string) => `Current update: ${n} (since ${d})`,
   },
@@ -196,9 +196,16 @@ const en = {
     technologies: { title: "AoE2 DE technologies: cost, time and what they do", description: "Every Age of Empires II technology with cost, research time, age, building, the units it upgrades and the civs that have it." },
     "tech-tree": { title: "AoE2 DE tech trees of every civilization", description: "The full Age of Empires II tech tree of each civilization, with what it is missing, by building and age." },
     calculator: { title: "AoE2 DE damage calculator: hits to kill with upgrades", description: "Pick two Age of Empires II units, civs and age: damage per hit, hits and seconds to kill, with blacksmith upgrades and civ bonuses." },
+    patches: { title: "AoE2 DE patches: every update and how civs changed", description: "Every Age of Empires II: DE update with its official notes, how each civilization's win rate moved and what changed in units and technologies." },
+    achievements: { title: "AoE2 DE achievements and how many players have them", description: "Every Age of Empires II: Definitive Edition Steam achievement, what it asks and the share of players who unlocked it." },
+    "build-orders": { title: "AoE2 DE build orders: scouts, archers, drush, fast castle", description: "Step by step Age of Empires II build orders with population and timings, and the civilizations that win most with each opening." },
   } satisfies Record<Aoe2Section, Seo>,
   detailSeo: (sec: Aoe2Tab, name: string): Seo =>
-    sec === "units"
+    sec === "patches"
+      ? { title: `AoE2 DE update ${name}: what changed`, description: `Age of Empires II: DE update ${name}: official notes, civilization win rates before and after, and changes to units and technologies.` }
+      : sec === "build-orders"
+      ? { title: `${name} build order for AoE2 DE`, description: `The ${name} build order for Age of Empires II step by step, with population, timings and the civs that win most with it.` }
+      : sec === "units"
       ? { title: `${name} in AoE2 DE: stats, cost and counters`, description: `${name} in Age of Empires II: hit points, attack, armor, range, cost, upgrades, the civs that have it and what it beats.` }
       : sec === "technologies"
       ? { title: `${name} in AoE2 DE: cost and effect`, description: `What ${name} does in Age of Empires II, what it costs, how long it takes and which civs can research it.` }
@@ -212,7 +219,7 @@ const en = {
 const es: typeof en = {
   name: "Age of Empires II",
   tagline: "Definitive Edition · estadísticas de cada partida de ranking, al día",
-  tabs: { leaderboards: "Ranking", players: "Jugadores", matches: "Partida", civilizations: "Civilizaciones", matchups: "Matchups", maps: "Mapas", units: "Unidades", technologies: "Tecnologías", "tech-tree": "Árbol", calculator: "Calculadora" },
+  tabs: { leaderboards: "Ranking", players: "Jugadores", matches: "Partida", civilizations: "Civilizaciones", matchups: "Matchups", maps: "Mapas", units: "Unidades", technologies: "Tecnologías", "tech-tree": "Árbol", calculator: "Calculadora", patches: "Parches", achievements: "Logros", "build-orders": "Build orders" },
   modes: { rm1v1: "Mapa aleatorio 1v1", rmteam: "Mapa aleatorio equipos", ew1v1: "Empire Wars 1v1", ewteam: "Empire Wars equipos", dm1v1: "Death Match 1v1", dmteam: "Death Match equipos" },
   t: {
     soon: "Muy pronto",
@@ -233,7 +240,7 @@ const es: typeof en = {
     followH: "Jugadores que seguís",
     followEmpty: "Abrí un perfil y apretá Seguir para tenerlo acá.",
     goH: "Todo lo de la sección",
-    go: { leaderboards: "Todos los rankings, con filtro por país", civilizations: "% de victorias de cada civ por ELO, mapa y apertura", matchups: "Civ contra civ en 1v1", maps: "Los mapas y las civs que ganan en cada uno", players: "Perfil, historial y aperturas de cualquier jugador", units: "Cifras, bonus de ataque y counters de cada unidad", technologies: "Costo y efecto de cada tecnología", "tech-tree": "El árbol de cada civ y lo que le falta", calculator: "Golpes para matar con mejoras y bonos de civ" } as Record<string, string>,
+    go: { leaderboards: "Todos los rankings, con filtro por país", civilizations: "% de victorias de cada civ por ELO, mapa y apertura", matchups: "Civ contra civ en 1v1", maps: "Los mapas y las civs que ganan en cada uno", players: "Perfil, historial y aperturas de cualquier jugador", units: "Cifras, bonus de ataque y counters de cada unidad", "build-orders": "Aperturas paso a paso y las civs que ganan con ellas", patches: "Cada actualización y cómo cambió cada civ", achievements: "Todos los logros y cuántos jugadores los tienen", technologies: "Costo y efecto de cada tecnología", "tech-tree": "El árbol de cada civ y lo que le falta", calculator: "Golpes para matar con mejoras y bonos de civ" } as Record<string, string>,
     civsH: "Civilizaciones",
     patch: (n: string, d: string) => `Actualización vigente: ${n} (desde el ${d})`,
   },
@@ -395,9 +402,16 @@ const es: typeof en = {
     technologies: { title: "Tecnologías de AoE2 DE: costo, tiempo y qué hacen", description: "Todas las tecnologías de Age of Empires II con costo, tiempo, edad, edificio, las unidades que mejoran y las civs que la tienen." },
     "tech-tree": { title: "Árboles tecnológicos de cada civilización de AoE2 DE", description: "El árbol tecnológico completo de cada civilización de Age of Empires II, con lo que le falta, por edificio y edad." },
     calculator: { title: "Calculadora de daño de AoE2 DE: golpes para matar con mejoras", description: "Elegí dos unidades, civs y edad de Age of Empires II: daño por golpe, golpes y segundos para matar, con mejoras de herrería y bonos de civ." },
+    patches: { title: "Parches de AoE2 DE: cada actualización y cómo cambiaron las civs", description: "Cada actualización de Age of Empires II: DE con sus notas oficiales, cómo se movió el % de victorias de cada civilización y qué cambió en unidades y tecnologías." },
+    achievements: { title: "Logros de AoE2 DE y cuántos jugadores los tienen", description: "Todos los logros de Steam de Age of Empires II: Definitive Edition, lo que piden y qué parte de los jugadores los desbloqueó." },
+    "build-orders": { title: "Build orders de AoE2 DE: scouts, arqueros, drush, fast castle", description: "Build orders de Age of Empires II paso a paso, con población y tiempos, y las civilizaciones que más ganan con cada apertura." },
   },
   detailSeo: (sec, name) =>
-    sec === "units"
+    sec === "patches"
+      ? { title: `Actualización ${name} de AoE2 DE: qué cambió`, description: `La actualización ${name} de Age of Empires II: DE: notas oficiales, % de victorias de las civilizaciones antes y después, y cambios en unidades y tecnologías.` }
+      : sec === "build-orders"
+      ? { title: `Build order ${name} de AoE2 DE`, description: `La build order ${name} de Age of Empires II paso a paso, con población, tiempos y las civs que más ganan con ella.` }
+      : sec === "units"
       ? { title: `${name} en AoE2 DE: estadísticas, costo y counters`, description: `${name} en Age of Empires II: vida, ataque, armadura, alcance, costo, mejoras, las civs que la tienen y contra qué gana.` }
       : sec === "technologies"
       ? { title: `${name} en AoE2 DE: costo y efecto`, description: `Qué hace ${name} en Age of Empires II, cuánto cuesta, cuánto tarda y qué civs la pueden investigar.` }

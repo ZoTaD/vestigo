@@ -348,6 +348,8 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   for (const e of data.a2?.units ?? []) out[`a2-units/${e.slug}`] = e.name[lang] || e.name.en;
   for (const e of data.a2?.techs ?? []) out[`a2-technologies/${e.slug}`] = e.name[lang] || e.name.en;
   for (const e of data.a2?.civs ?? []) out[`a2-tech-tree/${e.slug}`] = e.name[lang] || e.name.en;
+  for (const p of data.a2?.patches ?? []) out[`a2-patches/${p}`] = p;
+  for (const e of data.a2?.buildOrders ?? []) out[`a2-build-orders/${e.slug}`] = e.name[lang] || e.name.en;
   for (const e of data.c2?.esports?.teams ?? []) out[`c2-teams/${e.slug}`] = e.name;
   for (const e of data.c2?.esports?.players ?? []) out[`c2-players/${e.slug}`] = e.id;
   for (const e of data.c2?.esports?.tours ?? []) out[`c2-esports/${e.slug}`] = e.name;

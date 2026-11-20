@@ -417,7 +417,15 @@ function readSitemapData(): { data: OgData } {
           } catch {
             units = [];
           }
-          return { generatedAt: meta.generatedAt, civs, maps, units, techs };
+          let patches: string[] = [];
+          let buildOrders: { slug: string; name: { en: string; es: string } }[] = [];
+          try {
+            patches = JSON.parse(readFileSync(`${aoe2StatsDir}/patches.json`, "utf-8")).map((p: { name: string }) => p.name);
+            buildOrders = JSON.parse(readFileSync(`${aoe2Dir}/buildorders.json`, "utf-8")).list;
+          } catch {
+            patches = [];
+          }
+          return { generatedAt: meta.generatedAt, civs, maps, units, techs, patches, buildOrders };
         } catch (e) {
           console.warn(`[aoe2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
           return undefined;
