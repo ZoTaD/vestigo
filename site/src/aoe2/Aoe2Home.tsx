@@ -30,6 +30,10 @@ const ACCESOS: [Aoe2Tab, string][] = [
   ["matchups", "mode-ew"],
   ["maps", "mode-dm"],
   ["players", "strip-3"],
+  ["units", "strip-5"],
+  ["technologies", "strip-4"],
+  ["tech-tree", "strip-2"],
+  ["calculator", "strip-1"],
 ];
 
 export default function Aoe2Home({ route, navigate }: { route: Route; navigate: Nav }) {

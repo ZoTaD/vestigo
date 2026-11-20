@@ -34,7 +34,7 @@ const en = {
     followH: "Players you follow",
     followEmpty: "Open a profile and press Follow to keep it here.",
     goH: "Everything in the section",
-    go: { leaderboards: "Every ladder, with a filter by country", civilizations: "Win rate of each civ by rating, map and opening", matchups: "Civ against civ in 1v1", maps: "The maps and the civs that win on each", players: "Profile, match history and openings of any player" } as Record<string, string>,
+    go: { leaderboards: "Every ladder, with a filter by country", civilizations: "Win rate of each civ by rating, map and opening", matchups: "Civ against civ in 1v1", maps: "The maps and the civs that win on each", players: "Profile, match history and openings of any player", units: "Stats, attack bonuses and counters of every unit", technologies: "Cost and effect of every technology", "tech-tree": "Each civ's tech tree and what it's missing", calculator: "Hits to kill with upgrades and civ bonuses" } as Record<string, string>,
     civsH: "Civilizations",
     patch: (n: string, d: string) => `Current update: ${n} (since ${d})`,
   },
@@ -182,7 +182,7 @@ const en = {
   },
   home: {
     h1: "Age of Empires II: Definitive Edition stats",
-    lead: "The ranked ladder, every player's profile and match history, and how each civilization does by rating, map and patch.",
+    lead: "The ranked ladder, every player's profile and match history, how each civilization does by rating, map and patch, and every unit, technology and tech tree.",
   },
   seo: {
     home: { title: "Age of Empires II DE stats: ladder, civ win rates and player profiles", description: "Ranked ladder, player profiles with match history, and civilization win rates by rating, map and patch for AoE2: Definitive Edition, updated daily." },
@@ -233,7 +233,7 @@ const es: typeof en = {
     followH: "Jugadores que seguís",
     followEmpty: "Abrí un perfil y apretá Seguir para tenerlo acá.",
     goH: "Todo lo de la sección",
-    go: { leaderboards: "Todos los rankings, con filtro por país", civilizations: "% de victorias de cada civ por ELO, mapa y apertura", matchups: "Civ contra civ en 1v1", maps: "Los mapas y las civs que ganan en cada uno", players: "Perfil, historial y aperturas de cualquier jugador" } as Record<string, string>,
+    go: { leaderboards: "Todos los rankings, con filtro por país", civilizations: "% de victorias de cada civ por ELO, mapa y apertura", matchups: "Civ contra civ en 1v1", maps: "Los mapas y las civs que ganan en cada uno", players: "Perfil, historial y aperturas de cualquier jugador", units: "Cifras, bonus de ataque y counters de cada unidad", technologies: "Costo y efecto de cada tecnología", "tech-tree": "El árbol de cada civ y lo que le falta", calculator: "Golpes para matar con mejoras y bonos de civ" } as Record<string, string>,
     civsH: "Civilizaciones",
     patch: (n: string, d: string) => `Actualización vigente: ${n} (desde el ${d})`,
   },
@@ -381,7 +381,7 @@ const es: typeof en = {
   },
   home: {
     h1: "Estadísticas de Age of Empires II: Definitive Edition",
-    lead: "El ranking, el perfil y el historial de cada jugador, y cómo le va a cada civilización según ELO, mapa y parche.",
+    lead: "El ranking, el perfil y el historial de cada jugador, cómo le va a cada civilización según ELO, mapa y parche, y cada unidad, tecnología y árbol tecnológico.",
   },
   seo: {
     home: { title: "Estadísticas de Age of Empires II DE: ranking, civs y perfiles", description: "Ranking, perfiles de jugador con historial de partidas y porcentaje de victoria de cada civilización por ELO, mapa y parche en AoE2: Definitive Edition, al día." },

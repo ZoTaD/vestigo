@@ -94,7 +94,7 @@ function Ficha({ slug, ts, a, route, navigate }: { slug: string; ts: Tecnologia[
         <Datos
           filas={[
             [t.units.cost, <Costo key="c" cost={x.cost} />],
-            [t.units.time, t.sec(x.time)],
+            [t.techs.time, t.sec(x.time)],
             [t.techs.researched, edificio ? nombreDe(edificio.name, lang) : "–"],
             [t.units.age, edad(lang, x.age)],
           ]}

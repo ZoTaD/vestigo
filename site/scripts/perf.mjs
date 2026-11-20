@@ -297,6 +297,12 @@ export const PAGES = [
   "/es/aoe2/mapas",
   "/en/aoe2/maps/arabia",
   "/es/aoe2/jugadores",
+  "/en/aoe2/units",
+  "/es/aoe2/unidades/knight",
+  "/en/aoe2/technologies",
+  "/es/aoe2/tecnologias/forging",
+  "/en/aoe2/tech-tree/franks",
+  "/es/aoe2/calculadora",
 ];
 
 /** El presupuesto por página al abrir en frío. Es el mismo de `CLAUDE.md`: si se cambia, cambiar los dos. */
