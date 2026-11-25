@@ -1,0 +1,132 @@
+/* Ruleta de builds (2026-11-25): la carta del héroe a la izquierda y las
+   cuatro etapas a la derecha. Usa los botones y la tinta de Builds
+   (deadlock-builds.css); sin bordes de color. */
+
+.dl-rl-board {
+  display: grid;
+  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  gap: var(--sp-5, 1.5rem);
+  align-items: start;
+  margin-top: var(--sp-4, 1rem);
+}
+.dl-rl-hero {
+  margin: 0;
+  position: relative;
+}
+.dl-rl-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 220 / 300;
+  object-fit: cover;
+  border-radius: var(--radius);
+  background: radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--hero, #f59a6c) 45%, transparent), #1a1714 70%);
+}
+.dl-rl-hero figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.dl-rl-board[aria-busy="true"] .dl-rl-stages {
+  opacity: 0.35;
+  transition: opacity 0.1s;
+}
+.dl-rl-when {
+  margin: 0 0 var(--sp-3, 0.75rem);
+  color: var(--accent-lit);
+  font-weight: 600;
+}
+.dl-rl-stages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.dl-rl-stage {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: var(--sp-3, 0.75rem);
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  background: var(--bl-card, #1a1714);
+  border: 1px solid var(--line);
+}
+.dl-rl-stage-name {
+  display: grid;
+  font-family: var(--font-data-narrow, var(--font-display));
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.dl-rl-stage-name small {
+  font-family: var(--font-text);
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+.dl-rl-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.dl-rl-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+.dl-rl-item > span {
+  min-width: 0;
+}
+.dl-rl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: var(--sp-4, 1rem);
+}
+.dl-rl-challenge {
+  margin: var(--sp-3, 0.75rem) 0 0;
+  color: var(--text-dim);
+}
+
+@media (max-width: 760px) {
+  .dl-rl-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dl-rl-hero {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    align-items: end;
+    gap: 12px;
+  }
+  .dl-rl-stage {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+  .dl-rl-item {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.8rem;
+  }
+}
+
+.dl-rl-rules {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  display: grid;
+  gap: 2px;
+}

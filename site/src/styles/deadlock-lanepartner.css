@@ -1,0 +1,73 @@
+/* "Tu compañero de línea ideal" en el perfil (2026-11-25). Tinte, sin bordes de color. */
+
+.dl-lp-rows {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.dl-lp-row {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(247, 233, 213, 0.05);
+}
+[data-theme="codex"] a.dl-lp-hero {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+}
+[data-theme="codex"] a.dl-lp-hero:hover span {
+  text-decoration: underline;
+}
+.dl-lp-hero img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.dl-lp-take,
+.dl-lp-avoid {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+.dl-lp-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.dl-lp-k {
+  font-family: var(--font-data-narrow, var(--font-display));
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dl-lp-mate {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.dl-lp-mate img {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+.dl-lp-mate b {
+  font-variant-numeric: tabular-nums;
+}
+.dl-lp-take .dl-lp-mate b {
+  color: #97da79;
+}
+.dl-lp-avoid .dl-lp-mate b {
+  color: #ef5b4b;
+}

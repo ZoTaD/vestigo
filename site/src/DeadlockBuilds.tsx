@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useLang } from "./i18n";
 import { useCopy } from "./deadlockCopy";
 import SectionHead from "./SectionHead";
@@ -42,9 +42,16 @@ import {
   type HeroBuildsFile,
   type IndexCard,
   type PublishedRow,
+  type WeekCard,
+  type WeekStat,
   type PublishError,
+  WEEK_MIN,
 } from "./deadlockCommunityBuilds";
 import "./styles/deadlock-builds.css";
+
+/** La ruleta (2026-11-25) en su propio pedazo: la biblioteca no la carga. */
+const DeadlockRoulette = lazy(() => import("./DeadlockRoulette"));
+export const ROULETTE_SLUG = "roulette";
 
 /**
  * Builds (`/deadlock/builds`), 2026-11-15. Plan:
@@ -83,6 +90,12 @@ export default function DeadlockBuilds({ route, navigate }: { route: Route; navi
   const to = (detail?: string): Route => ({ ...route, view: "deadlock", dlSection: "builds", detail });
   const toHero = (h: Hero) => to(heroSlugs.toSlug.get(String(h.heroId)));
 
+  if (slug === ROULETTE_SLUG)
+    return (
+      <Suspense fallback={<p className="detail-note">{c.loading}</p>}>
+        <DeadlockRoulette route={route} navigate={navigate} />
+      </Suspense>
+    );
   if (!slug || !Number.isFinite(heroId)) return <BuildsHub c={c} route={route} navigate={navigate} heroes={heroesMeta?.heroes ?? []} toHero={toHero} to={to} />;
   if (!hero) return <p className="detail-note">{c.loading}</p>;
   if (idText) return <BuildPage c={c} route={route} navigate={navigate} hero={hero} buildId={Number(idText)} to={to} />;
@@ -218,10 +231,15 @@ function BuildsHub({
             <button type="button" className="dl-bl-btn" onClick={() => setSubir(true)} aria-expanded={subir}>
               {c.uploadBuild}
             </button>
+            <RouteLink className="dl-bl-btn" to={to(ROULETTE_SLUG)} onNavigate={navigate}>
+              🎲 {c.roulette.link}
+            </RouteLink>
           </div>
         }
       />
       <p className="dl-bl-lead">{c.lead}</p>
+
+      {index?.week && <WeekHub c={c} index={index} heroes={lista} to={to} navigate={navigate} />}
 
       <div className="dl-bl-hub-head">
         <h2 className="dl-bl-h2">{c.pickHero}</h2>
@@ -283,6 +301,157 @@ function BuildsHub({
 
       <div ref={subirRef}>{subir && <UploadPanel c={c} heroes={heroes} route={route} navigate={navigate} to={to} />}</div>
       {index === null && <p className="detail-note">{dl.loading}</p>}
+    </section>
+  );
+}
+
+/* ── Builds de la semana (2026-11-25) ──────────────────────────────── */
+
+type WeekKind = "popular" | "best" | "rising";
+const WEEK_KINDS: WeekKind[] = ["popular", "best", "rising"];
+/** Cuántas por columna en la portada: una por héroe. */
+const WEEK_HUB_ROWS = 5;
+
+/** La cifra grande de cada tipo: partidas, % de victoria o la parte del héroe que ganó. */
+function WeekFigure({ kind, w, c, lang, heroName }: { kind: WeekKind; w: Omit<WeekStat, "id">; c: Copy; lang: "en" | "es"; heroName: string }) {
+  if (kind === "popular")
+    return (
+      <span className="dl-bl-wk-fig">
+        <b>{fmtN(w.matches, lang)}</b>
+        <small>
+          {c.matches.toLowerCase()} · <WinRate b={w} c={c} lang={lang} />
+        </small>
+      </span>
+    );
+  if (kind === "best")
+    return (
+      <span className="dl-bl-wk-fig">
+        <WinRate b={w} c={c} lang={lang} big />
+        <small>{c.week.games(fmtN(w.matches, lang))}</small>
+      </span>
+    );
+  return (
+    <span className="dl-bl-wk-fig is-up" title={w.prevMatches > 0 ? c.week.share(fmtPct(w.share, lang), fmtPct(w.prevShare, lang), heroName) : c.week.newShare(fmtPct(w.share, lang), heroName)}>
+      <b>
+        <span aria-hidden="true">▲ </span>
+        {fmtPct(w.share, lang)}
+      </b>
+      <small>{w.prevMatches > 0 ? c.week.before(fmtPct(w.prevShare, lang)) : c.week.isNew}</small>
+    </span>
+  );
+}
+
+/** Para ordenar entre héroes: partidas, piso de Wilson o cuánto subió. */
+function weekScore(kind: WeekKind, w: WeekCard): number {
+  if (kind === "popular") return w.matches;
+  if (kind === "rising") return w.share - w.prevShare;
+  const p = w.wins / w.matches;
+  const z = 1.96;
+  const d = 1 + (z * z) / w.matches;
+  return (p + (z * z) / (2 * w.matches) - z * Math.sqrt((p * (1 - p) + (z * z) / (4 * w.matches)) / w.matches)) / d;
+}
+
+/** Portada: tres columnas con lo mejor de la semana de todos los héroes. */
+function WeekHub({
+  c,
+  index,
+  heroes,
+  to,
+  navigate,
+}: {
+  c: Copy;
+  index: NonNullable<ReturnType<typeof useBuildsIndex>>;
+  heroes: Hero[];
+  to: (detail?: string) => Route;
+  navigate: (r: Route) => void;
+}) {
+  const { lang } = useLang();
+  const cols = useMemo(
+    () =>
+      WEEK_KINDS.map((kind) => ({
+        kind,
+        rows: heroes
+          .map((h) => ({ h, w: index.heroes[String(h.heroId)]?.week?.[kind] }))
+          .filter((x): x is { h: Hero; w: WeekCard } => !!x.w)
+          .sort((a, b) => weekScore(kind, b.w) - weekScore(kind, a.w))
+          .slice(0, WEEK_HUB_ROWS),
+      })),
+    [index, heroes],
+  );
+  if (!index.week || cols.every((col) => col.rows.length === 0)) return null;
+  return (
+    <section className="dl-bl-section dl-bl-week" aria-labelledby="dl-bl-week">
+      <h2 className="dl-bl-h2" id="dl-bl-week">
+        {c.week.title}
+      </h2>
+      <p className="dl-bl-sub">{c.week.lead(index.week.from, index.week.to, lang)}</p>
+      <div className="dl-bl-wk-cols">
+        {cols.map(({ kind, rows }) => (
+          <section key={kind} className="dl-bl-wk-col" aria-labelledby={`dl-bl-wk-${kind}`}>
+            <h3 className="dl-bl-wk-h" id={`dl-bl-wk-${kind}`}>
+              {c.week[kind]}
+            </h3>
+            <p className="dl-bl-wk-lead">{kind === "best" ? c.week.bestLead(WEEK_MIN, lang) : kind === "popular" ? c.week.popularLead : c.week.risingLead}</p>
+            <ol className="dl-bl-wk-list">
+              {rows.map(({ h, w }) => (
+                <li key={h.heroId}>
+                  <RouteLink className="dl-bl-wk-row" to={to(`${heroSlugs.toSlug.get(String(h.heroId))}/${w.id}`)} onNavigate={navigate}>
+                    <GameImg src={h.img} alt="" width={40} height={40} className="dl-bl-most-hero" loading="lazy" decoding="async" />
+                    <span className="dl-bl-most-text">
+                      <span className="dl-bl-most-name">{displayName(w, c)}</span>
+                      <span className="dl-bl-most-meta">
+                        {h.name} · {authorOf(w, c)}
+                      </span>
+                    </span>
+                    <WeekFigure kind={kind} w={w} c={c} lang={lang} heroName={h.name} />
+                  </RouteLink>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** Biblioteca de un héroe: sus tres builds de la semana, arriba de las pestañas. */
+function HeroWeek({ c, hero, file, to, navigate }: { c: Copy; hero: Hero; file: HeroBuildsFile; to: (id: number) => Route; navigate: (r: Route) => void }) {
+  const { lang } = useLang();
+  const porId = useMemo(() => new Map(file.builds.map((b) => [b.id, b])), [file]);
+  // Si la de mejor % es la misma que la más jugada, va una sola tarjeta que dice las dos cosas.
+  const repetida = !!file.week?.best && file.week.best.id === file.week.popular?.id;
+  const cards = WEEK_KINDS.filter((k) => !(repetida && k === "best"))
+    .map((kind) => ({ kind, w: file.week?.[kind], b: file.week?.[kind] ? porId.get(file.week[kind]!.id) : undefined }))
+    .filter((x): x is { kind: WeekKind; w: WeekStat; b: CommunityBuild } => !!x.w && !!x.b);
+  if (cards.length === 0) return null;
+  return (
+    <section className="dl-bl-herowk" aria-labelledby="dl-bl-herowk">
+      <h2 className="dl-bl-wk-h" id="dl-bl-herowk">
+        {c.week.heroTitle}
+      </h2>
+      <ul className="dl-bl-herowk-list">
+        {cards.map(({ kind, w, b }) => (
+          <li key={kind}>
+            <RouteLink className="dl-bl-herowk-card" to={to(b.id)} onNavigate={navigate}>
+              <span className="dl-bl-herowk-kind">
+                {c.week[kind]}
+                {kind === "popular" && repetida && <small> · {c.week.alsoBest}</small>}
+              </span>
+              <span className="dl-bl-most-name">{displayName(b, c)}</span>
+              <span className="dl-bl-most-meta">{authorOf(b, c)}</span>
+              <span className="dl-bl-herowk-foot">
+                <span className="dl-bl-most-items" aria-hidden="true">
+                  {b.key.map((id) => (
+                    <ItemIcon key={id} itemId={id} size={28} tip={false} />
+                  ))}
+                </span>
+                <WeekFigure kind={kind} w={w} c={c} lang={lang} heroName={hero.name} />
+              </span>
+            </RouteLink>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
@@ -424,6 +593,8 @@ function HeroLibrary({
           </RouteLink>
         ))}
       </nav>
+
+      {file?.week && <HeroWeek c={c} hero={hero} file={file} to={(id) => to(`${heroSlug}/${id}`)} navigate={navigate} />}
 
       <div className="dl-bl-tabs" role="tablist" aria-label={c.heroTitle(hero.name)}>
         {TABS.map((t) => (

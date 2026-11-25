@@ -156,6 +156,11 @@ const EN = {
           "Guess today's Deadlock hero, item and ability from their stats, with a daily ranking for each. " +
           "New puzzles every day at 00:00 UTC.",
       },
+      roulette: {
+        title: () => "Deadlock Build Roulette — Random Hero & Build Challenge | Vestigo",
+        description: () =>
+          "Spin a random Deadlock hero and a random build with real rules: one weapon, vitality and spirit item per stage. A new daily challenge for everyone, and a picture to share.",
+      },
       duos: {
         title: () => "Deadlock Lane Duos Tier List — Best & Worst Lane Partners | Vestigo",
         description: () =>
@@ -416,6 +421,11 @@ const ES: typeof EN = {
         description: () =>
           "Adiviná el héroe, el objeto y la habilidad de Deadlock del día por sus stats, con un ranking diario " +
           "para cada uno. Nuevos todos los días a las 00:00 UTC.",
+      },
+      roulette: {
+        title: () => "Ruleta de builds de Deadlock — héroe y build al azar | Vestigo",
+        description: () =>
+          "Girá un héroe y una build al azar de Deadlock con reglas de verdad: un objeto de arma, vitalidad y espíritu por etapa. Un desafío nuevo cada día, igual para todos, con imagen para compartir.",
       },
       duos: {
         title: () => "Tier list de dúos de línea de Deadlock — mejores y peores parejas | Vestigo",

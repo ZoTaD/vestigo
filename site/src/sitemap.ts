@@ -465,6 +465,7 @@ export function sitemapPaths(data: SitemapData): string[] {
       const builds = data.dlBuilds?.[data.dlHeroIds[i]];
       if (!builds) return;
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: slug }));
+      if (i === 0) paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: "roulette" }));
       for (const b of builds) paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: `${slug}/${b.id}` }));
     });
     // Una página por edición de Vestigo News (2026-09-18). Son las notas de

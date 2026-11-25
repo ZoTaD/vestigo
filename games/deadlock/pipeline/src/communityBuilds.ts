@@ -7,6 +7,7 @@ import {
   isOffensive,
   styleOf,
   toBuild,
+  weekPicks,
   wilson,
   type BuildStyle,
   type CatalogItem,
@@ -18,9 +19,12 @@ import {
   type RawBuild,
   type StatRow,
   type Tag,
+  type WeekCard,
+  type WeekPicks,
+  type WeekStat,
 } from "./communityBuildsCore";
 
-export { abilityPath, cleanName, isOffensive, styleOf, toBuild, wilson };
+export { abilityPath, cleanName, isOffensive, styleOf, toBuild, weekPicks, wilson };
 export type { BuildStyle, CatalogItem, CommunityBuild, CurrencyChange, HeroBuildsFile, IndexCard, IndexFile, RawBuild, StatRow, Tag };
 
 /**
@@ -88,6 +92,31 @@ export function indexCard(b: CommunityBuild): IndexCard {
   if (b.official) c.official = true;
   if (b.verified) c.verified = true;
   return c;
+}
+
+/** Sólo las de la semana que tienen ficha publicada (una borrada o vacía se cae). `undefined` si no queda ninguna. */
+export function weekWithBuilds(picks: WeekPicks<WeekStat> | undefined, builds: CommunityBuild[]): WeekPicks<WeekStat> | undefined {
+  if (!picks) return undefined;
+  const hay = new Set(builds.map((b) => b.id));
+  const out: WeekPicks<WeekStat> = {};
+  for (const k of ["popular", "best", "rising"] as const) {
+    const w = picks[k];
+    if (w && hay.has(w.id)) out[k] = w;
+  }
+  return Object.keys(out).length > 0 ? out : undefined;
+}
+
+/** Las tarjetas del índice: la de la build, con las partidas y victorias de la semana. */
+export function weekCards(week: WeekPicks<WeekStat>, builds: CommunityBuild[]): WeekPicks<WeekCard> {
+  const porId = new Map(builds.map((b) => [b.id, b]));
+  const out: WeekPicks<WeekCard> = {};
+  for (const k of ["popular", "best", "rising"] as const) {
+    const w = week[k];
+    const b = w && porId.get(w.id);
+    if (!w || !b) continue;
+    out[k] = { ...indexCard(b), matches: w.matches, wins: w.wins, prevMatches: w.prevMatches, prevWins: w.prevWins, share: w.share, prevShare: w.prevShare };
+  }
+  return out;
 }
 
 /* ── La corrida ────────────────────────────────────────────────────── */
@@ -181,8 +210,35 @@ async function main() {
   const statDe = new Map(stats.map((r) => [r.hero_build_id, r]));
   console.log(`  ${stats.length} builds con partidas en ${porHeroe.size} héroes`);
 
+  // Las builds de la semana (2026-11-25): estos 7 días contra los 7 de antes, redondeado a la hora como arriba.
+  // Si la API no contesta, la biblioteca sale igual, sin la semana.
+  const hora = Math.floor(ahora.getTime() / 3_600_000) * 3600;
+  const semana = hora - 7 * 86_400;
+  const semanaAntes = semana - 7 * 86_400;
+  const semanaDe = new Map<number, WeekPicks<WeekStat>>();
+  try {
+    const [esta, anterior] = await Promise.all([
+      traer<StatRow[]>(`analytics/hero-build-stats?min_unix_timestamp=${semana}&min_matches=50`),
+      traer<StatRow[]>(`analytics/hero-build-stats?min_unix_timestamp=${semanaAntes}&max_unix_timestamp=${semana}&min_matches=50`),
+    ]);
+    const agrupar = (rows: StatRow[]) => {
+      const m = new Map<number, StatRow[]>();
+      for (const r of rows) m.set(r.hero_id, [...(m.get(r.hero_id) ?? []), r]);
+      return m;
+    };
+    const a = agrupar(esta);
+    const b = agrupar(anterior);
+    for (const [hero, rows] of a) semanaDe.set(hero, weekPicks(rows, b.get(hero) ?? [], MIN_BUILD_ID));
+    // Las de la semana usan los números de la semana; los del mes, para la ficha, salen de `stats`.
+    for (const r of esta) if (!statDe.has(r.hero_build_id)) statDe.set(r.hero_build_id, r);
+    console.log(`  semana: ${esta.length} builds, ${[...semanaDe.values()].filter((p) => p.rising).length} héroes con una en alza`);
+  } catch (e) {
+    console.log(`  la semana no contestó (${e instanceof Error ? e.message : e}); sigo sin ella`);
+  }
+
   mkdirSync(OUT_DIR, { recursive: true });
   const index: IndexFile = { generatedAt: ahora.toISOString(), from: desde.toISOString().slice(0, 10), to: ahora.toISOString().slice(0, 10), matches: 0, heroes: {} };
+  if (semanaDe.size > 0) index.week = { from: new Date(semana * 1000).toISOString().slice(0, 10), to: index.to };
   for (const r of stats) index.matches += r.matches;
 
   const porHeroeOut = new Map<number, CommunityBuild[]>();
@@ -191,6 +247,8 @@ async function main() {
       ...elegidas.filter((b) => b.hero === hero).map((b) => b.id),
       ...subidas.filter((b) => b.hero === hero).map((b) => b.id),
       ...(top.heroes[String(hero)]?.builds ?? []).map((b) => b.id),
+      // Las de la semana tienen que tener su ficha, aunque en el mes no lleguen al corte.
+      ...Object.values(semanaDe.get(hero) ?? {}).map((w) => w.id),
     ];
     const ids = pickIds(porHeroe.get(hero) ?? [], forzadas);
     const crudas = await enTandas(ids, CONCURRENCY, async (id) => {
@@ -261,12 +319,15 @@ async function main() {
       tags: Object.fromEntries(Object.entries(tags).filter(([id]) => usadas.has(Number(id)))),
       builds,
     };
+    const week = weekWithBuilds(semanaDe.get(hero), builds);
+    if (week) file.week = week;
     writeFileSync(archivo, JSON.stringify(file));
     index.heroes[hero] = {
       builds: builds.length,
       matches: (porHeroe.get(hero) ?? []).reduce((s, r) => s + r.matches, 0),
       top: builds.slice(0, INDEX_TOP).map(indexCard),
     };
+    if (week) index.heroes[hero].week = weekCards(week, builds);
   }
   if (Object.keys(index.heroes).length === 0) throw new Error("ningún héroe salió");
   writeFileSync(`${OUT_DIR}/index.json`, JSON.stringify(index));
