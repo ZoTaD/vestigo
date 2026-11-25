@@ -1,0 +1,102 @@
+/* "Contra tu rango" en el informe de la partida (2026-11-25). La cifra lleva
+   el color (verde arriba, rojo abajo); la barra marca el percentil. Sin bordes. */
+
+.dl-vsr-lead {
+  margin: 0 0 0.6rem;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+.dl-vsr-rows,
+.dl-vsr-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.dl-vsr-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 13rem) minmax(4rem, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(247, 233, 213, 0.05);
+}
+.dl-vsr-name {
+  font-size: 0.9rem;
+}
+.dl-vsr-bar {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, rgba(239, 91, 75, 0.35), rgba(247, 233, 213, 0.15) 50%, rgba(151, 218, 121, 0.35));
+}
+.dl-vsr-bar i {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--text);
+  transform: translateY(-50%);
+}
+.dl-vsr-nums {
+  display: grid;
+  justify-items: end;
+  text-align: right;
+}
+.dl-vsr-nums b {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+.dl-vsr-nums small,
+.dl-vsr-items small {
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+[data-tone="up"] .dl-vsr-nums b,
+[data-tone="up"] > span > b {
+  color: #97da79;
+}
+[data-tone="down"] .dl-vsr-nums b,
+[data-tone="down"] > span > b {
+  color: #ef5b4b;
+}
+.dl-vsr-sub {
+  margin: 0.9rem 0 0.4rem;
+  font-weight: 600;
+}
+.dl-vsr-items {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+}
+.dl-vsr-items li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(247, 233, 213, 0.05);
+}
+.dl-vsr-items li > span {
+  display: grid;
+}
+@media (max-width: 560px) {
+  .dl-vsr-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .dl-vsr-bar {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+/* "3 min tarde · lo normal 10:36" no entra en una caja chica: baja de renglón. */
+.dl-vsr-items small {
+  white-space: normal;
+}
+.dl-vsr-items li > span {
+  min-width: 0;
+}

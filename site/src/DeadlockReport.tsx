@@ -37,6 +37,7 @@ import DeadlockCoachCard from "./DeadlockCoachCard";
 import { objectiveKind } from "./deadlockReplay";
 
 const DeadlockMatchTabs = lazy(() => import("./DeadlockMatchTabs"));
+import DeadlockVsRankCard from "./DeadlockVsRankCard";
 
 /**
  * El informe de una partida.
@@ -792,6 +793,9 @@ export default function DeadlockReport({
           ) : (
             <p className="box-empty">{c.noGrade}</p>
           )}
+
+          {/* Contra tu rango (2026-11-25): el mismo héroe en salas de la misma banda. */}
+          <DeadlockVsRankCard player={jugador} match={match} lang={lang} />
 
           <h3 className="dl-rep-sub">{c.buildTitle}</h3>
           <BuildOrder player={jugador} lang={lang} />
