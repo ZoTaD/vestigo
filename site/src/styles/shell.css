@@ -384,6 +384,38 @@
   flex: 0 0 auto;
 }
 
+/* Ko-fi (2026-11-25): la taza blanca con el corazón, en el azul de la marca para que se vea sin gritar. */
+.top-kofi {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  padding: 0 0.65rem;
+  border-radius: var(--radius);
+  background: #13c3ff;
+  color: #fff;
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.top-kofi:hover { background: #29abe0; }
+.top-kofi-ic { width: 22px; height: 18px; flex: 0 0 auto; }
+@media (max-width: 1100px) {
+  .top-kofi { padding: 0 0.5rem; }
+  .top-kofi-t { display: none; }
+}
+/* En el teléfono arriba no entra junto al idioma (lo mandaba a una fila nueva): va en la fila del buscador, a la
+   derecha de la cuenta, y el buscador le deja su lugar. */
+@media (max-width: 760px) {
+  .top-kofi { order: 12; }
+  .top-in:has(.top-kofi) .top-search { flex-basis: calc(100% - 6rem); }
+  /* Con el DLE de Deadlock al lado no entra: el buscador quedaba en "Bus". Ahí queda sólo el link del pie. */
+  .top-in:has(.top-dle) .top-kofi { display: none; }
+}
+
 .top-langbtn {
   min-height: 36px;
   min-width: 36px;
@@ -895,6 +927,10 @@
 }
 
 .foot-link:hover {
+  color: var(--accent-lit);
+}
+
+.foot-link.is-support {
   color: var(--accent-lit);
 }
 
