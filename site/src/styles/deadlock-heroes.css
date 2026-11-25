@@ -1624,3 +1624,8 @@
     min-width: 8rem;
   }
 }
+
+/* Ficha del héroe: el enlace a todos sus dúos de línea (2026-11-25). */
+.dl-hp-more { margin: 0.6rem 0 0; font: 700 0.9rem/1.3 var(--font-body); }
+[data-theme="codex"] .dl-hp-more a { color: var(--accent); text-decoration: none; }
+[data-theme="codex"] .dl-hp-more a:hover { text-decoration: underline; }

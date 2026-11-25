@@ -450,6 +450,11 @@ export function sitemapPaths(data: SitemapData): string[] {
     for (const slug of deadlockDetailSlugs(data).heroes) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "ladder", detail: slug }));
     }
+    // Dúos de línea (2026-11-25), sub-pestaña de Héroes: todos y los de cada héroe.
+    paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: "duos" }));
+    for (const slug of deadlockDetailSlugs(data).heroes) {
+      paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: `duos/${slug}` }));
+    }
     // Récords (2026-11-18), sub-pestaña de Héroes: la del mundo y la de cada héroe.
     paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: "records" }));
     for (const slug of deadlockDetailSlugs(data).heroes) {

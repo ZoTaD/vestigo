@@ -218,6 +218,10 @@ export const originsFor = (route: Route) => (route.view === "deadlock" ? DEADLOC
 export const isRecordsDetail = (route: Route): boolean =>
   route.view === "deadlock" && route.dlSection === "heroes" && (route.detail === "records" || !!route.detail?.startsWith("records/"));
 
+/** Dúos de línea (2026-11-25), la otra sub-pestaña de Héroes con archivo propio: `/heroes/duos[/<héroe>]`. */
+export const isDuosDetail = (route: Route): boolean =>
+  route.view === "deadlock" && route.dlSection === "heroes" && (route.detail === "duos" || !!route.detail?.startsWith("duos/"));
+
 export function filesFor(route: Route): string[] {
   const area = AREA_FILES[route.view];
   if (!area) return [];
@@ -225,7 +229,9 @@ export function filesFor(route: Route): string[] {
     route.view === "deadlock"
       ? isRecordsDetail(route)
         ? "src/DeadlockRecords.tsx"
-        : DEADLOCK_TAB_FILES[route.dlSection]
+        : isDuosDetail(route)
+          ? "src/DeadlockDuos.tsx"
+          : DEADLOCK_TAB_FILES[route.dlSection]
       : route.view === "d2r"
         ? D2R_TAB_FILES[route.d2Section ?? "home"]
         : route.view === "zomboid"

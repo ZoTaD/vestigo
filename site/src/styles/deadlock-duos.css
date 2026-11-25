@@ -1,0 +1,163 @@
+/* ---------------------------------------------------------------------------
+   Deadlock: Dúos de línea (2026-11-25). Las mismas tiras de papel de la tier
+   list (.dl-tier, en deadlock-cartel.css) con tarjetas de dos caras adentro.
+   Sin bordes de color: la tarjeta es un tinte de tinta sobre el papel.
+   --------------------------------------------------------------------------- */
+
+/* El selector: "Todos los héroes" y las caras (las de la Escalera). */
+.dl-duo-pick {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: start;
+  margin: 0 0 1.4rem;
+}
+[data-theme="codex"] a.dl-duo-all {
+  display: flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0 0.8rem;
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  font: 700 0.8rem/1 var(--font-body);
+  white-space: nowrap;
+  text-decoration: none;
+  color: inherit;
+}
+[data-theme="codex"] a.dl-duo-all[aria-current="page"] { box-shadow: 0 0 0 2px var(--accent); }
+[data-theme="codex"] a.dl-duo-hero { display: block; text-decoration: none; }
+[data-theme="codex"] a.dl-duo-hero[aria-current="page"] { filter: none; box-shadow: 0 0 0 2px var(--accent); }
+
+/* La solapa de la letra: arriba de la tira y pegada al bajar. */
+[data-theme="codex"][data-game="deadlock"] .dl-duo-tier .dl-tier-mark {
+  justify-content: flex-start;
+}
+/* Derechas: torcer 2° una tira de 2.000 px corre el pie ~70 px y tapa la primera
+   columna. La tira entera también va casi derecha por lo mismo. */
+[data-theme="codex"][data-game="deadlock"] .dl-duo-tier .dl-tier-mark,
+[data-theme="codex"][data-game="deadlock"] .dl-duo-tier:nth-child(even) .dl-tier-mark {
+  transform: none;
+}
+[data-theme="codex"][data-game="deadlock"] .dl-duo-tier,
+[data-theme="codex"][data-game="deadlock"] .dl-duo-tier:nth-child(even) {
+  transform: rotate(-0.08deg);
+}
+[data-theme="codex"][data-game="deadlock"] .dl-duo-tier:nth-child(even) {
+  transform: rotate(0.08deg);
+}
+.dl-duo-mark {
+  position: sticky;
+  top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+/* La grilla de tarjetas, adentro de la tira. */
+.dl-duo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+  gap: 0.55rem;
+  margin: 0;
+  padding: 1.2rem 1.2rem 1.3rem 1.4rem;
+  list-style: none;
+  align-content: start;
+  min-width: 0;
+}
+
+.dl-duo {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.6rem;
+  align-items: center;
+  /* Alto fijo, con o sin "vs. solos": las filas quedan parejas y LazyRows sabe cuánto reservar. */
+  box-sizing: border-box;
+  height: 88px;
+  padding: 0.45rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(40, 28, 16, 0.08);
+  color: #1d1812;
+  min-width: 0;
+}
+
+/* Las dos caras, la segunda un poco encimada sobre la primera. */
+[data-theme="codex"] a.dl-duo-faces {
+  display: flex;
+  text-decoration: none;
+}
+.dl-duo-faces img {
+  width: 44px;
+  height: 44px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #2a231b;
+}
+.dl-duo-faces img + img {
+  margin-left: -8px;
+  box-shadow: -2px 0 0 #e9dbc0;
+}
+
+.dl-duo-body { display: grid; gap: 0.2rem; min-width: 0; }
+/* Hasta dos renglones: "Lady Geist + Deadman Danny" no entra en uno a 920 px, y las palabras no se cortan. */
+.dl-duo-names {
+  margin: 0;
+  font: 700 0.9rem/1.2 var(--font-body);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+[data-theme="codex"] .dl-duo-names a { color: inherit; text-decoration: none; }
+[data-theme="codex"] .dl-duo-names a:hover { text-decoration: underline; }
+
+.dl-duo-figs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.55rem;
+  margin: 0;
+  font: 500 0.78rem/1.2 var(--font-body);
+}
+.dl-duo-wr {
+  font: 700 1.15rem/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+.dl-duo-n { opacity: 0.75; font-variant-numeric: tabular-nums; }
+
+/* "vs. solos": en palabras, con el color de subir o bajar. */
+.dl-duo-syn {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(176, 48, 32, 0.14);
+  color: #8e2a1c;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: help;
+}
+.dl-duo-syn[data-up] {
+  background: rgba(46, 118, 60, 0.16);
+  color: #24602f;
+}
+
+/* El rail: dos caras chicas en vez de una. */
+[data-theme="codex"] .dl-duo-rail { grid-template-columns: auto minmax(0, 1fr) auto; }
+.dl-duo-rail-faces { display: flex; }
+[data-theme="codex"] .dl-duo-rail .dl-rail-name { white-space: normal; overflow: visible; }
+.dl-duo-rail-faces img {
+  width: 26px;
+  height: 26px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.dl-duo-rail-faces img + img { margin-left: -6px; }
+
+@media (max-width: 560px) {
+  .dl-duo-pick { grid-template-columns: minmax(0, 1fr); }
+  [data-theme="codex"] .dl-duo-pick .dl-lb-heroes { grid-template-columns: repeat(auto-fill, minmax(1.9rem, 1fr)); }
+  [data-theme="codex"] a.dl-duo-all { justify-self: start; }
+  .dl-duo-grid { padding: 0.9rem 0.7rem 1rem; }
+  /* Una sola columna: el alto ya no tiene que ser parejo, y el nombre largo
+     ("Lady Geist + Holliday") baja a un segundo renglón en vez de cortarse. */
+  .dl-duo { height: auto; min-height: 88px; }
+}
