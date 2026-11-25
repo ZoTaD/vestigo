@@ -299,6 +299,7 @@ const EN = {
     sourcesValheim: "Averia typeface by Dan Sayers (SIL Open Font License).",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
+    support: "Support Vestigo on Ko-fi",
     // Both documents are English-only, so a Spanish reader deserves fair warning
     // before the click rather than a surprise after it.
     englishOnly: "",
@@ -602,6 +603,7 @@ const ES: typeof EN = {
     sourcesValheim: "Tipografía Averia de Dan Sayers (SIL Open Font License).",
     privacy: "Política de Privacidad",
     terms: "Términos del Servicio",
+    support: "Apoyá a Vestigo en Ko-fi",
     englishOnly: "(en inglés)",
     disclaimerValve:
       "Vestigo tampoco está avalado por Valve Corporation. Deadlock, Dota 2 y todas sus " +

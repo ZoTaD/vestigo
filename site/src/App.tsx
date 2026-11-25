@@ -178,6 +178,12 @@ function Shell({
           {copy.footer.englishOnly && (
             <span className="foot-note">{copy.footer.englishOnly}</span>
           )}
+          {/* Donaciones (2026-11-25): un link común, sin el widget de Ko-fi, así
+              no suma scripts ni pedidos a ninguna página. Va después del "(en
+              inglés)", que habla de Privacidad y Términos. */}
+          <a className="foot-link is-support" href="https://ko-fi.com/vestigogg" target="_blank" rel="noopener">
+            {copy.footer.support} ♥
+          </a>
           {analyticsAvailable() && (
             <button className="foot-link is-consent" onClick={() => setReopened(true)}>
               {copy.consent.settings}
