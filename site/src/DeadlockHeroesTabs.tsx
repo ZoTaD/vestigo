@@ -5,8 +5,9 @@ import "./styles/deadlock-heroes-tabs.css";
 
 /**
  * Las sub-pestañas de Héroes (2026-11-18): la tabla de estadísticas
- * (`/deadlock/heroes`) y los récords (`/deadlock/heroes/records`). Van arriba
- * de las dos, con el mismo aspecto que las de la Escalera y el perfil.
+ * (`/deadlock/heroes`), los dúos de línea (`/deadlock/heroes/duos`, 2026-11-25)
+ * y los récords (`/deadlock/heroes/records`). Van arriba de las tres, con el
+ * mismo aspecto que las de la Escalera y el perfil.
  */
 export default function DeadlockHeroesTabs({
   route,
@@ -15,7 +16,7 @@ export default function DeadlockHeroesTabs({
 }: {
   route: Route;
   navigate: (r: Route) => void;
-  active: "stats" | "records";
+  active: "stats" | "duos" | "records";
 }) {
   const t = useCopy().deadlock.heroes.subtabs;
   return (
@@ -32,6 +33,19 @@ export default function DeadlockHeroesTabs({
         active={active === "stats"}
       >
         {t.stats}
+      </RouteLink>
+      <RouteLink
+        className="dl-htab"
+        to={{
+          ...route,
+          view: "deadlock",
+          dlSection: "heroes",
+          detail: "duos",
+        }}
+        onNavigate={navigate}
+        active={active === "duos"}
+      >
+        {t.duos}
       </RouteLink>
       <RouteLink
         className="dl-htab"

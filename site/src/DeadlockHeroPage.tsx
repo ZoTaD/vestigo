@@ -828,6 +828,33 @@ export default function DeadlockHeroPage({
             </div>
           </>
         )}
+        {/* Con quién ir a la línea (2026-11-25): lo mismo que la tier list de
+            dúos, recortado a este héroe, con el enlace a la lista entera. */}
+        {ins?.mates && ins.mates.length > 0 && (
+          <>
+            <h3 className="dl-hp-lane-title">{t.matchups.mates}</h3>
+            <p className="detail-note">{t.matchups.matesLead(insights?.minMate ?? 200)}</p>
+            <div className="dl-hp-pairs-grid" data-cols="2">
+              <PairList title={t.matchups.matesBest} rows={ins.mates.slice(0, 5)} kind="with" heroes={porId} route={route} navigate={navigate} />
+              <PairList
+                title={t.matchups.matesWorst}
+                rows={ins.mates.length > 5 ? [...ins.mates].reverse().slice(0, Math.min(5, ins.mates.length - 5)) : []}
+                kind="hard"
+                heroes={porId}
+                route={route}
+                navigate={navigate}
+              />
+            </div>
+            <p className="dl-hp-more">
+              <RouteLink
+                to={{ ...route, view: "deadlock", dlSection: "heroes", detail: `duos/${heroSlugs.toSlug.get(String(hero.heroId))}` }}
+                onNavigate={navigate}
+              >
+                {t.matchups.matesAll(hero.name)} →
+              </RouteLink>
+            </p>
+          </>
+        )}
         {/* Dónde pelea: después de contra quién, que es la misma pregunta
             hecha sobre el mapa. Se carga sola (~6 KB) y sin archivo no dibuja. */}
         <DeadlockKillMap heroId={hero.heroId} />

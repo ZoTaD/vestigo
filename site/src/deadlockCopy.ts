@@ -36,7 +36,7 @@ const EN = {
      * base del juego, ordenable por columna. Cada fila abre la página del héroe.
      */
     heroes: {
-      subtabs: { label: "Heroes", stats: "Hero stats", records: "Records" },
+      subtabs: { label: "Heroes", stats: "Hero stats", duos: "Lane duos", records: "Records" },
       title: "Deadlock heroes",
       accent: "side by side",
       lead:
@@ -247,6 +247,11 @@ const EN = {
         laneHard: "Loses the lane against",
         laneWin: (wr: string) => `${wr}% won`,
         laneWinTitle: "Win rate of those matches, start to end",
+        mates: "Lane partners",
+        matesLead: (min: number) => `Win rate when this hero and each ally start in the same lane. Only partners with ${min}+ matches together.`,
+        matesBest: "Best lane partners",
+        matesWorst: "Worst lane partners",
+        matesAll: (h: string) => `All of ${h}'s lane duos`,
       },
       build: {
         kicker: (wr: string, n: string) => `Build · ${wr} in ${n} matches`,
@@ -372,6 +377,38 @@ const EN = {
       copied: "Copied: paste it in Watch in the game",
       copyTip: "Copy the ID and paste it in the game's Watch menu to spectate",
       more: (n: number) => `Show ${n} more`,
+    },
+    duos: {
+      title: "Lane duos",
+      accent: "tier list",
+      heroTitle: (h: string) => h,
+      heroAccent: "lane partners",
+      lead: "How often each pair of heroes wins when they go to the same lane, from the best duos to the worst.",
+      leadHero: (h: string) => `How often ${h} wins with each lane partner, from the best to the worst.`,
+      meta: (n: number, band: string) => `${n} duos · ${band}`,
+      loading: "Loading duos…",
+      all: "All heroes",
+      pickHero: "Show the duos of one hero",
+      tierCount: (n: number) => (n === 1 ? "1 duo" : `${n} duos`),
+      games: (n: string) => `${n} games`,
+      winTitle: "Win rate when both heroes go to the same lane",
+      together: (a: string, b: string) => `${a} and ${b}`,
+      synergyUp: (pts: string) => `+${pts} vs. alone`,
+      synergyDown: (pts: string) => `−${pts} vs. alone`,
+      synergyTip: (pts: string, up: boolean) =>
+        up
+          ? `They win ${pts} points more together than you'd expect from how each one does on their own.`
+          : `They win ${pts} points less together than you'd expect from how each one does on their own.`,
+      best: "Best duos",
+      worst: "Worst duos",
+      synergy: "Better together",
+      synergyLead: "Duos that win clearly more than each hero would on their own: the pair itself makes the difference.",
+      synergyNone: "In this rank group no duo is clearly better than its two heroes on their own. Pick All ranks for a bigger sample.",
+      none: "Not enough games yet for this hero's duos in this rank group.",
+      note: (min: string, from: string, to: string) =>
+        `Ranked matches from ${from} to ${to} where both heroes started in the same lane. Only duos with ${min}+ games together. Letters: S 57%+, A 54–57%, B 50–54%, C 46–50%, D under 46%.`,
+      synergyNote:
+        "\"vs. alone\" compares the duo with what its two heroes win on their own in the same games; it only shows when the gap is bigger than the sample's margin of error.",
     },
     records: {
       title: "Deadlock records",
@@ -1951,7 +1988,7 @@ const ES: typeof EN = {
       kpis: { winRate: "Victorias", pickRate: "Uso", skillGap: "Brecha", trend: "Desde el parche" },
     },
     heroes: {
-      subtabs: { label: "Héroes", stats: "Estadísticas", records: "Récords" },
+      subtabs: { label: "Héroes", stats: "Estadísticas", duos: "Dúos de línea", records: "Récords" },
       title: "Héroes de Deadlock",
       accent: "lado a lado",
       lead:
@@ -2161,6 +2198,11 @@ const ES: typeof EN = {
         laneHard: "Pierde la línea contra",
         laneWin: (wr: string) => `${wr} % ganadas`,
         laneWinTitle: "Winrate de esas partidas, de principio a fin",
+        mates: "Compañeros de línea",
+        matesLead: (min: number) => `Victorias cuando este héroe y cada aliado empiezan en la misma línea. Sólo compañeros con ${min} partidas juntos o más.`,
+        matesBest: "Mejores compañeros de línea",
+        matesWorst: "Peores compañeros de línea",
+        matesAll: (h: string) => `Todos los dúos de línea de ${h}`,
       },
       build: {
         kicker: (wr: string, n: string) => `Build · ${wr} en ${n} partidas`,
@@ -2272,6 +2314,38 @@ const ES: typeof EN = {
       copied: "Copiado: pegalo en Espectar dentro del juego",
       copyTip: "Copiá el ID y pegalo en el menú Espectar del juego para mirarla",
       more: (n: number) => `Ver ${n} más`,
+    },
+    duos: {
+      title: "Dúos de línea",
+      accent: "tier list",
+      heroTitle: (h: string) => h,
+      heroAccent: "compañeros de línea",
+      lead: "Cuánto gana cada pareja de héroes cuando va junta a la misma línea, de los mejores dúos a los peores.",
+      leadHero: (h: string) => `Cuánto gana ${h} con cada compañero de línea, del mejor al peor.`,
+      meta: (n: number, band: string) => `${n} dúos · ${band}`,
+      loading: "Cargando los dúos…",
+      all: "Todos los héroes",
+      pickHero: "Ver los dúos de un héroe",
+      tierCount: (n: number) => (n === 1 ? "1 dúo" : `${n} dúos`),
+      games: (n: string) => `${n} partidas`,
+      winTitle: "Victorias cuando los dos héroes van a la misma línea",
+      together: (a: string, b: string) => `${a} y ${b}`,
+      synergyUp: (pts: string) => `+${pts} vs. solos`,
+      synergyDown: (pts: string) => `−${pts} vs. solos`,
+      synergyTip: (pts: string, up: boolean) =>
+        up
+          ? `Juntos ganan ${pts} puntos más de lo que ganaría cada uno por su cuenta.`
+          : `Juntos ganan ${pts} puntos menos de lo que ganaría cada uno por su cuenta.`,
+      best: "Los mejores dúos",
+      worst: "Los peores dúos",
+      synergy: "Mejor juntos",
+      synergyLead: "Dúos que ganan claramente más que sus dos héroes por separado: la pareja en sí hace la diferencia.",
+      synergyNone: "En estos rangos ningún dúo gana claramente más que sus dos héroes por separado. Elegí Todos los rangos para una muestra más grande.",
+      none: "Todavía no hay partidas suficientes de los dúos de este héroe en estos rangos.",
+      note: (min: string, from: string, to: string) =>
+        `Partidas clasificatorias del ${from} al ${to} en que los dos héroes empezaron en la misma línea. Sólo dúos con ${min} partidas juntos o más. Letras: S 57 % o más, A 54–57 %, B 50–54 %, C 46–50 %, D menos de 46 %.`,
+      synergyNote:
+        "\"vs. solos\" compara al dúo con lo que ganan sus dos héroes por su cuenta en las mismas partidas; sólo aparece cuando la diferencia es más grande que el margen de error de la muestra.",
     },
     records: {
       title: "Récords de Deadlock",

@@ -43,6 +43,9 @@ export const PAGES = [
   "/en/deadlock/live",
   // Récords (2026-11-18): el mundo y un héroe.
   "/en/deadlock/heroes/records",
+  // Dúos de línea (2026-11-25): todos y los de un héroe.
+  "/en/deadlock/heroes/duos",
+  "/es/deadlock/heroes/duos/graves",
   "/es/deadlock/heroes/records/abrams",
   "/en/deadlock/dle",
   "/en/deadlock/dle/ranking",

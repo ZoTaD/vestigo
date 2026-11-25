@@ -139,6 +139,8 @@ export interface HeroInsight {
   vs: PairPoint[];
   with: PairPoint[];
   lane?: LanePoint[];
+  /** Junto a cada compañero de línea (los dos en el mismo carril), de mejor a peor (2026-11-25). */
+  mates?: PairPoint[];
 }
 
 export interface HeroInsightsFile {
@@ -148,6 +150,8 @@ export interface HeroInsightsFile {
   to: string;
   patch?: string;
   minPair: number;
+  /** El piso de los compañeros de línea (2026-11-25). */
+  minMate?: number;
   heroes: Record<string, HeroInsight>;
 }
 
