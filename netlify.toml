@@ -202,6 +202,13 @@
   status = 200
   force = true
 
+# Los seguidos de AoE2 (2026-11-26), del mismo Worker (`api/src/follows`).
+[[redirects]]
+  from = "/api/follows"
+  to = "https://vestigo-api.vestigo-gg.workers.dev/api/follows"
+  status = 200
+  force = true
+
 # Las builds de la comunidad (2026-11-15), del mismo Worker. Dos reglas: la
 # del comodín no toma `/api/builds` a secas (`GET ?hero=` y `POST`).
 [[redirects]]
