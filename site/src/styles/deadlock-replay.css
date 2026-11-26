@@ -1,0 +1,296 @@
+/* ---------------------------------------------------------------------------
+   Deadlock · pestaña Repetición de una partida (2026-11-20).
+   Va en tinta oscura como las otras cajas del estilo Mixto; los colores de
+   equipo son los de la chance de ganar (`--lead-amber`, `--lead-sapphire`).
+   --------------------------------------------------------------------------- */
+
+.dl-replay {
+  --rp-amber: var(--lead-amber, #f0a34a);
+  --rp-sapphire: var(--lead-sapphire, #6fa8e6);
+  --rp-fight: #ff5d47;
+  outline: none;
+}
+.dl-replay .is-amber { color: var(--rp-amber); }
+.dl-replay .is-sapphire { color: var(--rp-sapphire); }
+.dl-replay .is-good { color: var(--good); }
+.dl-replay .is-bad { color: var(--bad); }
+.dl-replay .is-dim { color: var(--text-faint); }
+.dl-replay button { font: inherit; color: inherit; cursor: pointer; }
+
+.dl-rp-lead { margin-top: 0; }
+
+/* Botones de modo y de pestaña: el elegido es una tira de papel. */
+.dl-rp-modes, .dl-rp-tabs, .dl-rp-speed { display: flex; gap: 4px; flex-wrap: wrap; }
+.dl-rp-modes button, .dl-rp-tabs button, .dl-rp-speed button {
+  background: var(--surface-2);
+  border: 0;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font: 700 0.8rem/1 var(--font-display);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dl-rp-modes button[aria-selected="true"],
+.dl-rp-tabs button[aria-selected="true"],
+.dl-rp-tabs button[aria-pressed="true"],
+.dl-rp-speed button[aria-pressed="true"] {
+  background: var(--cns-paper, #e6d6b9);
+  color: #1e1a14;
+}
+.dl-rp-modes button:disabled { opacity: 0.4; cursor: default; }
+.dl-rp-beta {
+  font: 700 0.62rem/1 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 4px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  color: var(--accent-lit);
+  vertical-align: middle;
+}
+
+/* ── Marcador ── */
+.dl-rp-score {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: "a mid b";
+  gap: 12px;
+  align-items: center;
+  margin: 14px 0 12px;
+}
+.dl-rp-side { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.dl-rp-side.is-amber { grid-area: a; }
+.dl-rp-side.is-sapphire { grid-area: b; flex-direction: row-reverse; }
+.dl-rp-mid { grid-area: mid; text-align: center; }
+.dl-rp-side li { flex: 1 1 0; min-width: 0; max-width: 80px; text-align: center; }
+.dl-rp-face { position: relative; display: inline-block; }
+.dl-rp-face .dl-rp-chip { width: 40px; height: 40px; }
+.dl-rp-side li.is-dead .dl-rp-chip { filter: grayscale(1) brightness(0.45); }
+.dl-rp-respawn {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font: 800 1rem/1 var(--font-display); color: var(--text);
+}
+.dl-rp-hp { display: block; height: 4px; margin: 6px 4px 3px; border-radius: 2px; background: var(--surface-2); overflow: hidden; }
+.dl-rp-hp i { display: block; height: 100%; background: var(--good); }
+.dl-rp-hp i[data-level="mid"] { background: #f0c24b; }
+.dl-rp-hp i[data-level="low"] { background: var(--bad); }
+.dl-rp-kd { font: 600 0.75rem/1 var(--font-display); color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.dl-rp-souls { margin: 0; font: 800 1.5rem/1 var(--font-display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dl-rp-souls span { font-size: 0.85rem; color: var(--text-faint); font-weight: 600; }
+.dl-rp-ahead {
+  margin: 4px 0 0; font: 600 0.75rem/1 var(--font-display); letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--text-dim); white-space: nowrap;
+}
+
+img.dl-rp-chip { border-radius: 50%; object-fit: cover; background: var(--surface-2); flex: none; box-shadow: 0 0 0 2px var(--rp-amber); }
+img.dl-rp-chip.is-sapphire { box-shadow: 0 0 0 2px var(--rp-sapphire); }
+
+/* ── Mapa y panel ── */
+.dl-rp-main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 14px; }
+.dl-rp-map {
+  position: relative; aspect-ratio: 1; max-height: 74vh; width: 100%;
+  border-radius: 6px; overflow: hidden; background: #0e0c09;
+}
+.dl-rp-map canvas, .dl-rp-curve canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.dl-rp-badge {
+  position: absolute; left: 10px; top: 10px; margin: 0; padding: 7px 10px; border-radius: 5px;
+  background: rgba(14, 12, 9, 0.86); display: grid; gap: 3px;
+}
+.dl-rp-badge span { font: 700 0.68rem/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.dl-rp-badge b { font: 800 1.2rem/1 var(--font-display); }
+.dl-rp-back {
+  position: absolute; right: 10px; top: 10px; border: 0; border-radius: 5px; padding: 7px 10px;
+  background: rgba(14, 12, 9, 0.86); font: 700 0.8rem/1 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase;
+}
+.dl-rp-back:hover { color: var(--accent-lit); }
+
+.dl-rp-panel {
+  display: flex; flex-direction: column; gap: 8px; min-height: 0; max-height: 74vh;
+  border: 1px solid var(--line); border-radius: 6px; padding: 10px;
+}
+.dl-rp-list { list-style: none; margin: 0; padding: 0; overflow: auto; flex: 1; min-height: 120px; }
+.dl-rp-list li > button {
+  display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 8px; align-items: center;
+  width: 100%; padding: 6px 6px; border: 0; background: none; text-align: left; border-radius: 4px;
+}
+.dl-rp-list li > button:hover { background: var(--surface-2); }
+.dl-rp-ev.is-future { opacity: 0.38; }
+.dl-rp-ev.is-now > button { background: rgba(245, 154, 108, 0.13); }
+.dl-rp-ev-t { font: 600 0.8rem/1 var(--font-display); color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.dl-rp-ev-what { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 0.82rem; }
+.dl-rp-ev-what > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dl-rp-ev-v { font: 700 0.8rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+img.dl-rp-item { width: 22px; height: 22px; border-radius: 4px; flex: none; }
+.dl-rp-dia { width: 9px; height: 9px; flex: none; transform: rotate(45deg); background: var(--rp-amber); margin: 0 4px; }
+.dl-rp-dia.is-sapphire { background: var(--rp-sapphire); }
+
+.dl-rp-note { margin: 2px 4px 8px; font-size: 0.8rem; color: var(--text-faint); }
+.dl-rp-impact { list-style: none; margin: 0; padding: 0; }
+.dl-rp-impact li > button {
+  display: grid; grid-template-columns: 26px minmax(0, 1fr) 52px; gap: 8px; align-items: center;
+  width: 100%; padding: 6px 4px; border: 0; border-radius: 4px; background: none; text-align: left; font-size: 0.82rem;
+}
+.dl-rp-impact li > button:hover { background: var(--surface-2); }
+.dl-rp-impact li > button > b { text-align: right; font: 700 0.9rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.dl-rp-impact-who > span:first-child { display: flex; justify-content: space-between; gap: 6px; }
+.dl-rp-impact-who small { color: var(--text-faint); font-family: var(--font-display); }
+.dl-rp-impact-bar { display: block; position: relative; height: 7px; margin-top: 4px; border-radius: 4px; background: var(--surface-2); }
+.dl-rp-impact-bar i { position: absolute; top: 0; bottom: 0; border-radius: 4px; background: var(--good); }
+.dl-rp-impact-bar i.is-bad { background: var(--bad); }
+
+/* ── Pelea por pelea ── */
+.dl-rp-fighthead h3 { margin: 0; font: 800 1.35rem/1.05 var(--font-display); text-transform: uppercase; }
+.dl-rp-fighthead p { margin: 3px 0 0; font-size: 0.8rem; color: var(--text-dim); }
+.dl-rp-verdict {
+  margin: 0; padding: 9px 11px; border-radius: 3px; font-size: 0.85rem; line-height: 1.35;
+  background: var(--cns-paper, #e6d6b9); color: #1e1a14; transform: rotate(-0.5deg);
+}
+.dl-rp-meter p { display: flex; justify-content: space-between; margin: 0; font: 700 0.75rem/1 var(--font-display); letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); }
+.dl-rp-meter-bar { display: flex; height: 9px; margin-top: 4px; border-radius: 3px; overflow: hidden; }
+.dl-rp-meter-bar i.is-amber { background: var(--rp-amber); }
+.dl-rp-meter-bar i.is-sapphire { background: var(--rp-sapphire); flex: 1; }
+.dl-rp-h { margin: 4px 0 0; font: 700 0.75rem/1 var(--font-display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); }
+.dl-rp-who { list-style: none; margin: 0; padding: 0; }
+.dl-rp-who li { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 4px 0; border-top: 1px solid var(--line); font-size: 0.82rem; }
+.dl-rp-who small { display: block; color: var(--text-faint); font-size: 0.72rem; }
+.dl-rp-who b { font: 700 0.9rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.dl-rp-fights { min-height: 140px; }
+.dl-rp-fights li.is-on > button { background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--line-strong); }
+.dl-rp-fc { display: grid; gap: 3px; min-width: 0; }
+.dl-rp-fc b { font: 700 0.85rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.dl-rp-fc-faces { display: flex; flex-wrap: wrap; gap: 3px; }
+.dl-rp-fc-faces img.dl-rp-chip { box-shadow: 0 0 0 1.5px var(--rp-amber); }
+.dl-rp-fc-faces img.dl-rp-chip.is-sapphire { box-shadow: 0 0 0 1.5px var(--rp-sapphire); }
+
+/* ── Barra de reproducción ── */
+.dl-rp-transport {
+  display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 14px; align-items: center;
+  margin-top: 14px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 6px;
+}
+.dl-rp-play {
+  width: 40px; height: 40px; border: 0; border-radius: 50%;
+  background: var(--accent-lit); color: #1e1a14 !important; font-size: 0.95rem;
+}
+.dl-rp-clock { font: 800 1.35rem/1 var(--font-display); min-width: 3.6em; font-variant-numeric: tabular-nums; }
+.dl-rp-curve canvas { height: 80px; cursor: pointer; }
+.dl-rp-axis {
+  display: flex; justify-content: space-between; gap: 8px; margin: 5px 0 0;
+  font: 600 0.7rem/1.1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint);
+}
+
+@media (max-width: 1000px) {
+  .dl-rp-main { grid-template-columns: 1fr; }
+  .dl-rp-panel { max-height: 440px; }
+  .dl-rp-score { grid-template-columns: 1fr 1fr; grid-template-areas: "mid mid" "a b"; }
+  .dl-rp-face .dl-rp-chip { width: 30px; height: 30px; }
+  .dl-rp-transport { grid-template-columns: auto auto minmax(0, 1fr); }
+  .dl-rp-speed { grid-column: 1 / -1; justify-content: flex-end; }
+}
+@media (max-width: 600px) {
+  .dl-rp-side { gap: 3px; }
+  .dl-rp-face .dl-rp-chip { width: 24px; height: 24px; }
+  .dl-rp-axis span:not(:nth-child(2)) { display: none; }
+  .dl-rp-axis { justify-content: center; }
+  .dl-rp-badge { padding: 5px 7px; }
+  .dl-rp-badge b { font-size: 0.95rem; }
+  .dl-rp-panel { max-height: 320px; }
+  .dl-rp-ev-what > img.dl-rp-chip:first-child { display: none; }
+  .dl-rp-back { padding: 5px 7px; font-size: 0.7rem; }
+}
+
+/* En una pelea el panel no crece más que el mapa: se desplaza el panel entero. */
+.dl-rp-main:has(.is-zoomed) .dl-rp-panel { overflow: auto; }
+.dl-rp-main:has(.is-zoomed) .dl-rp-fights { flex: none; overflow: visible; min-height: 0; }
+.dl-rp-main:has(.is-zoomed) .dl-rp-who li { padding: 3px 0; }
+
+/* ── Desglose de un jugador ── */
+.dl-rp-link {
+  border: 0; background: none; padding: 2px 0; margin-bottom: 8px;
+  font: 700 0.75rem/1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
+}
+.dl-rp-link:hover { color: var(--accent-lit); }
+.dl-rp-player-head { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.dl-rp-player-head img.dl-rp-chip { width: 40px; height: 40px; }
+.dl-rp-player-head span b { display: block; font: 800 1.15rem/1.05 var(--font-display); text-transform: uppercase; }
+.dl-rp-player-head small { color: var(--text-faint); font-size: 0.78rem; }
+.dl-rp-player-total { font: 800 1.6rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.dl-rp-spark { display: block; width: 100%; height: 64px; margin-top: 12px; cursor: pointer; background: var(--surface); border-radius: 4px; }
+.dl-rp-spark polyline { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; }
+.dl-rp-spark polyline.is-good { stroke: var(--good); }
+.dl-rp-spark polyline.is-bad { stroke: var(--bad); }
+.dl-rp-spark-zero { stroke: var(--line-strong); stroke-dasharray: 3 3; vector-effect: non-scaling-stroke; }
+.dl-rp-spark-now { stroke: var(--accent-lit); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.dl-rp-spark-axis {
+  display: flex; justify-content: space-between; margin: 4px 0 10px;
+  font: 600 0.65rem/1.1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint);
+}
+.dl-rp-groups { list-style: none; margin: 0 0 12px; padding: 0; }
+.dl-rp-groups li { display: flex; justify-content: space-between; gap: 8px; padding: 5px 2px; border-top: 1px solid var(--line); font-size: 0.82rem; }
+.dl-rp-groups small { color: var(--text-faint); }
+.dl-rp-groups b { font: 700 0.9rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.dl-rp-moments { list-style: none; margin: 6px 0 0; padding: 0; }
+.dl-rp-moments li > button {
+  display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; gap: 8px; align-items: center;
+  width: 100%; padding: 6px 4px; border: 0; border-radius: 4px; background: none; text-align: left; font-size: 0.82rem;
+}
+.dl-rp-moments li > button:hover { background: var(--surface-2); }
+.dl-rp-moments b { font: 700 0.85rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+
+/* ── Sobre el mapa: nombre al pasar y últimas kills ── */
+.dl-rp-tip {
+  position: absolute; transform: translate(-50%, calc(-100% - 22px)); pointer-events: none;
+  padding: 3px 7px; border-radius: 4px; background: rgba(14, 12, 9, 0.92); white-space: nowrap;
+  font: 700 0.78rem/1 var(--font-display); letter-spacing: 0.03em; text-transform: uppercase;
+}
+.dl-rp-feed {
+  position: absolute; left: 10px; bottom: 10px; margin: 0; padding: 0; list-style: none;
+  display: grid; gap: 4px; pointer-events: none;
+}
+.dl-rp-feed li {
+  display: flex; align-items: center; gap: 6px; padding: 3px 7px 3px 4px; border-radius: 14px;
+  background: rgba(14, 12, 9, 0.86); font-size: 0.7rem; color: var(--text-faint);
+}
+.dl-rp-feed img.dl-rp-chip { width: 22px; height: 22px; }
+.dl-rp-feed-none { width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); }
+.dl-rp-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── Compartir ── */
+.dl-rp-share { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0 2px; }
+.dl-rp-share button {
+  border: 1px solid var(--line-strong); border-radius: 4px; padding: 6px 9px; background: none;
+  font: 700 0.72rem/1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
+}
+.dl-rp-share button:hover:not(:disabled) { color: var(--accent-lit); border-color: var(--accent-lit); }
+.dl-rp-share button:disabled { opacity: 0.6; cursor: progress; }
+.dl-rp-share-note { flex-basis: 100%; font-size: 0.75rem; color: var(--good); }
+
+/* ── Mapa de calor del jugador que se sigue ── */
+.dl-rp-heat { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 3px; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
+.dl-rp-heat button {
+  border: 0; border-radius: 4px; padding: 5px 8px; background: rgba(14, 12, 9, 0.88);
+  font: 700 0.7rem/1 var(--font-display); letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-dim);
+}
+.dl-rp-heat button[aria-pressed="true"] { background: var(--cns-paper, #f7e9d5); color: #1e1a14; }
+.dl-rp-heat-note {
+  position: absolute; right: 10px; bottom: 44px; max-width: 60%; margin: 0; padding: 5px 8px; border-radius: 4px;
+  background: rgba(14, 12, 9, 0.88); font-size: 0.72rem; color: var(--text-dim); text-align: right;
+}
+
+/* ── Celular: la curva en su propia fila, y nada que se pise ── */
+@media (max-width: 600px) {
+  .dl-rp-transport {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: "play clock speed" "curve curve curve";
+    gap: 10px;
+  }
+  .dl-rp-play { grid-area: play; }
+  .dl-rp-clock { grid-area: clock; }
+  .dl-rp-curve { grid-area: curve; }
+  .dl-rp-speed { grid-area: speed; grid-column: auto; justify-content: flex-end; }
+  .dl-rp-speed button:first-child:not(:only-child) { display: none; }
+  .dl-rp-spark-axis span:nth-child(2) { display: none; }
+  .dl-rp-player-total { font-size: 1.3rem; }
+  .dl-rp-heat { max-width: 100%; left: 10px; }
+  .dl-rp-heat button { padding: 4px 6px; font-size: 0.62rem; }
+}

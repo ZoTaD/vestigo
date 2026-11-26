@@ -16,7 +16,7 @@ import { ACH_COPY, achievementText } from "./deadlockAchievementsCopy";
  * en círculo cortaba las cabezas, y el retrato entra entero en todos los héroes.
  */
 
-function useNames() {
+export function useNames() {
   const { lang } = useLang();
   return {
     hero: (id: number) => {

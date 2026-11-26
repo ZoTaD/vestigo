@@ -123,6 +123,8 @@ export interface HeroBuildsFile {
   heroId: number;
   tags: Record<string, Tag>;
   builds: CommunityBuild[];
+  /** Las builds de la semana (2026-11-25): la ficha de cada una está en `builds`. */
+  week?: WeekPicks<WeekStat>;
 }
 
 export type IndexCard = Pick<CommunityBuild, "id" | "name" | "authorName" | "matches" | "wins" | "style" | "key"> & { official?: true; verified?: true };
@@ -133,7 +135,79 @@ export interface IndexFile {
   to: string;
   /** Partidas con build propia en la ventana, todos los héroes. */
   matches: number;
-  heroes: Record<string, { builds: number; matches: number; top: IndexCard[] }>;
+  heroes: Record<string, { builds: number; matches: number; top: IndexCard[]; week?: WeekPicks<WeekCard> }>;
+  /** La ventana de las builds de la semana: los últimos 7 días contra los 7 de antes. */
+  week?: { from: string; to: string };
+}
+
+/* ── Builds de la semana (2026-11-25) ──────────────────────────────── */
+
+/** Una build en la semana: sus partidas y victorias de estos 7 días y de los 7 de antes, y su parte del héroe. */
+export interface WeekStat {
+  id: number;
+  matches: number;
+  wins: number;
+  prevMatches: number;
+  prevWins: number;
+  /** Qué parte de las partidas del héroe (con build de la comunidad) jugó con esta build, 0–1. */
+  share: number;
+  prevShare: number;
+}
+
+/** Para el índice: la tarjeta de la build con los números de la semana. */
+export type WeekCard = IndexCard & Omit<WeekStat, "id" | "matches" | "wins">;
+
+export interface WeekPicks<T> {
+  /** La más jugada. */
+  popular?: T;
+  /** La de mejor % de victoria, por el piso de Wilson, con al menos `WEEK_MIN` partidas. */
+  best?: T;
+  /** La que más creció su parte del héroe contra la semana anterior. */
+  rising?: T;
+}
+
+/** Partidas en la semana para entrar en "mejor %" y "en alza": con menos, el % se mueve ±3 puntos por azar. */
+export const WEEK_MIN = 1000;
+/** "En alza" pide ganar al menos esta parte del héroe (2 puntos): menos es ruido de una semana a la otra. */
+export const RISE_MIN = 0.02;
+
+/**
+ * Las tres builds de la semana de un héroe, de las filas de `hero-build-stats`
+ * de estos 7 días y de los 7 de antes. Las builds predeterminadas del juego
+ * (id < 1000, sin autor) no entran.
+ */
+export function weekPicks(week: StatRow[], prev: StatRow[], minBuildId = 1000): WeekPicks<WeekStat> {
+  const propias = week.filter((r) => r.hero_build_id >= minBuildId && r.matches > 0);
+  if (propias.length === 0) return {};
+  const total = propias.reduce((s, r) => s + r.matches, 0);
+  const antes = new Map(prev.filter((r) => r.hero_build_id >= minBuildId).map((r) => [r.hero_build_id, r]));
+  const totalAntes = [...antes.values()].reduce((s, r) => s + r.matches, 0);
+  const stat = (r: StatRow): WeekStat => {
+    const p = antes.get(r.hero_build_id);
+    return {
+      id: r.hero_build_id,
+      matches: r.matches,
+      wins: r.wins,
+      prevMatches: p?.matches ?? 0,
+      prevWins: p?.wins ?? 0,
+      share: r.matches / total,
+      prevShare: totalAntes > 0 && p ? p.matches / totalAntes : 0,
+    };
+  };
+  const porId = (a: StatRow, b: StatRow) => a.hero_build_id - b.hero_build_id;
+  const out: WeekPicks<WeekStat> = {};
+  out.popular = stat([...propias].sort((a, b) => b.matches - a.matches || porId(a, b))[0]);
+  const firmes = propias.filter((r) => r.matches >= WEEK_MIN);
+  if (firmes.length > 0) {
+    out.best = stat([...firmes].sort((a, b) => wilson(b.wins, b.matches) - wilson(a.wins, a.matches) || porId(a, b))[0]);
+    // Sin semana anterior no hay contra qué medir la subida.
+    if (totalAntes > 0) {
+      const sube = firmes.map(stat).filter((s) => s.share - s.prevShare >= RISE_MIN);
+      sube.sort((a, b) => b.share - b.prevShare - (a.share - a.prevShare) || a.id - b.id);
+      if (sube[0]) out.rising = sube[0];
+    }
+  }
+  return out;
 }
 
 /* ── Lo que contesta la API ────────────────────────────────────────── */

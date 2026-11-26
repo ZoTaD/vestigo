@@ -95,12 +95,23 @@ export function metaFor(
   const seo = copy.seo;
 
   // Builds (2026-11-15): la biblioteca de un héroe ("Abrams") o una build ("<build>␟<héroe>").
+  // La ruleta de builds (2026-11-25), dentro de Builds.
+  if (route.view === "deadlock" && route.dlSection === "builds" && route.detail === "roulette") {
+    return { title: seo.deadlock.roulette.title(), description: seo.deadlock.roulette.description() };
+  }
   if (detailName && route.view === "deadlock" && route.dlSection === "builds") {
     const [build, hero] = detailName.split(BUILD_NAME_SEP);
     return hero === undefined ? seo.deadlock.buildsHero(build) : seo.deadlock.buildsOne(build, hero);
   }
   // Ranking (2026-11-17): el de un héroe, o una sub-pestaña (stats, one-tricks, check).
   // Récords (2026-11-18), sub-pestaña de Héroes: la del mundo y la de cada héroe.
+  // Dúos de línea (2026-11-25), la otra sub-pestaña de Héroes.
+  if (route.view === "deadlock" && route.dlSection === "heroes" && route.detail === "duos") {
+    return { title: seo.deadlock.duos.title(), description: seo.deadlock.duos.description() };
+  }
+  if (detailName && route.view === "deadlock" && route.dlSection === "heroes" && route.detail?.startsWith("duos/")) {
+    return seo.deadlock.duosHero(detailName);
+  }
   if (route.view === "deadlock" && route.dlSection === "heroes" && route.detail === "records") {
     return { title: seo.deadlock.records.title(), description: seo.deadlock.records.description() };
   }
@@ -292,6 +303,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
     if (!builds) return;
     const hero = say(data.dlHeroes[id]?.name as Localized, lang, slug);
     out[`dl-builds/${slug}`] = hero;
+    out["dl-builds/roulette"] = "roulette";
     for (const b of builds) out[`dl-builds/${slug}/${b.id}`] = `${b.name || `Build #${b.id}`}${BUILD_NAME_SEP}${hero}`;
   });
   // El ranking de cada héroe y las sub-pestañas del ranking (2026-11-17).
@@ -302,6 +314,7 @@ function detailNames(data: SitemapData, lang: Lang): Record<string, string> {
   // Los récords de cada héroe (2026-11-18).
   dlSlugs.heroes.forEach((slug, i) => {
     out[`dl-heroes/records/${slug}`] = say(data.dlHeroes[data.dlHeroIds[i]]?.name as Localized, lang, slug);
+    out[`dl-heroes/duos/${slug}`] = say(data.dlHeroes[data.dlHeroIds[i]]?.name as Localized, lang, slug);
   });
   for (const e of data.dlNews ?? []) out[`dl-patches/${e.slug}`] = e.title;
   for (const l of data.p2?.leagues ?? []) out[`p2-economy/${l.slug}`] = l.name;

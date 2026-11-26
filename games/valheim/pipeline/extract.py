@@ -65,7 +65,9 @@ BOSS_ART = {"Eikthyr": "eikthyr_sony", "gd_king": "elder_sony", "Bonemass": "bon
 # tiene: se usa su logo.
 BIOME_ART = {"biome_meadows": "meadows", "biome_blackforest": "blackforest", "biome_swamp": "swamp",
              "biome_mountain": "mountain", "biome_heath": "plains", "biome_ocean": "ocean",
-             "biome_mistlands": "mistlands", "biome_ashlands": "ashlands", "Valheim_DeepNorth_Logo": "deepnorth"}
+             "biome_mistlands": "mistlands", "biome_ashlands": "ashlands"}
+# El Norte profundo no trae ilustración en el juego (sólo su logo): su paisaje
+# sale de una foto de la wiki, en `wiki_images.biome_art()`.
 
 # Pistas de bioma por nombre, para lo que vive en las salas de una mazmorra
 # (prefabs aparte, sin ubicación que diga el bioma) y los cofres sueltos.

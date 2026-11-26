@@ -5,7 +5,7 @@
  * entraba a Valheim bajaba también el armador de Deadlock. Ahora `areas.ts`
  * carga este módulo aparte, con su CSS, y sólo cuando la ruta es de Deadlock.
  */
-import { isRecordsDetail } from "./areaFiles";
+import { isDuosDetail, isRecordsDetail } from "./areaFiles";
 import { Suspense, useState } from "react";
 import { useCopy } from "./deadlockCopy";
 import RouteLink from "./RouteLink";
@@ -54,6 +54,7 @@ const DeadlockPlayerLadder = lazyWithPreload(() => import("./DeadlockPlayerLadde
 const DeadlockComebacks = lazyWithPreload(() => import("./DeadlockComebacks"));
 const DeadlockLive = lazyWithPreload(() => import("./DeadlockLive"));
 const DeadlockRecords = lazyWithPreload(() => import("./DeadlockRecords"));
+const DeadlockDuos = lazyWithPreload(() => import("./DeadlockDuos"));
 const DeadlockMap = lazyWithPreload(() => import("./DeadlockMap"));
 const DeadlockDle = lazyWithPreload(() => import("./DeadlockDle"));
 const DeadlockPlayer = lazyWithPreload(() => import("./DeadlockPlayer"));
@@ -81,7 +82,7 @@ const TABS: Partial<Record<DeadlockSection, { preload: () => Promise<void> }>> =
 
 /** Baja el chunk de la pestaña de una ruta de Deadlock (la tier list ya viene con el área). */
 export const preloadTab = (route: Route): Promise<void> =>
-  (isRecordsDetail(route) ? DeadlockRecords.preload() : TABS[route.dlSection]?.preload()) ?? Promise.resolve();
+  (isRecordsDetail(route) ? DeadlockRecords.preload() : isDuosDetail(route) ? DeadlockDuos.preload() : TABS[route.dlSection]?.preload()) ?? Promise.resolve();
 
 export default function DeadlockArea({
   route,
@@ -175,6 +176,8 @@ export default function DeadlockArea({
         <DeadlockItems band={band} picker={picker} open={route.detail} onOpen={(slug) => goDetail("items", slug)} />
       ) : isRecordsDetail(route) ? (
         <DeadlockRecords route={route} navigate={navigate} />
+      ) : isDuosDetail(route) ? (
+        <DeadlockDuos route={route} navigate={navigate} band={band} all={allRanks} picker={heroesPicker} />
       ) : route.dlSection === "heroes" ? (
         <DeadlockHeroes route={route} navigate={navigate} band={band} all={allRanks} picker={picker} tablePicker={heroesPicker} open={route.detail} />
       ) : route.dlSection === "builder" ? (

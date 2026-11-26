@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useMasonry } from "./useMasonry";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
@@ -57,7 +57,13 @@ import DeadlockRankTrail from "./DeadlockRankTrail";
 import { rankSteps, trailOf, type RankPoint } from "./deadlockRankHistory";
 import { useHeroStats } from "./deadlockHeroStats";
 import GameImg from "./GameImg";
+import DeadlockSeasonRecap from "./DeadlockSeasonRecap";
+import DeadlockLanePartnerCard from "./DeadlockLanePartnerCard";
+import { seasonRecap } from "./deadlockSeasonRecapData";
 import DeadlockTraits from "./DeadlockTraitList";
+
+/** El impacto partida a partida: en su pedazo, porque trae el cálculo de la Repetición. */
+const DeadlockImpactHistory = lazy(() => import("./DeadlockImpactHistory"));
 import { profileTraits } from "./deadlockTraits";
 import { useVsBand } from "./deadlockVsBand";
 import { flagUrl } from "./flags";
@@ -814,6 +820,20 @@ export default function DeadlockPlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, historial, serie, records]);
 
+  /**
+   * El resumen de temporada (2026-11-25): de la temporada elegida, o con
+   * "todas" de la más nueva con partidas. Todas las partidas de la temporada,
+   * no sólo el modo elegido: es la temporada entera de la persona.
+   */
+  const recap = useMemo(() => {
+    if (!historial || historialTodo.length === 0) return null;
+    const s = temporada === "all" ? defaultSeason(historialTodo.map((r) => r.startTime)) : temporada;
+    if (s === "all") return null;
+    const filas = historialTodo.filter((r) => inSeason(r.startTime, s));
+    return seasonRecap(s, filas, serie.filter((p) => inSeason(p.startTime, s)), logros.bySeason.get(s)?.earned ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [historial, temporada, serie, logros]);
+
   return (
     <section className="tool">
       <SectionHead eyebrow={copy.deadlock.eyebrow} title={c.searchTitle} lead={c.searchLead} />
@@ -951,6 +971,8 @@ export default function DeadlockPlayer({
               </div>
           )}
 
+          {pestana === "overview" && recap && <DeadlockSeasonRecap recap={recap} player={cuenta?.name ?? String(id)} />}
+
           {pestana === "overview" && (
             <Piso>
             {rasgos.length > 0 && (
@@ -969,6 +991,8 @@ export default function DeadlockPlayer({
                   <DeadlockStreakForm corpus={corpus} streak={streak} forma={forma} />
                 </div>
               )}
+              {/* Tu compañero de línea ideal (2026-11-25): de los dúos de línea de tu banda. */}
+              <DeadlockLanePartnerCard heroIds={heroesTop.map((h) => h.heroId)} badge={rango?.badge ?? 0} route={route} navigate={navigate} />
               <DeadlockPeerCard
                 kind="mates"
                 peers={mates}
@@ -1180,6 +1204,20 @@ export default function DeadlockPlayer({
           {pestana === "performance" && (
             <Piso>
               <DeadlockPerformance state={vs} />
+              {id != null && historial && (
+                <Suspense fallback={null}>
+                  <DeadlockImpactHistory
+                    accountId={id}
+                    history={historialTodo}
+                    lang={lang}
+                    matchLink={(matchId, label) => (
+                      <button type="button" className="dl-imph-row" onClick={() => onOpenMatch(matchId)}>
+                        {label}
+                      </button>
+                    )}
+                  />
+                </Suspense>
+              )}
             </Piso>
           )}
 

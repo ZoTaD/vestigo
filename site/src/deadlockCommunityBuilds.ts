@@ -22,12 +22,15 @@ import {
   type HeroBuildsFile,
   type IndexCard,
   type IndexFile as BuildsIndexFile,
+  type WeekCard,
+  type WeekStat,
   type RawBuild,
   type Tag as BuildTag,
 } from "../../games/deadlock/pipeline/src/communityBuildsCore";
 
 export { cleanName, isOffensive };
-export type { BuildStyle, BuildTag, BuildsIndexFile, CommunityBuild, HeroBuildsFile, IndexCard };
+export { WEEK_MIN } from "../../games/deadlock/pipeline/src/communityBuildsCore";
+export type { BuildStyle, BuildTag, BuildsIndexFile, CommunityBuild, HeroBuildsFile, IndexCard, WeekCard, WeekStat };
 
 /* ── Carga ─────────────────────────────────────────────────────────── */
 

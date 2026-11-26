@@ -1663,3 +1663,162 @@
   margin: 0;
   max-width: 75ch;
 }
+
+/* ── Builds de la semana (2026-11-25) ─────────────────────────────────
+   Portada: tres columnas (más jugada, mejor %, en alza), una build por héroe.
+   Biblioteca de un héroe: tres tarjetas arriba de las pestañas. Sin bordes de
+   color: el tipo va en palabras y la cifra lleva el color. */
+
+.dl-bl-week {
+  margin-bottom: var(--sp-6, 2rem);
+}
+.dl-bl-wk-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  gap: var(--sp-4, 1rem);
+}
+.dl-bl-wk-col {
+  min-width: 0;
+}
+.dl-bl-wk-h {
+  margin: 0;
+  font-family: var(--font-data-narrow, var(--font-display));
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-lit);
+}
+.dl-bl-wk-lead {
+  margin: 0.2rem 0 var(--sp-2, 0.5rem);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+.dl-bl-wk-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.dl-bl-wk-list > li,
+.dl-bl-herowk-list > li {
+  min-width: 0;
+}
+.dl-bl-wk-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2, 0.5rem);
+  min-height: 58px;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  background: var(--bl-card);
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.12s, background 0.12s;
+}
+.dl-bl-wk-row:hover {
+  border-color: var(--accent);
+  background: var(--bl-card-2);
+  color: var(--text);
+}
+.dl-bl-wk-row .dl-bl-most-hero {
+  width: 40px;
+  height: 40px;
+}
+.dl-bl-wk-fig {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.dl-bl-wk-fig > b,
+.dl-bl-wk-fig .dl-bl-wr.is-big {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.dl-bl-wk-fig small {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.dl-bl-wk-fig small .dl-bl-wr {
+  font-size: inherit;
+}
+.dl-bl-wk-fig.is-up > b {
+  color: var(--bl-good);
+}
+
+.dl-bl-herowk {
+  margin: var(--sp-3, 0.75rem) 0 var(--sp-4, 1rem);
+}
+.dl-bl-herowk-list {
+  list-style: none;
+  margin: var(--sp-2, 0.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: var(--sp-2, 0.5rem);
+}
+.dl-bl-herowk-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--bl-card);
+  border: 1px solid var(--line);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.12s, background 0.12s;
+}
+.dl-bl-herowk-card:hover {
+  border-color: var(--accent);
+  background: var(--bl-card-2);
+  color: var(--text);
+}
+.dl-bl-herowk-kind {
+  font-family: var(--font-data-narrow, var(--font-display));
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-lit);
+}
+.dl-bl-herowk-kind small {
+  font-size: inherit;
+  color: var(--text-dim);
+}
+.dl-bl-herowk-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-2, 0.5rem);
+  margin-top: auto;
+  padding-top: 6px;
+}
+.dl-bl-wk-row:focus-visible,
+.dl-bl-herowk-card:focus-visible {
+  outline: 2px solid var(--accent-lit);
+  outline-offset: 2px;
+}
+/* Los nombres de las builds son largos ("SPAM BALLS AND SUPER ULTIMATE"): hasta dos renglones, sin cortar palabras. */
+.dl-bl-wk-row .dl-bl-most-name,
+.dl-bl-herowk-card .dl-bl-most-name {
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.2;
+}
+/* En el teléfono las tres columnas van una abajo de la otra: con 3 filas cada una, la elección de héroe no queda lejos. */
+@media (max-width: 700px) {
+  .dl-bl-wk-list > li:nth-child(n + 4) {
+    display: none;
+  }
+}

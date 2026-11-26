@@ -467,6 +467,11 @@ export function sitemapPaths(data: SitemapData): string[] {
     for (const slug of deadlockDetailSlugs(data).heroes) {
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "ladder", detail: slug }));
     }
+    // Dúos de línea (2026-11-25), sub-pestaña de Héroes: todos y los de cada héroe.
+    paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: "duos" }));
+    for (const slug of deadlockDetailSlugs(data).heroes) {
+      paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: `duos/${slug}` }));
+    }
     // Récords (2026-11-18), sub-pestaña de Héroes: la del mundo y la de cada héroe.
     paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "heroes", detail: "records" }));
     for (const slug of deadlockDetailSlugs(data).heroes) {
@@ -477,6 +482,7 @@ export function sitemapPaths(data: SitemapData): string[] {
       const builds = data.dlBuilds?.[data.dlHeroIds[i]];
       if (!builds) return;
       paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: slug }));
+      if (i === 0) paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: "roulette" }));
       for (const b of builds) paths.push(routePath({ ...base, lang, view: "deadlock", dlSection: "builds", detail: `${slug}/${b.id}` }));
     });
     // Una página por edición de Vestigo News (2026-09-18). Son las notas de

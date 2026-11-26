@@ -169,12 +169,15 @@
 [data-theme="codex"][data-place="home"] .home-tile[data-game="cs2"] { grid-area: cs; }
 [data-theme="codex"][data-place="home"] .home-tile[data-game="coh3"] { grid-area: c3; }
 
-/* Deadlock: el color del mejor héroe del día (`--hero`, del catálogo del juego) tiñe el fondo, y su carta va encima. */
+/* Deadlock: la calle del juego de fondo, como los demás cuadros (2026-11-25; antes era sólo un degradé y la carta
+   quedaba flotando). Oscurecida abajo para que se lean el logo y las cifras; el color del mejor héroe del día
+   (`--hero`) la tiñe detrás de su carta. */
 [data-theme="codex"][data-place="home"] .home-tile[data-game="deadlock"] .home-tile-art {
   background:
-    radial-gradient(ellipse 70% 70% at 72% 32%, color-mix(in srgb, var(--hero, #c46a3a) 55%, transparent) 0%, transparent 70%),
-    radial-gradient(ellipse 120% 90% at 10% 0%, #3a2c15 0%, transparent 62%),
-    linear-gradient(180deg, #1e1914 0%, #120f0c 100%);
+    radial-gradient(ellipse 60% 60% at 72% 32%, color-mix(in srgb, var(--hero, #c46a3a) 40%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(18, 15, 12, 0.35) 0%, rgba(18, 15, 12, 0.55) 45%, #120f0c 88%),
+    url(/deadlock/game/ui/menu-gothic.webp) 38% 40% / cover no-repeat,
+    #120f0c;
 }
 
 [data-theme="codex"][data-place="home"] .home-tile-hero {

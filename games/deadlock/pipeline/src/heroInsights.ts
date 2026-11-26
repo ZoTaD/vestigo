@@ -75,6 +75,8 @@ export interface HeroInsight {
   with: PairPoint[];
   /** Contra cada rival de línea con muestra suficiente, de la línea que más gana a la que más pierde. */
   lane?: LanePoint[];
+  /** Junto a cada compañero de línea (los dos en el mismo carril), de mejor a peor. */
+  mates?: PairPoint[];
 }
 
 export interface HeroInsightsFile {
@@ -86,6 +88,8 @@ export interface HeroInsightsFile {
   /** El parche vigente, para marcarlo en la curva. */
   patch?: string;
   minPair: number;
+  /** El piso de los compañeros de línea (`mates`). */
+  minMate?: number;
   heroes: Record<string, HeroInsight>;
 }
 
@@ -171,6 +175,70 @@ export interface SynergyRow {
   matches_played: number;
 }
 
+/**
+ * Cuántas partidas hace falta que un dúo haya ido junto a la línea para
+ * publicarlo (2026-11-25). Más que `MIN_PAIR` porque con él se arma una tier
+ * list: con 200 partidas el error estándar del winrate ronda los 3,5 puntos.
+ * Medido en la API ese día: en Fantasma+ (~11 días) pasan unos 490 de los 946
+ * dúos posibles, y en las bandas de abajo casi todos.
+ */
+export const MIN_MATE = 200;
+
+/**
+ * Los compañeros de línea (2026-11-25): `hero-synergy-stats` con
+ * `same_lane_filter=true` cuenta sólo las partidas en que los dos fueron al
+ * mismo carril. La API trae cada par una sola vez; acá cuenta para los dos.
+ * Ordenados de mejor a peor winrate, como `with`.
+ */
+export function matesOf(rows: SynergyRow[], heroIds: number[]): Map<number, PairPoint[]> {
+  const publicados = new Set(heroIds);
+  const out = new Map<number, PairPoint[]>();
+  const sumar = (a: number, p: PairPoint) => {
+    const l = out.get(a) ?? [];
+    l.push(p);
+    out.set(a, l);
+  };
+  for (const s of rows) {
+    if (s.hero_id1 === s.hero_id2 || s.matches_played < MIN_MATE) continue;
+    if (!publicados.has(s.hero_id1) || !publicados.has(s.hero_id2)) continue;
+    sumar(s.hero_id1, [s.hero_id2, s.matches_played, s.wins]);
+    sumar(s.hero_id2, [s.hero_id1, s.matches_played, s.wins]);
+  }
+  for (const l of out.values()) l.sort((p, q) => q[2] / q[1] - p[2] / p[1]);
+  return out;
+}
+
+/**
+ * La tier list de dúos (2026-11-25, `/deadlock/heroes/duos`) lee su propio
+ * archivo, `lane-duos.json`: todos los dúos de línea de cada banda en uno solo,
+ * para que "todos los rangos" se arme sumando las cuatro sin bajar los cuatro
+ * `hero-insights`. Acá el piso es bajo (`MIN_DUO_RAW`) porque la suma necesita
+ * también los dúos que en una banda sola no llegan; el sitio publica sólo los
+ * que suman `MIN_MATE`.
+ */
+export const MIN_DUO_RAW = 20;
+
+/** [héroe, otro héroe (mayor), partidas, victorias] */
+export type DuoPoint = [number, number, number, number];
+
+export interface LaneDuosFile {
+  generatedAt: string;
+  minDuo: number;
+  bands: Partial<Record<BandId, { from: string; to: string; duos: DuoPoint[] }>>;
+}
+
+export function duosOf(rows: SynergyRow[], heroIds: number[]): DuoPoint[] {
+  const publicados = new Set(heroIds);
+  const out: DuoPoint[] = [];
+  for (const s of rows) {
+    if (s.hero_id1 === s.hero_id2 || s.matches_played < MIN_DUO_RAW) continue;
+    if (!publicados.has(s.hero_id1) || !publicados.has(s.hero_id2)) continue;
+    const [a, b] = s.hero_id1 < s.hero_id2 ? [s.hero_id1, s.hero_id2] : [s.hero_id2, s.hero_id1];
+    out.push([a, b, s.matches_played, s.wins]);
+  }
+  return out.sort((x, y) => x[0] - y[0] || x[1] - y[1]);
+}
+
 const r = (n: number, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
 
 /** Promedios por partida de una fila de `hero-stats`. */
@@ -210,7 +278,8 @@ export function buildInsights(
   counters: CounterRow[],
   synergies: SynergyRow[],
   generatedAt: string,
-  lane?: Map<number, LanePoint[]>
+  lane?: Map<number, LanePoint[]>,
+  mates?: Map<number, PairPoint[]>
 ): HeroInsightsFile {
   const publicados = new Set(heroIds);
   const heroes: Record<string, HeroInsight> = {};
@@ -241,6 +310,7 @@ export function buildInsights(
     h.with.sort((a, b) => wr(b) - wr(a));
   }
   if (lane) for (const [id, l] of lane) if (heroes[String(id)]) heroes[String(id)].lane = l;
+  if (mates) for (const [id, l] of mates) if (heroes[String(id)]) heroes[String(id)].mates = l;
 
   return {
     generatedAt,
@@ -249,6 +319,7 @@ export function buildInsights(
     to: window.to,
     ...(window.patch ? { patch: window.patch } : {}),
     minPair: MIN_PAIR,
+    minMate: MIN_MATE,
     heroes,
   };
 }
@@ -285,6 +356,10 @@ async function main() {
   const now = new Date();
   const unix = (d: Date | string) => Math.floor((typeof d === "string" ? Date.parse(d) : d.getTime()) / 1000);
   const hace30 = new Date(now.getTime() - DAYS * 86_400_000);
+  const duosPath = `${OUT_DIR}/lane-duos.json`;
+  const duos: LaneDuosFile = existsSync(duosPath)
+    ? { ...(JSON.parse(readFileSync(duosPath, "utf8")) as LaneDuosFile), generatedAt: now.toISOString(), minDuo: MIN_MATE }
+    : { generatedAt: now.toISOString(), minDuo: MIN_MATE, bands: {} };
 
   for (const band of BANDS) {
     const tierList = `${OUT_DIR}/heroes.${band.id}.json`;
@@ -322,6 +397,24 @@ async function main() {
       }
     }
 
+    // Los compañeros de línea, aparte por lo mismo: si fallan, quedan los de antes.
+    let mates: Map<number, PairPoint[]> | undefined;
+    try {
+      const filas = await traer<SynergyRow[]>(
+        `hero-synergy-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}&same_lane_filter=true`
+      );
+      if (!Array.isArray(filas)) throw new Error("no es una lista");
+      mates = matesOf(filas, heroIds);
+      duos.bands[band.id] = { from, to, duos: duosOf(filas, heroIds) };
+    } catch (e) {
+      console.log(`  ${band.id}: los compañeros de línea no contestaron (${e instanceof Error ? e.message : e})`);
+      const previo = `${OUT_DIR}/hero-insights.${band.id}.json`;
+      if (existsSync(previo)) {
+        const viejo = JSON.parse(readFileSync(previo, "utf8")) as HeroInsightsFile;
+        mates = new Map(Object.entries(viejo.heroes).flatMap(([id, h]) => (h.mates ? [[Number(id), h.mates] as const] : [])));
+      }
+    }
+
     try {
       const [totals, daily, counters, synergies] = await Promise.all([
         traer<StatsRow[]>(`hero-stats?${q}&min_unix_timestamp=${unix(from)}&max_unix_timestamp=${hasta}`),
@@ -338,7 +431,8 @@ async function main() {
         counters,
         synergies,
         now.toISOString(),
-        lane
+        lane,
+        mates
       );
       writeFileSync(`${OUT_DIR}/hero-insights.${band.id}.json`, JSON.stringify(file));
       const cruces = Object.values(file.heroes).reduce((n, h) => n + h.vs.length, 0);
@@ -347,6 +441,10 @@ async function main() {
       console.log(`  ${band.id}: la API no contestó (${e instanceof Error ? e.message : e}); queda el archivo anterior`);
     }
   }
+  // Las bandas que no contestaron quedan como estaban en el archivo anterior.
+  writeFileSync(duosPath, JSON.stringify(duos));
+  const total = Object.values(duos.bands).reduce((n, b) => n + (b?.duos.length ?? 0), 0);
+  console.log(`  lane-duos.json: ${total} dúos de línea en ${Object.keys(duos.bands).length} bandas`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

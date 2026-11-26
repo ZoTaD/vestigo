@@ -294,6 +294,17 @@ export default function Nav({
           )}
         </form>
 
+        {/* Donaciones (2026-11-25): la taza de Ko-fi dibujada acá, sin el widget ni la imagen de ellos, así no suma
+            pedidos. Hasta 1.100 px va sólo la taza; el nombre completo queda para los lectores de pantalla. */}
+        <a className="top-kofi" href="https://ko-fi.com/vestigogg" target="_blank" rel="noopener" aria-label={copy.footer.support}>
+          <svg className="top-kofi-ic" viewBox="0 0 24 20" aria-hidden="true">
+            <path d="M2 2.5h15.5v8.2a7 7 0 0 1-7 7H9a7 7 0 0 1-7-7z" fill="#fff" />
+            <path d="M17.5 4h1.6a3.4 3.4 0 0 1 0 6.8h-1.9" fill="none" stroke="#fff" strokeWidth="2.2" />
+            <path d="M9.75 14.2 6.4 10.9a2.1 2.1 0 0 1 3-3l.35.35.35-.35a2.1 2.1 0 0 1 3 3z" fill="#ff5e5b" />
+          </svg>
+          <span className="top-kofi-t">Ko-fi</span>
+        </a>
+
         <span className="top-lang">
           <span className="visually-hidden" id="lang-label">
             {copy.language.label}

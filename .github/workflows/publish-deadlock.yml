@@ -612,6 +612,29 @@ jobs:
             echo "las remontadas tienen ${edad_h}h (son las ${hora} UTC); esta corrida las saltea con los puntos"
           fi
 
+      # El modelo del Impacto de la Repetición (2026-11-20), del lake: una
+      # logística por minuto sobre una semana de partidas. Cambia con los
+      # parches, así que alcanza con una vez por semana (o a mano).
+      # **Perdona fallar**: queda el modelo commiteado.
+      - name: build impact model
+        continue-on-error: true
+        timeout-minutes: 20
+        run: |
+          edad_h=$(node -e '
+            const fs = require("fs");
+            try {
+              const f = JSON.parse(fs.readFileSync("games/deadlock/data/impact-model.json", "utf8"));
+              console.log(Math.floor((Date.now() - Date.parse(f.generatedAt)) / 3600000));
+            } catch { console.log(9999); }
+          ')
+          hora=$(date -u +%H)
+          if { [ "$edad_h" -ge 160 ] && [ "$hora" -lt 12 ]; } || [ "$edad_h" -ge 200 ] || [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "el modelo del impacto tiene ${edad_h}h; se regenera"
+            timeout -k 1m 15m npm run build:impact --prefix games/deadlock/pipeline
+          else
+            echo "el modelo del impacto tiene ${edad_h}h (son las ${hora} UTC); esta corrida lo saltea"
+          fi
+
       # Récords de una partida (2026-11-18): la mejor partida de la temporada en
       # cada estadística, del mundo y de cada héroe, del lake. Suma de a poco: lee
       # desde la corrida anterior (con dos días de margen) y mezcla; la primera de

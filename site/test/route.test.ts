@@ -292,3 +292,14 @@ describe("Deadlock: récords en Héroes (2026-11-18)", () => {
     expect(routePath(r)).toBe("/en/deadlock/heroes/records/abrams");
   });
 });
+
+describe("Deadlock: dúos de línea en Héroes (2026-11-25)", () => {
+  it("lee todos y los de un héroe como sub-pestaña de Héroes", () => {
+    expect(parseRoute("/es/deadlock/heroes/duos")).toMatchObject({ view: "deadlock", dlSection: "heroes", detail: "duos" });
+    expect(parseRoute("/en/deadlock/heroes/duos/graves")).toMatchObject({ dlSection: "heroes", detail: "duos/graves" });
+  });
+
+  it("escribe y vuelve a leer la misma dirección", () => {
+    expect(routePath(parseRoute("/en/deadlock/heroes/duos/graves"))).toBe("/en/deadlock/heroes/duos/graves");
+  });
+});

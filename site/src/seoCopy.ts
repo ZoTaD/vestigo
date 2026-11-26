@@ -156,6 +156,16 @@ const EN = {
           "Guess today's Deadlock hero, item and ability from their stats, with a daily ranking for each. " +
           "New puzzles every day at 00:00 UTC.",
       },
+      roulette: {
+        title: () => "Deadlock Build Roulette — Random Hero & Build Challenge | Vestigo",
+        description: () =>
+          "Spin a random Deadlock hero and a random build with real rules: one weapon, vitality and spirit item per stage. A new daily challenge for everyone, and a picture to share.",
+      },
+      duos: {
+        title: () => "Deadlock Lane Duos Tier List — Best & Worst Lane Partners | Vestigo",
+        description: () =>
+          "Every Deadlock lane duo ranked by how often it wins when both heroes go to the same lane, by rank: the best and worst pairs, and the ones that are better together.",
+      },
       records: {
         title: () => "Deadlock Records — Most Kills, Damage & Souls in One Match | Vestigo",
         description: () => "The best single-match performances of the Deadlock season: most kills, hero damage, souls, healing and more, for every hero, with a link to each match.",
@@ -228,6 +238,11 @@ const EN = {
       },
       /** Builds (2026-11-15): la biblioteca de un héroe y la ficha de una build. */
       /** Ranking (2026-11-17): el de cada héroe y las sub-pestañas, cada una con su título. */
+      /** Dúos de línea (2026-11-25): los de un héroe. */
+      duosHero: (hero: string) => ({
+        title: `Best Lane Partners for ${hero} – Deadlock Lane Duos | Vestigo`,
+        description: `Who to lane with as ${hero} in Deadlock: the win rate of every lane partner when both start in the same lane, from the best duo to the worst, by rank.`,
+      }),
       /** Récords (2026-11-18): los de un héroe. */
       recordsHero: (hero: string) => ({
         title: `${hero} Records – Most Kills, Damage & Souls in One Deadlock Match | Vestigo`,
@@ -407,6 +422,16 @@ const ES: typeof EN = {
           "Adiviná el héroe, el objeto y la habilidad de Deadlock del día por sus stats, con un ranking diario " +
           "para cada uno. Nuevos todos los días a las 00:00 UTC.",
       },
+      roulette: {
+        title: () => "Ruleta de builds de Deadlock — héroe y build al azar | Vestigo",
+        description: () =>
+          "Girá un héroe y una build al azar de Deadlock con reglas de verdad: un objeto de arma, vitalidad y espíritu por etapa. Un desafío nuevo cada día, igual para todos, con imagen para compartir.",
+      },
+      duos: {
+        title: () => "Tier list de dúos de línea de Deadlock — mejores y peores parejas | Vestigo",
+        description: () =>
+          "Todos los dúos de línea de Deadlock ordenados por cuánto ganan cuando los dos héroes van a la misma línea, por rango: las mejores y peores parejas, y las que rinden más juntas.",
+      },
       records: {
         title: () => "Récords de Deadlock — más kills, daño y almas en una partida | Vestigo",
         description: () => "Las mejores partidas de la temporada de Deadlock: más kills, daño a héroes, almas, curación y más, de cada héroe, con el enlace a cada partida.",
@@ -468,6 +493,10 @@ const ES: typeof EN = {
             : `Cómo jugar ${name} en Deadlock: victorias, uso, el orden de compra recomendado ` +
               "y los enfrentamientos que lo cambian.",
       },
+      duosHero: (hero: string) => ({
+        title: `Mejores compañeros de línea de ${hero} – dúos de Deadlock | Vestigo`,
+        description: `Con quién ir a la línea jugando ${hero} en Deadlock: las victorias con cada compañero cuando los dos empiezan en la misma línea, del mejor dúo al peor, por rango.`,
+      }),
       recordsHero: (hero: string) => ({
         title: `Récords de ${hero} – más kills, daño y almas en una partida de Deadlock | Vestigo`,
         description: `Las mejores partidas de ${hero} en la temporada de Deadlock: más kills, daño a héroes, almas, curación y más en una sola partida, con el jugador y el enlace a cada partida.`,
