@@ -126,7 +126,11 @@ async function grabacion(p: URLSearchParams, f: typeof fetch): Promise<Response 
   // Sin historial no se sabe quién es quién: falla corta, no un resultado vacío guardado un mes.
   if (!hist) return fail(0);
   const slot = hist.matchHistoryStats.find((m) => m.id === id)?.slotinfo;
-  if (!slot || !rec || !rec.ok) return notFound();
+  if (!slot) return notFound();
+  // El servidor de grabaciones corta con 429 si se le pide mucho seguido (medido el 26/11): eso, o que no conteste, es
+  // una falla pasajera, no "no hay grabación" (el 404 la página no lo vuelve a pedir).
+  if (!rec || rec.status === 429 || rec.status >= 500) return fail(rec?.status ?? 0);
+  if (!rec.ok) return notFound();
   if (Number(rec.headers.get("content-length") ?? 0) > MAX_GRABACION) return notFound();
   const datos = unzipFirst(new Uint8Array(await rec.arrayBuffer()));
   if (!datos) return notFound();

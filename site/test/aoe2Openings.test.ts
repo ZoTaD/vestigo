@@ -86,6 +86,24 @@ describe("grabación por la función", () => {
     expect(r.status).toBe(200);
     expect(await r.json()).toEqual({ id: 521948686, players: { 9423131: "archers", 196310: "drush" } });
   });
+  it("analysis?id&p: apertura, APM, clics de edad y unidades de cada perfil", async () => {
+    const hist = { result: { code: 0 }, matchHistoryStats: [{ id: 521948686, mapname: "Arabian Desert.rms", matchtype_id: 6, startgametime: 1, completiontime: 2, slotinfo: Buffer.from(deflateSync(Buffer.from('2,[{"profileInfo.id":9423131,"stationID":1},{"profileInfo.id":196310,"stationID":2}]'))).toString("base64"), matchhistorymember: [] }], profiles: [] };
+    const f: typeof fetch = async (input) => (String(input).includes("replay") ? new Response(zip("r.aoe2record", body)) : new Response(JSON.stringify(hist)));
+    const r = await handleAoe2(new URL("http://x/api/aoe2/analysis?id=521948686&p=9423131"), f);
+    expect(r.status).toBe(200);
+    const { players } = (await r.json()) as { players: Record<string, { opening: string; apm: number; ages: (number | null)[]; units: [number, number][] }> };
+    expect(players[9423131].opening).toBe("archers");
+    expect(players[196310].opening).toBe("drush");
+    expect(players[9423131].apm).toBeGreaterThan(20);
+    expect(players[9423131].ages[0]).toBeGreaterThan(300);
+    expect(players[9423131].units[0][0]).toBe(83); // lo que más se entrena son aldeanos
+  });
+  it("si el servidor de grabaciones corta por pedidos (429), es una falla pasajera, no un 404", async () => {
+    const hist = { result: { code: 0 }, matchHistoryStats: [{ id: 5, mapname: "x", matchtype_id: 6, startgametime: 1, completiontime: 2, slotinfo: Buffer.from(deflateSync(Buffer.from('2,[{"profileInfo.id":9,"stationID":1}]'))).toString("base64"), matchhistorymember: [] }], profiles: [] };
+    const f: typeof fetch = async (input) => (String(input).includes("replay") ? new Response("", { status: 429 }) : new Response(JSON.stringify(hist)));
+    const r = await handleAoe2(new URL("http://x/api/aoe2/analysis?id=5&p=9"), f);
+    expect(r.status).toBe(502);
+  });
   it("parámetros de más (para saltear la caché) son 400", async () => {
     const f: typeof fetch = async () => new Response("no", { status: 500 });
     expect((await handleAoe2(new URL("http://x/api/aoe2/opening?id=5&p=9&z=123"), f)).status).toBe(400);
