@@ -1,25 +1,29 @@
 /**
- * "Soy yo" y seguidos de AoE2 (2026-11-20). Sin sesión de Steam viven en el navegador (`vg_aoe2_follows`); con sesión,
- * en la cuenta (`/api/follows?game=aoe2`, Worker de `api/`). Al iniciar sesión se junta lo del navegador con lo de la
- * cuenta. Las funciones puras tienen tests en `test/aoe2Me.test.ts`; `useAoe2Me` las conecta.
+ * Seguidos y perfil propio de AoE2 (2026-11-20). Sin sesión de Steam los seguidos viven en el navegador
+ * (`vg_aoe2_follows`); con sesión, en la cuenta (`/api/follows?game=aoe2`, Worker de `api/`). Al iniciar sesión se junta
+ * lo del navegador con lo de la cuenta. Las funciones puras tienen tests en `test/aoe2Me.test.ts`; `useAoe2Me` las conecta.
+ *
+ * El perfil propio ya no se marca a mano (el botón "Soy yo" salió el 2026-11-26: cualquiera podía decir que era otro).
+ * Sale del SteamID de la sesión: el perfil de AoE2 cuyo SteamID es el de la cuenta es el tuyo.
  */
 import { useCallback, useEffect, useState } from "react";
 
-export type Follows = { me: number | null; follows: number[] };
+export type Follows = { follows: number[] };
 type Store = { getItem(k: string): string | null; setItem(k: string, v: string): void };
 
 const KEY = "vg_aoe2_follows";
 /** Marca de "lo de este navegador ya se juntó con la cuenta". */
 const JUNTADO = "vg_aoe2_merged";
-const VACIO: Follows = { me: null, follows: [] };
+const VACIO: Follows = { follows: [] };
 const esId = (v: unknown): v is number => typeof v === "number" && Number.isInteger(v) && v > 0;
 
 export function localFollows(s: Store | null): Follows {
   try {
     const raw = s?.getItem(KEY);
     if (!raw) return VACIO;
+    // Lo guardado antes del 2026-11-26 traía además `me`: se ignora.
     const o = JSON.parse(raw) as Partial<Follows>;
-    return { me: esId(o.me) ? o.me : null, follows: Array.isArray(o.follows) ? o.follows.filter(esId) : [] };
+    return { follows: Array.isArray(o.follows) ? o.follows.filter(esId) : [] };
   } catch {
     return VACIO;
   }
@@ -33,9 +37,8 @@ export function saveLocalFollows(s: Store | null, f: Follows): void {
   }
 }
 
-/** Lo de la cuenta manda en "Soy yo"; los seguidos se suman (primero los de la cuenta). */
+/** Los seguidos se suman (primero los de la cuenta). */
 export const mergeFollows = (local: Follows, remote: Follows): Follows => ({
-  me: remote.me ?? local.me,
   follows: [...new Set([...remote.follows, ...local.follows])],
 });
 
@@ -55,7 +58,60 @@ const storage = (): Store | null => {
 /** La pista de sesión que deja el login (`vg_in`, ver `NavAccount.tsx`): sin ella no se le pregunta a la API. */
 const conSesion = () => typeof document !== "undefined" && /(?:^|;\s*)vg_in=/.test(document.cookie);
 
-/** El estado de "Soy yo" y seguidos, con guardado en la cuenta si hay sesión y en el navegador si no. */
+/** El SteamID64 de la cuenta guardada por `NavAccount` (`vg_account`), o null sin sesión. */
+export function steamIdDeSesion(s: Store | null = storage(), sesion = conSesion()): string | null {
+  if (!sesion) return null;
+  try {
+    const raw = s?.getItem("vg_account");
+    const id = raw ? (JSON.parse(raw) as { steamId?: unknown }).steamId : null;
+    return typeof id === "string" && /^7656\d{13}$/.test(id) ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+/** El SteamID de la sesión, leído después de montar (el HTML prerenderizado no sabe quién mira). */
+export function useSteamId(): string | null {
+  const [id, setId] = useState<string | null>(null);
+  useEffect(() => setId(steamIdDeSesion()), []);
+  return id;
+}
+
+/** Perfil de AoE2 de la cuenta, buscado una vez por sesión del navegador. */
+const MIO = "vg_aoe2_mine";
+export function useMiPerfil(): number | null {
+  const steam = useSteamId();
+  const [id, setId] = useState<number | null>(null);
+  useEffect(() => {
+    if (!steam) return setId(null);
+    try {
+      const guardado = sessionStorage.getItem(MIO);
+      if (guardado?.startsWith(`${steam}:`)) return setId(Number(guardado.slice(steam.length + 1)) || null);
+    } catch {
+      // sin almacenamiento: se pregunta
+    }
+    let vivo = true;
+    fetch(`/api/aoe2/search?q=${steam}`)
+      .then((r) => (r.ok ? (r.json() as Promise<{ results: { id: number }[] }>) : null))
+      .then((r) => {
+        if (!vivo || !r) return;
+        const mio = r.results[0]?.id ?? null;
+        setId(mio);
+        try {
+          sessionStorage.setItem(MIO, `${steam}:${mio ?? 0}`);
+        } catch {
+          // nada
+        }
+      })
+      .catch(() => undefined);
+    return () => {
+      vivo = false;
+    };
+  }, [steam]);
+  return id;
+}
+
+/** Los seguidos, con guardado en la cuenta si hay sesión y en el navegador si no. */
 export function useAoe2Me() {
   const [f, setF] = useState<Follows>(VACIO);
   const [cuenta, setCuenta] = useState(false);
@@ -84,7 +140,7 @@ export function useAoe2Me() {
         } catch {
           // sin lugar: se vuelve a juntar la próxima vez, nada más
         }
-        if (junto.follows.length !== remoto.follows.length || junto.me !== remoto.me) void subir(junto);
+        if (junto.follows.length !== remoto.follows.length) void subir(junto);
       })
       .catch(() => undefined);
   }, []);
@@ -97,10 +153,8 @@ export function useAoe2Me() {
     [cuenta],
   );
   return {
-    me: f.me,
     follows: f.follows,
-    setMe: (id: number | null) => guardar({ ...f, me: id }),
-    toggleFollow: (id: number) => guardar({ ...f, follows: toggle(f.follows, id) }),
+    toggleFollow: (id: number) => guardar({ follows: toggle(f.follows, id) }),
   };
 }
 

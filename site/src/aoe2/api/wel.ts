@@ -172,14 +172,32 @@ export function normalizePersonal(raw: RawAoe2Personal, profileId: number): { pr
   return { profile: perfil(m), standings };
 }
 
-export type SearchResult = Aoe2Profile & { best: { leaderboard: number; elo: number; rank: number } | null };
-export function normalizeSearch(raw: RawAoe2Personal): SearchResult[] {
+/** Un rating de un ranking. `rank` ≤ 0 es "sin puesto": la API lo da así a quien no figura hoy en la tabla (lleva
+ * tiempo sin jugar o le faltan partidas); el rating sigue valiendo. */
+export type Aoe2Rating = { leaderboard: number; elo: number; rank: number };
+/** El orden en que se muestran los rankings de un jugador: mapa aleatorio primero. */
+export const ORDEN_RANKINGS = [3, 4, 13, 14, 1, 2];
+export type SearchResult = Aoe2Profile & { ratings: Aoe2Rating[]; last: number | null };
+
+/** Los ratings y la última partida de cada perfil de la respuesta (el buscador y los seguidos). */
+function fichas(raw: RawAoe2Personal, solo?: Set<number>): SearchResult[] {
   const st = filas(raw);
-  return raw.statGroups.flatMap((g) => g.members).map((m) => {
-    const mejor = st.filter((s) => s.profileId === m.profile_id).sort((a, b) => b.elo - a.elo)[0];
-    return { ...perfil(m), best: mejor ? { leaderboard: mejor.leaderboard, elo: mejor.elo, rank: mejor.rank } : null };
-  });
+  const vistos = new Set<number>();
+  return raw.statGroups
+    .flatMap((g) => g.members)
+    .filter((m) => (!solo || solo.has(m.profile_id)) && !vistos.has(m.profile_id) && vistos.add(m.profile_id))
+    .map((m) => {
+      const suyas = st.filter((s) => s.profileId === m.profile_id && ORDEN_RANKINGS.includes(s.leaderboard));
+      suyas.sort((a, b) => ORDEN_RANKINGS.indexOf(a.leaderboard) - ORDEN_RANKINGS.indexOf(b.leaderboard));
+      const last = suyas.reduce((x, s) => Math.max(x, s.lastMatch || 0), 0);
+      return { ...perfil(m), ratings: suyas.map(({ leaderboard, elo, rank }) => ({ leaderboard, elo, rank })), last: last || null };
+    });
 }
+export const normalizeSearch = (raw: RawAoe2Personal): SearchResult[] => fichas(raw);
+export const normalizeFichas = (raw: RawAoe2Personal, ids: number[]): SearchResult[] => {
+  const por = new Map(fichas(raw, new Set(ids)).map((f) => [f.id, f]));
+  return ids.map((id) => por.get(id)).filter((f): f is SearchResult => !!f);
+};
 
 export type Aoe2Result = "win" | "loss" | "other";
 export type Aoe2Player = {

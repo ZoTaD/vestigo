@@ -7,7 +7,7 @@ import type { SearchResult } from "../api/wel";
 type Fetch = (url: string) => Promise<Response>;
 export type Seguido = { id: number; alias: string; elo: number | null };
 
-/** Los perfiles con ese nombre exacto o SteamID64; `[]` si no hay (o si el texto no vale), `null` si la API está caída. */
+/** Los perfiles con ese nombre exacto (la API distingue mayúsculas) o SteamID64; `[]` si no hay (o si el texto no vale), `null` si la API está caída. */
 export async function buscarPerfiles(q: string, f: Fetch = fetch): Promise<SearchResult[] | null> {
   try {
     const r = await f(`/api/aoe2/search?q=${encodeURIComponent(q)}`);
@@ -25,6 +25,17 @@ export async function pedirSeguidos(ids: string, f: Fetch = fetch): Promise<Segu
     const r = await f(`/api/aoe2/players?ids=${ids}`);
     if (!r.ok) return null;
     return ((await r.json()) as { players: Seguido[] }).players;
+  } catch {
+    return null;
+  }
+}
+
+/** Ratings y última partida de unos perfiles (`ids` separados por coma, hasta 50); `null` si la API está caída. */
+export async function pedirFichas(ids: string, f: Fetch = fetch): Promise<SearchResult[] | null> {
+  try {
+    const r = await f(`/api/aoe2/players?ids=${ids}`);
+    if (!r.ok) return null;
+    return ((await r.json()) as { players: SearchResult[] }).players;
   } catch {
     return null;
   }

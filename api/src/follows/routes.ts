@@ -1,5 +1,6 @@
 /**
- * Seguidos y "Soy yo" (2026-11-20): `GET/PUT /api/follows?game=aoe2`. Con sesión de Steam; sin ella, 401 (el sitio
+ * Seguidos (2026-11-20): `GET/PUT /api/follows?game=aoe2`. El "Soy yo" a mano salió el 2026-11-26: el perfil propio
+ * sale del SteamID de la sesión, así nadie puede decir que es otro. Con sesión de Steam; sin ella, 401 (el sitio
  * guarda en el navegador). El PUT reemplaza todo y sólo se acepta desde nuestro origen.
  */
 import type { FollowStore, Follows } from "./store";
@@ -19,15 +20,14 @@ export interface FollowsDeps {
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" } });
 const id = (v: unknown): v is number => typeof v === "number" && Number.isInteger(v) && v > 0 && v < 1e12;
 
-/** Valida el cuerpo del PUT: `me` (id o null) y `follows` (ids, sin repetidos, hasta el tope). */
+/** Valida el cuerpo del PUT: `follows` (ids, sin repetidos, hasta el tope). */
 function limpiar(body: unknown): Follows | null {
   if (!body || typeof body !== "object") return null;
-  const { me, follows } = body as { me?: unknown; follows?: unknown };
-  if (me != null && !id(me)) return null;
+  const { follows } = body as { follows?: unknown };
   if (!Array.isArray(follows) || !follows.every(id)) return null;
   const unicos = [...new Set(follows)];
   if (unicos.length > MAX_FOLLOWS) return null;
-  return { me: me ?? null, follows: unicos };
+  return { follows: unicos };
 }
 
 export async function handleFollows(req: Request, url: URL, deps: FollowsDeps): Promise<Response | null> {

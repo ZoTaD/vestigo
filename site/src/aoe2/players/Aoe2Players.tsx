@@ -13,7 +13,7 @@ import { useAoe2Copy } from "../../aoe2Copy";
 import { countryName, useApi, useDocTitle, useNoindex } from "../../coh3/live/ui";
 import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, CivShield, Panel, civById, type Nav } from "../ui";
-import { Buscador } from "../leaderboards/Aoe2Leaderboards";
+import { Buscador } from "./Buscador";
 import { LEADERBOARD_OF, type Aoe2Match, type Aoe2Mode, type Aoe2Profile, type Aoe2Standing } from "../api/wel";
 import { activity, avgDuration, byCiv, byMap, eloSeries, form, mates, rivals } from "./profileStats";
 import EloChart from "./EloChart";
@@ -22,7 +22,7 @@ import HeadToHead from "./HeadToHead";
 import { mapName } from "./mapName";
 import ShareCard from "./ShareCard";
 import TheirOpenings from "./TheirOpenings";
-import { useAoe2Me } from "./me";
+import { useAoe2Me, useSteamId } from "./me";
 import { civById as civ } from "../ui";
 
 /** La memoria diaria de ELO del colector, partida por perfil (`games/aoe2/stats/elo/<ranking>/<perfil % 16>.json`). */
@@ -69,6 +69,7 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
   const { lang } = useLang();
   useNoindex();
   const yo = useAoe2Me();
+  const steam = useSteamId();
   const { data, error, retry } = useApi<PlayerData>(`/api/aoe2/player?id=${id}`);
   useDocTitle(data ? `${data.profile.alias} · Age of Empires II · Vestigo` : null);
   const modos = useMemo(
@@ -106,10 +107,10 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
           <h1 className="a2-alias">{p.alias}</h1>
         </div>
         <div className="a2-who-actions">
-          <button type="button" className={`a2-btn${yo.me === id ? " is-on" : ""}`} onClick={() => yo.setMe(yo.me === id ? null : id)} aria-pressed={yo.me === id}>
-            {yo.me === id ? `✓ ${t.me.itsYou}` : t.me.isMe}
-          </button>
-          {yo.me !== id && (
+          {/* El perfil propio sale del SteamID de la sesión (2026-11-26); antes era un botón "Soy yo" que no comprobaba nada. */}
+          {steam && p.steamId === steam ? (
+            <span className="a2-btn is-on a2-mine">✓ {t.me.itsYou}</span>
+          ) : (
             <button type="button" className={`a2-btn${yo.follows.includes(id) ? " is-on" : ""}`} onClick={() => yo.toggleFollow(id)} aria-pressed={yo.follows.includes(id)}>
               {yo.follows.includes(id) ? `★ ${t.me.following}` : `☆ ${t.me.follow}`}
             </button>
@@ -333,12 +334,10 @@ function Actividad({ grilla }: { grilla: number[][] }) {
 /** `/aoe2/players/steam-<SteamID64>` (el link del menú de la cuenta): busca el perfil de ese Steam y lo abre. */
 function PorSteam({ steamId, route, navigate }: { steamId: string; route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
-  const yo = useAoe2Me();
   const { data, error } = useApi<{ results: { id: number }[] }>(`/api/aoe2/search?q=${steamId}`);
   const encontrado = data?.results[0]?.id;
   useEffect(() => {
     if (!encontrado) return;
-    if (yo.me == null) yo.setMe(encontrado);
     navigate({ ...route, view: "aoe2", a2Section: "players", detail: String(encontrado) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [encontrado]);

@@ -1,5 +1,6 @@
 import type { RustPage } from "./rust/sitemapPages";
 import { DLE_RANKING_OPEN } from "./dle/modes";
+import { AOE2_OCULTO } from "./gameGroups";
 import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, COH3_SEGMENT, COH3_SECTIONS, cohTabs, AOE2_SEGMENT, AOE2_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
@@ -275,7 +276,7 @@ export interface SitemapData {
  * páginas siguen publicadas y prerenderizadas, así lo que Google ya conoce no da 404. Se borran el 2026-12-05 con 301 al
  * Home. `sitemapPaths` los sigue listando porque de ahí sale también el prerender.
  */
-export const SITEMAP_HIDDEN: SitemapGroup[] = ["poe2", "d2r", "warframe"];
+export const SITEMAP_HIDDEN: SitemapGroup[] = ["poe2", "d2r", "warframe", ...(AOE2_OCULTO ? (["aoe2"] as const) : [])];
 const HIDDEN_SEGMENTS = new Set(["poe2", "d2r", WF_SEGMENT]);
 
 /** Si una dirección es de un juego escondido (no va a ningún sitemap). */

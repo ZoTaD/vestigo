@@ -87,7 +87,7 @@ export default function MatchHistory({ matches, id, route, navigate }: { matches
                   <span className="a2-hist-what">
                     <b>{mapName(m.map)}</b>
                     <small>
-                      {modo(m.mode)} · {new Date(m.start * 1000).toLocaleDateString(locale, { day: "numeric", month: "short" })} · {t.hist.min(m.end - m.start)}
+                      {modo(m.mode)} · {new Date(m.start * 1000).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })} · {t.hist.min(m.end - m.start)}
                     </small>
                     {tieneApertura(m) && <OpeningTag match={m.id} owner={id} player={id} />}
                   </span>

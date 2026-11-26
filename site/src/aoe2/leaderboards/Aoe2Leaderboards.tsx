@@ -3,7 +3,7 @@
  * con "Cargar más"), filtro por país sobre lo cargado y el buscador de jugadores. Los datos salen de `/api/aoe2/*`.
  * "Subieron hoy" y la distribución de ELO llegan con las fotos diarias del colector (Task 8).
  */
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import RouteLink from "../../RouteLink";
 import { LazyRows } from "../../LazyRows";
 import type { Route } from "../../route";
@@ -12,8 +12,8 @@ import { useAoe2Copy } from "../../aoe2Copy";
 import { countryName } from "../../coh3/live/ui";
 import { sortRows, useSort } from "../../coh3/ui";
 import { Aoe2Loading, ModePicker, Panel, type Aoe2Mode, type Nav } from "../ui";
-import { LEADERBOARD_OF, type Aoe2Row, type SearchResult } from "../api/wel";
-import { buscarPerfiles } from "../players/search";
+import { LEADERBOARD_OF, type Aoe2Row } from "../api/wel";
+import { Buscador } from "../players/Buscador";
 import { aplicarRespuesta, climbers, countriesOf, percentileOf, type Bucket, type Tabla } from "./logic";
 
 /** La foto diaria del colector (`games/aoe2/stats/ladder/<id>.json`). */
@@ -182,7 +182,7 @@ function Foto({ foto, route, navigate }: { foto: LadderSnap; route: Route; navig
   return (
     <div className="a2-cols">
       {suben.length > 0 && (
-        <Panel h={t.lb.climbersH} sub={t.lb.climbersSub(new Date(foto.date).toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" }))}>
+        <Panel h={t.lb.climbersH} sub={t.lb.climbersSub(new Date(foto.date).toLocaleDateString(lang, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }))}>
           <ul className="a2-vs">
             {suben.map((c) => (
               <li key={c.profileId}>
@@ -209,58 +209,5 @@ function Foto({ foto, route, navigate }: { foto: LadderSnap; route: Route; navig
         </div>
       </Panel>
     </div>
-  );
-}
-
-/** El buscador: nombre exacto o SteamID64 → lista de perfiles. */
-export function Buscador({ route, navigate }: { route: Route; navigate: Nav }) {
-  const t = useAoe2Copy();
-  const [q, setQ] = useState("");
-  const [res, setRes] = useState<SearchResult[] | "down" | null>(null);
-  const [busy, setBusy] = useState(false);
-  const enviar = (e: FormEvent) => {
-    e.preventDefault();
-    const v = q.trim();
-    if (!v) return;
-    setBusy(true);
-    void buscarPerfiles(v).then((r) => {
-      setRes(r ?? "down");
-      setBusy(false);
-    });
-  };
-  return (
-    <Panel className="a2-search">
-      <form onSubmit={enviar} role="search">
-        <label htmlFor="a2-q">{t.lb.search}</label>
-        <div className="a2-search-row">
-          <input id="a2-q" value={q} onChange={(e) => setQ(e.target.value)} placeholder={t.lb.searchHint} autoComplete="off" spellCheck={false} />
-          <button type="submit" className="a2-btn" disabled={busy}>
-            {t.lb.searchGo}
-          </button>
-        </div>
-      </form>
-      {res === "down" && (
-        <p className="a2-note" role="alert">
-          {t.t.apiDown}
-        </p>
-      )}
-      {res && res !== "down" && (
-        <ul className="a2-results">
-          {res.length ? (
-            res.map((p) => (
-              <li key={p.id}>
-                <RouteLink to={{ ...route, view: "aoe2", a2Section: "players", detail: String(p.id) }} onNavigate={navigate}>
-                  {p.alias}
-                </RouteLink>
-                {p.country && <span className="a2-cc">{p.country.toUpperCase()}</span>}
-                {p.best && <span className="a2-note">{` · ${p.best.elo} · ${t.lb.worldRank(p.best.rank)}`}</span>}
-              </li>
-            ))
-          ) : (
-            <li className="a2-note">{t.lb.noResults}</li>
-          )}
-        </ul>
-      )}
-    </Panel>
   );
 }

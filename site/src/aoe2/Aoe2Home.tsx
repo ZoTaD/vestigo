@@ -10,7 +10,7 @@ import type { Aoe2Tab, Route } from "../route";
 import { useAoe2Copy } from "../aoe2Copy";
 import { useLang } from "../i18n";
 import { CivShield, Panel, civBySlug, type Civ, type Nav } from "./ui";
-import { useAoe2Me } from "./players/me";
+import { useAoe2Me, useMiPerfil } from "./players/me";
 import { mapIcon, mapLabel } from "./stats/parts";
 import civs from "@aoe2/civs.json";
 import home from "@aoe2stats/home.json";
@@ -41,7 +41,7 @@ export default function Aoe2Home({ route, navigate }: { route: Route; navigate: 
   const { lang } = useLang();
   const ir = (a2Section: Aoe2Tab, detail?: string): Route => ({ ...route, view: "aoe2", a2Section, detail });
   const lista = (civs as Civ[]).filter((c) => c.era === "base");
-  const fecha = (d: string) => new Date(d).toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" });
+  const fecha = (d: string) => new Date(d).toLocaleDateString(lang, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
   return (
     <>
       <Panel h={t.home.h1}>
@@ -157,7 +157,8 @@ export default function Aoe2Home({ route, navigate }: { route: Route; navigate: 
 function Seguidos({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
   const yo = useAoe2Me();
-  const ids = [...new Set([...(yo.me ? [yo.me] : []), ...yo.follows])].slice(0, 50);
+  const mio = useMiPerfil();
+  const ids = [...new Set([...(mio ? [mio] : []), ...yo.follows])].slice(0, 50);
   const [js, setJs] = useState<Seguido[] | "down" | null>(null);
   const clave = ids.join(",");
   useEffect(() => {
@@ -184,7 +185,7 @@ function Seguidos({ route, navigate }: { route: Route; navigate: Nav }) {
           {js.map((j) => (
             <li key={j.id}>
               <RouteLink to={{ ...route, view: "aoe2", a2Section: "players", detail: String(j.id) }} onNavigate={navigate}>
-                {j.id === yo.me ? `★ ${j.alias}` : j.alias}
+                {j.id === mio ? `★ ${j.alias}` : j.alias}
               </RouteLink>
               <span>{j.elo ?? "–"}</span>
             </li>

@@ -98,6 +98,16 @@
 .a2-search-row input { flex: 1; min-width: 0; }
 .a2-results { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
 .a2-results a { color: var(--a2-text); font-weight: 700; }
+.a2-res { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 14px; padding: 8px 10px; border-radius: 6px; background: var(--a2-panel2); text-decoration: none; }
+.a2-res:hover, .a2-res:focus-visible { background: rgba(240, 191, 76, 0.12); }
+.a2-res-name { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.a2-res-name img, .a2-res-noflag { width: 20px; height: 15px; flex: none; border-radius: 2px; }
+.a2-res-name b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.a2-res-data { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-size: 13px; font-weight: 400; color: var(--a2-text); font-variant-numeric: tabular-nums; }
+.a2-res-elo small { color: var(--a2-muted); font-size: 11px; }
+.a2-res-elo { font-weight: 700; }
+.a2-res-rank { font-weight: 400; }
+.a2-mine { cursor: default; }
 /* Perfil. */
 .a2-who-row { display: flex; align-items: center; gap: 10px; }
 .a2-who { container-type: inline-size; }

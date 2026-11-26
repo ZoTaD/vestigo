@@ -41,6 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from patches import NOTAS, NOTICIA, PARCHES  # noqa: E402
 from openings import openings as _aperturas  # noqa: E402
 from replay import read_actions  # noqa: E402
+from names import actualizar as actualizar_nombres, escribir as escribir_nombres, leer as leer_nombres  # noqa: E402
 
 AQUI = Path(__file__).resolve().parent
 RAIZ = AQUI.parents[2]
@@ -367,8 +368,8 @@ def _get(endpoint: str, params: dict, intentos: int = 3) -> dict | None:
     return None
 
 
-def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str]]:
-    """Todo el ranking: `(perfil, ELO, última partida, alias)` en orden."""
+def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str, str]]:
+    """Todo el ranking: `(perfil, ELO, última partida, alias, país)` en orden."""
     primera = _get("getLeaderBoard2", {"leaderboard_id": lb, "start": 1, "count": 200, "sortBy": 1})
     if not primera:
         return []
@@ -389,9 +390,9 @@ def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str]]:
         for st in p["leaderboardStats"]:
             if st["statgroup_id"] in grupos:
                 m = grupos[st["statgroup_id"]]
-                filas.append((m["profile_id"], st["rating"], st["lastmatchdate"], st["rank"], m.get("alias", "")))
+                filas.append((m["profile_id"], st["rating"], st["lastmatchdate"], st["rank"], m.get("alias", ""), m.get("country") or ""))
     filas.sort(key=lambda x: x[3])
-    return [(p, e, u, a) for p, e, u, _, a in filas]
+    return [(p, e, u, a, c) for p, e, u, _, a, c in filas]
 
 
 def _grabacion(match_id: int, perfil: int) -> bytes | None:
@@ -433,14 +434,19 @@ def main() -> None:
 
     # 1 y 2: rankings, fotos y memoria de ELO.
     activos: dict[int, list[tuple[int, float]]] = {}
+    del_ranking: dict[int, tuple[str, str, float]] = {}
+    de_historiales: dict[int, tuple[str, str]] = {}
     for lb in LEADERBOARDS:
         filas = bajar_ranking(lb, a.workers)
         print(f"ranking {lb}: {len(filas)} filas", flush=True)
         if not filas:
             continue
         ruta = STATS / "ladder" / f"{lb}.json"
-        _escribir(ruta, ladder_snapshot([(p, e, a_) for p, e, _, a_ in filas], hoy, prev=_leer(ruta)))
-        activos[lb] = [(p, e) for p, e, u, _ in filas if ahora - u < 7 * DIA]
+        _escribir(ruta, ladder_snapshot([(p, e, a_) for p, e, _, a_, _c in filas], hoy, prev=_leer(ruta)))
+        for p, e, _, a_, c in filas:
+            if p not in del_ranking or e > del_ranking[p][2]:
+                del_ranking[p] = (a_, c, e)
+        activos[lb] = [(p, e) for p, e, u, *_ in filas if ahora - u < 7 * DIA]
         if lb in (3, 4):
             carpeta = STATS / "elo" / str(lb)
             viejas = {n: _leer(carpeta / f"{n}.json") or {} for n in range(SHARDS)}
@@ -468,6 +474,8 @@ def main() -> None:
             hechos += 1
             for m in (h or {}).get("matchHistoryStats", []):
                 acc.agregar(m)
+            for pr in (h or {}).get("profiles", []):
+                de_historiales[pr.get("profile_id", 0)] = (pr.get("alias", ""), pr.get("country") or "")
     print(f"historiales: {hechos}; partidas vistas: {len(acc.vistas)}", flush=True)
 
     # 3b: aperturas. Grabaciones de una muestra de RM 1v1 de días completos, repartida entre bandas de ELO.
@@ -518,6 +526,11 @@ def main() -> None:
     _escribir(STATS / "patches.json", parches)
     _escribir(STATS / "home.json", home_json(_leer(STATS / "ladder" / "3.json"), sumario or _leer(STATS / "summary.json")))
     print(f"días guardados: {len(dias)}", flush=True)
+
+    # 5: el índice de nombres del buscador (`names.py`). Sin rankings (API caída) no se toca.
+    if del_ranking:
+        indice = actualizar_nombres(leer_nombres(), del_ranking, de_historiales)
+        print(f"índice de nombres: {len(indice)} jugadores en {escribir_nombres(indice)} archivos", flush=True)
 
 
 if __name__ == "__main__":

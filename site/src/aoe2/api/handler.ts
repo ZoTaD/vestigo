@@ -26,6 +26,7 @@ import {
   normalizeLeaderboard,
   normalizeMatch,
   normalizePersonal,
+  normalizeFichas,
   normalizeSearch,
   type Aoe2Match,
 } from "./wel";
@@ -111,16 +112,15 @@ async function opening(p: URLSearchParams, f: typeof fetch) {
   return json({ id, players }, 200, cache(86400 * 30, 86400 * 30));
 }
 
-/** `players?ids=1,2,3` (hasta 50): alias, país y ELO de mapa aleatorio 1v1 de cada uno (los seguidos de la portada). */
+/** `players?ids=1,2,3` (hasta 50): alias, país, ratings y última partida de cada uno (los seguidos de la portada y los
+ * resultados del buscador). `elo` es el de mapa aleatorio 1v1. */
 async function players(p: URLSearchParams, f: typeof fetch) {
   const ids = (p.get("ids") ?? "").split(",").filter(Boolean);
   if (!ids.length || ids.length > 50 || !ids.every((x) => /^\d{1,12}$/.test(x))) return bad("ids");
-  const raw = await getPersonalStats(f, ids.map(Number));
-  const out = ids
-    .map(Number)
-    .map((id) => normalizePersonal(raw, id))
-    .filter((x): x is NonNullable<typeof x> => !!x)
-    .map(({ profile, standings }) => ({ ...profile, elo: standings.find((s) => s.leaderboard === 3)?.elo ?? null }));
+  const out = normalizeFichas(await getPersonalStats(f, ids.map(Number)), ids.map(Number)).map((x) => ({
+    ...x,
+    elo: x.ratings.find((r) => r.leaderboard === 3)?.elo ?? null,
+  }));
   return json({ players: out }, 200, cache(300, 300));
 }
 

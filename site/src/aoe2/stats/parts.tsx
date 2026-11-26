@@ -52,7 +52,7 @@ export function StatFilters({ f, set, s, bands = true, modes = ["rm1v1", "rmteam
           <select value={f.window} onChange={(e) => set({ ...f, window: e.target.value as WindowKey })}>
             {ventanas.map((w) => (
               <option key={w} value={w}>
-                {w === "patch" && s.patch ? t.st.sinceP(s.patch.name, new Date(s.patch.since).toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" })) : t.st.windows[w]}
+                {w === "patch" && s.patch ? t.st.sinceP(s.patch.name, new Date(s.patch.since).toLocaleDateString(lang, { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })) : t.st.windows[w]}
               </option>
             ))}
           </select>

@@ -21,7 +21,7 @@ export default function EloChart({ points }: { points: readonly [number, number]
   const lineas: number[] = [];
   for (let v = lo; v <= hi; v += paso) lineas.push(v);
   const d = points.map(([t, e], i) => `${i ? "L" : "M"}${x(t).toFixed(1)},${y(e).toFixed(1)}`).join("");
-  const fecha = (t: number) => new Date(t * 1000).toLocaleDateString(locale, { day: "numeric", month: "short" });
+  const fecha = (t: number) => new Date(t * 1000).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" });
   const ult = points[points.length - 1];
   return (
     <svg className="a2-elo" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`ELO ${es[0]} → ${ult[1]}`}>

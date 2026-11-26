@@ -10,6 +10,12 @@ name: publish aoe2 stats
 # (`games/aoe2/tools/openings.py`).
 #
 # **Parche nuevo** → sumar su línea en `games/aoe2/tools/patches.py`.
+#
+# **Índice de nombres** (2026-11-26): con los rankings enteros y los perfiles de los historiales se rehace
+# `games/aoe2/stats/names/` (el buscador por parte del nombre, `names.py`).
+#
+# **Plazo**: 40 min de historiales + hasta 20 de grabaciones + los rankings; por eso el tope del trabajo es 90 min.
+# El presupuesto subió a 5000 historiales el 2026-11-26, para juntar más partidas mientras AoE2 está oculto.
 on:
   schedule:
     # Después de la de CoH (07:05 UTC), para no pedirle a las dos APIs a la vez.
@@ -26,7 +32,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -40,7 +46,7 @@ jobs:
       # propio plazo para pedir historiales (`--deadline`) y escribe lo juntado.
       - name: stats
         continue-on-error: true
-        run: python games/aoe2/tools/daily.py --days 28 --budget 3000 --replays 500 --deadline 2400
+        run: python games/aoe2/tools/daily.py --days 28 --budget 5000 --replays 500 --deadline 2400
 
       - name: guard
         id: guard

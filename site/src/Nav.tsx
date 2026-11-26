@@ -54,6 +54,9 @@ export default function Nav({
   // Dentro de Valheim también se buscan objetos: el texto lo recoge el buscador
   // de la portada de la sección.
   const inValheim = active === "valheim";
+  // Dentro de AoE2 se buscan jugadores de AoE2 (2026-11-26; antes mandaba a Deadlock): el texto lo recoge el buscador de
+  // la pestaña Jugadores, que busca por parte del nombre.
+  const inAoe2 = active === "aoe2";
   /**
    * En Valheim, Diablo II, Project Zomboid y Rust la barra busca las fichas del juego y muestra los resultados mientras
    * se escribe; cada uno lleva a su ficha (Valheim desde el 2026-09-24, pedido de ZoTaD; los otros tres desde el
@@ -74,7 +77,7 @@ export default function Nav({
     coh3: [copy.games.coh3Short, copy.games.coh3],
     aoe2: [copy.games.aoe2Short, copy.games.aoe2],
   };
-  const [searchGame, searchGameFull] = (itemSearch && gameName[active]) || [copy.games.deadlock, copy.games.deadlock];
+  const [searchGame, searchGameFull] = ((itemSearch || inAoe2) && gameName[active]) || [copy.games.deadlock, copy.games.deadlock];
   const searchLabel = itemSearch ? copy.shell.searchItemFor(searchGameFull) : copy.shell.searchFor(searchGameFull);
 
   /** El buscador del juego, pedido recién al enfocar la barra. Al cambiar de juego se suelta el anterior. */
@@ -198,7 +201,9 @@ export default function Nav({
           { ...route, view: "poe2", p2Section: "economy", detail: route.p2Section === "economy" ? route.detail : undefined }
         : inValheim
           ? { ...route, view: "valheim", vhSection: "home", detail: undefined }
-          : { ...route, view: "deadlock", dlSection: "player", detail: undefined },
+          : inAoe2
+            ? { ...route, view: "aoe2", a2Section: "players", detail: undefined }
+            : { ...route, view: "deadlock", dlSection: "player", detail: undefined },
     );
   };
 

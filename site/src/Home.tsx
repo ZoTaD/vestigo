@@ -7,7 +7,7 @@ import { useCopy, useLang, useLocale } from "./i18n";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import type { Game } from "./Nav";
-import { GAME_LOGOS, logoFile } from "./gameGroups";
+import { AOE2_OCULTO, GAME_LOGOS, logoFile } from "./gameGroups";
 import pzMeta from "@zomboid/meta.json";
 import c2Meta from "@cs2/meta.json";
 import c3Meta from "@coh3/meta.json";
@@ -140,6 +140,7 @@ export default function Home({
             [num(c3Meta.counts.weapons), copy.home.games.coh3Weapons],
           ]}
         />
+        {!AOE2_OCULTO && (
         <Tile
           game="aoe2"
           name={copy.games.aoe2}
@@ -151,6 +152,7 @@ export default function Home({
             [num(6), copy.home.games.aoe2Leaderboards],
           ]}
         />
+        )}
       </section>
 
       <section className="home-today">
