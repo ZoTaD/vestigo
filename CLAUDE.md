@@ -34,8 +34,9 @@ producción. Antes de publicar un juego o una pestaña nueva:
    `deploy.yml` (y al `ignore` de `netlify.toml`, por si se vuelve a compilar
    allá); si no, los cambios de datos no se publican. Si el juego tiene una
    Action de publicación, sumarla también a `workflow_run`.
-6. **Build**: el tope de memoria en Netlify es 6 GB (`NODE_OPTIONS` en
-   `netlify.toml`). Medir el pico de RAM y el tiempo de `npm run build` antes y
+6. **Build**: el tope de memoria de node en Actions es 10 GB (`NODE_OPTIONS` en
+   `deploy.yml`; la máquina tiene 16 GB). En Netlify sigue en 6 GB
+   (`netlify.toml`), su límite real, por si se vuelve a compilar allá. Medir el pico de RAM y el tiempo de `npm run build` antes y
    después de sumar un juego, y anotarlo en el plan del juego. Referencia del
    2026-10-06: `vite build` 93 s y 2,3 GB, con 22.222 páginas prerenderizadas.
 7. **Los JSON se importan enteros** (`import data from "./x.json"`), nunca una
