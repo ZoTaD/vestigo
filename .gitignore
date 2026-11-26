@@ -51,3 +51,6 @@ site/public/deadlock/dle-pool.json
 games/coh3/raw/
 games/coh1/raw/
 games/coh2/raw/
+
+# AoE2: las partidas ya contadas por el colector (viven en la caché de Actions, ver games/aoe2/tools/vistas.py)
+games/aoe2/.cache/
