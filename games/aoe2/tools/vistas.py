@@ -14,6 +14,8 @@ import gzip
 import json
 from pathlib import Path
 
+import grabaciones as grab
+
 
 def leer(ruta: Path) -> dict[str, set[int]] | None:
     """Lo guardado, o None si no hay archivo (o está roto): eso es "no sé qué se contó"."""
@@ -48,10 +50,14 @@ def sumar_dia(base: dict, nuevo: dict) -> dict:
     out = json.loads(json.dumps(base))
     out["games"] = base.get("games", 0) + nuevo.get("games", 0)
     out["patch"] = nuevo.get("patch") or base.get("patch")
-    for k in ("civ", "map", "vs", "dur", "open", "n"):
+    for k in ("civ", "map", "vs", "dur", "open", "n", "rec", "units", "apm", "age"):
         destino = out.setdefault(k, {})
         for clave, (a, b) in (nuevo.get(k) or {}).items():
             x = destino.setdefault(clave, [0, 0])
             x[0] += a
             x[1] += b
+    top = out.setdefault("top", {})
+    for marca, filas in (nuevo.get("top") or {}).items():
+        for f in filas:
+            top[marca] = grab.sumar_top(top.get(marca, []), f, marca)
     return out

@@ -55,7 +55,9 @@ jobs:
       # propio plazo para pedir historiales (`--deadline`) y escribe lo juntado.
       - name: stats
         continue-on-error: true
-        run: python games/aoe2/tools/daily.py --days 60 --budget 5000 --replays 500 --deadline 2400
+        # Grabaciones (2026-11-26): de a una, con pausa y esperas ante 429, hasta 40 min; dan aperturas, unidades, APM,
+        # edades y las marcas de los datos curiosos. Historiales (~12 min) + grabaciones entran en los 90 min.
+        run: python games/aoe2/tools/daily.py --days 60 --budget 5000 --replays 1000 --deadline 2400 --deadline-rec 2400
 
       - name: guard
         id: guard

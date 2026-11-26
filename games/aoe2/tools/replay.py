@@ -22,6 +22,16 @@ class Accion:
     kind: str  # "queue" | "research" | "build"
     id: int  # unidad, tecnología o edificio
     player: int
+    amount: int = 1  # cuántas se encolaron (shift encola 5)
+
+
+@dataclass
+class Lectura:
+    """Una grabación leída (2026-11-26): las acciones que interesan, cuántas acciones hizo cada jugador (todas, para el
+    APM) y hasta dónde se leyó, en segundos de juego."""
+    acciones: list[Accion]
+    cuenta: dict[int, int]
+    fin: float
 
 
 def _meta(d: bytes, i: int) -> int:
@@ -50,8 +60,8 @@ def _sync(d: bytes, i: int) -> tuple[int, int]:
     return incremento, i + 4 * _JUGADORES * _VALORES + 4
 
 
-def _accion(tipo: int, b: bytes) -> tuple[str, int, int] | None:
-    """(clase, id, jugador) de una acción del formato nuevo (`len == largo + 3`), o None."""
+def _accion(tipo: int, b: bytes) -> tuple[str, int, int, int] | None:
+    """(clase, id, jugador, cantidad) de una acción del formato nuevo (`len == largo + 3`), o None."""
     if len(b) < 3:
         return None
     jugador, largo = struct.unpack_from("<bh", b)
@@ -60,14 +70,14 @@ def _accion(tipo: int, b: bytes) -> tuple[str, int, int] | None:
     p = b[3:]
     try:
         if tipo == DE_QUEUE:
-            _, _, unidad, _ = struct.unpack_from("<h4xhhh", p)
-            return "queue", unidad, jugador
+            _, _, unidad, cantidad = struct.unpack_from("<h4xhhh", p)
+            return "queue", unidad, jugador, max(1, cantidad)
         if tipo == RESEARCH:
             _, _, tec = struct.unpack_from("<Ihh", p)
-            return "research", tec, jugador
+            return "research", tec, jugador, 1
         if tipo == BUILD:
             _, _, _, edificio = struct.unpack_from("<h2xffI", p)
-            return "build", edificio, jugador
+            return "build", edificio, jugador, 1
     except struct.error:
         return None
     return None
@@ -75,8 +85,14 @@ def _accion(tipo: int, b: bytes) -> tuple[str, int, int] | None:
 
 def read_actions(data: bytes, hasta: float = 25 * 60) -> list[Accion]:
     """Las acciones de los primeros `hasta` segundos de juego. Una grabación rota devuelve lo que se pudo leer (o [])."""
+    return leer(data, hasta).acciones
+
+
+def leer(data: bytes, hasta: float = float("inf")) -> Lectura:
+    """La grabación entera (o hasta `hasta` segundos de juego); ver `Lectura`. Igual que `leer` de `replay.ts`."""
     ms = 0
     out: list[Accion] = []
+    cuenta: dict[int, int] = {}
     try:
         (hlen,) = struct.unpack_from("<I", data)
         d = data
@@ -89,9 +105,13 @@ def read_actions(data: bytes, hasta: float = 25 * 60) -> list[Accion]:
                 tipo = d[i + 4]
                 cuerpo = d[i + 5 : i + 4 + largo]
                 i += 4 + largo + 4
+                if len(cuerpo) >= 3:
+                    j, l = struct.unpack_from("<bh", cuerpo)
+                    if len(cuerpo) == l + 3:
+                        cuenta[j] = cuenta.get(j, 0) + 1
                 a = _accion(tipo, cuerpo)
                 if a:
-                    out.append(Accion(ms / 1000, a[0], a[1], a[2]))
+                    out.append(Accion(ms / 1000, a[0], a[1], a[2], a[3]))
             elif op == 2:
                 inc, i = _sync(d, i)
                 ms += inc
@@ -106,4 +126,4 @@ def read_actions(data: bytes, hasta: float = 25 * 60) -> list[Accion]:
                 break  # 6 = resumen final; cualquier otra cosa, se corta acá
     except (struct.error, IndexError):
         pass
-    return out
+    return Lectura(out, cuenta, min(ms / 1000, hasta))

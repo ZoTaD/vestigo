@@ -1,7 +1,8 @@
 /**
  * Unidades de AoE2 (2026-11-21): la lista por edificio (comunes, únicas por civ y regionales) y la ficha de cada una
  * (`/aoe2/units/<slug>`): cifras, bonus de ataque y clases de armadura con su nombre del juego, línea de mejora,
- * tecnologías que la mejoran, civs que la tienen y counters calculados con el daño del juego.
+ * tecnologías que la mejoran, civs que la tienen y counters calculados con el daño del juego. Desde el 26/11, arriba
+ * de la lista va la tier list (de las grabaciones de 1v1: % de victorias cuando se entrena 10 o más).
  */
 import { useMemo, useState } from "react";
 import RouteLink from "../../RouteLink";
@@ -11,9 +12,12 @@ import { CivShield, Panel, civBySlug, Aoe2Loading, type Nav } from "../ui";
 import { arbol, civsCon, edad, loadAyuda, peekAyuda, tecnologias, unidades, type Arbol, type Unidad, type Unidades } from "./data";
 import { useEncCopy } from "./copy";
 import { Costo, Datos, Fichas, Icono, useCargado, useEnc } from "./parts";
+import { Civ, FILTROS_INICIALES, StatFilters, pct, useSummary, type Filters } from "../stats/parts";
+import { unitByCiv, unitTable, type Tier, type UnitRow } from "../stats/data";
 
 type Vista = "common" | "unique" | "regional";
 const VISTAS: Vista[] = ["common", "unique", "regional"];
+const TIERS: Tier[] = ["S", "A", "B", "C", "D"];
 const vistaDe = (u: Unidad): Vista => (u.kind === "UniqueUnit" ? "unique" : u.kind === "RegionalUnit" ? "regional" : "common");
 /** Una variante repetida (mismo nombre que otra, con el id en el slug): no va en la lista, sí tiene ficha. */
 const variante = (u: Unidad) => u.slug.endsWith(`-${u.id}`);
@@ -25,6 +29,76 @@ export default function Aoe2Units({ route, navigate }: { route: Route; navigate:
   if (!u || !a) return <Aoe2Loading />;
   if (route.detail) return <Ficha key={route.detail} slug={route.detail} u={u} a={a} route={route} navigate={navigate} />;
   return <Lista u={u} a={a} route={route} navigate={navigate} />;
+}
+
+function TierList({ u, a, route, navigate }: { u: Unidades; a: Arbol; route: Route; navigate: Nav }) {
+  const t = useEncCopy();
+  const { lang } = useLang();
+  const s = useSummary();
+  const [f, setF] = useState<Filters>({ ...FILTROS_INICIALES, window: "28" });
+  const [chicas, setChicas] = useState(false);
+  const porId = useMemo(() => new Map(u.units.map((x) => [x.id, x])), [u]);
+  const filas = useMemo(() => (s ? unitTable(s, f.window, f.band, (l) => civsCon(a, `u${l}`)).filter((r) => porId.has(r.line)) : []), [s, f, a, porId]);
+  if (!s) return null;
+  const pocas = filas.filter((r) => r.small);
+  const grupos: [Tier | "small", UnitRow[]][] = [...TIERS.map((x) => [x, filas.filter((r) => !r.small && r.tier === x)] as [Tier, UnitRow[]]), ["small", chicas ? pocas : []]];
+  return (
+    <Panel h={t.units.tierH} sub={t.units.tierSub}>
+      <StatFilters f={f} set={setF} s={s} modes={["rm1v1"]} />
+      {!filas.length ? (
+        <p className="a2-note">{t.units.tierEmpty}</p>
+      ) : (
+          <table className="a2-table a2-utier">
+            <thead>
+              <tr>
+                <th />
+                <th>{t.units.tierCols.unit}</th>
+                <th className="num">{t.units.tierCols.wr}</th>
+                <th className="num">{t.units.tierCols.games}</th>
+                <th className="num a2-hide-s" title={t.units.pickHint}>
+                  {t.units.tierCols.pick}
+                </th>
+              </tr>
+            </thead>
+            {grupos
+              .filter(([, rs]) => rs.length)
+              .map(([tier, rs]) => (
+                <tbody key={tier} className={tier === "small" ? "is-small" : undefined}>
+                  {tier === "small" && (
+                    <tr className="a2-utier-sep">
+                      <td colSpan={5}>{t.units.small}</td>
+                    </tr>
+                  )}
+                  {rs.map((r, i) => {
+                    const x = porId.get(r.line)!;
+                    return (
+                      <tr key={r.line}>
+                        <td>{tier !== "small" && i === 0 && <span className={`a2-tier is-${tier}`}>{tier}</span>}</td>
+                        <td>
+                          <RouteLink className="a2-civ" to={{ ...route, view: "aoe2", a2Section: "units", detail: x.slug }} onNavigate={navigate}>
+                            <Icono k="u" pic={x.pic} size={32} />
+                            {nombreDe(x.name, lang)}
+                          </RouteLink>
+                        </td>
+                        <td className="num">
+                          <b>{pct(r.wr)}</b>
+                        </td>
+                        <td className="num">{r.games.toLocaleString(lang)}</td>
+                        <td className="num a2-hide-s">{pct(r.pick, 0)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              ))}
+          </table>
+      )}
+      {pocas.length > 0 && (
+        <button type="button" className="a2-btn a2-more" onClick={() => setChicas(!chicas)}>
+          {chicas ? t.units.hideSmall : t.units.showSmall(pocas.length)}
+        </button>
+      )}
+    </Panel>
+  );
 }
 
 function Lista({ u, a, route, navigate }: { u: Unidades; a: Arbol; route: Route; navigate: Nav }) {
@@ -55,6 +129,7 @@ function Lista({ u, a, route, navigate }: { u: Unidades; a: Arbol; route: Route;
   }, [u, a, vista, lang, edificios]);
   return (
     <>
+      <TierList u={u} a={a} route={route} navigate={navigate} />
       <Panel h={t.units.h} sub={vista === "unique" ? t.units.uniqueSub : vista === "regional" ? t.units.regionalSub : t.units.sub}>
         <div className="a2-seg" role="radiogroup">
           {VISTAS.map((v) => (
@@ -217,7 +292,36 @@ function Ficha({ slug, u, a, route, navigate }: { slug: string; u: Unidades; a: 
           <CivLista tiene={tiene} faltan={faltan} route={route} navigate={navigate} />
         )}
       </Panel>
+      <MejoresCivs line={(x.line ?? [x.id])[0]} />
     </>
+  );
+}
+
+/** Con qué civs rinde más la unidad (de las grabaciones; sólo si hay muestra). */
+function MejoresCivs({ line }: { line: number }) {
+  const t = useEncCopy();
+  const { lang } = useLang();
+  const s = useSummary();
+  const filas = s ? unitByCiv(s, "28", "all", line).slice(0, 8) : [];
+  if (!filas.length) return null;
+  return (
+    <Panel h={t.units.bestCivs} sub={t.units.bestCivsSub}>
+      <table className="a2-table">
+        <tbody>
+          {filas.map((r) => (
+            <tr key={r.civ}>
+              <td>
+                <Civ slug={r.civ} size={26} />
+              </td>
+              <td className="num">
+                <b>{pct(r.wr)}</b>
+              </td>
+              <td className="num">{r.games.toLocaleString(lang)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </Panel>
   );
 }
 

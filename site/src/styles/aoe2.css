@@ -337,6 +337,13 @@
 .a2-tag.is-good { background: rgba(105, 210, 127, 0.13); color: var(--a2-good); }
 .a2-tag.is-bad { background: rgba(242, 107, 91, 0.13); color: var(--a2-bad); }
 .a2-tag.is-gold { background: rgba(240, 191, 76, 0.14); color: var(--a2-gold); }
+/* Tier list de unidades (2026-11-26): un tbody por nota; la letra va en la primera fila de cada una. */
+.a2-utier tbody + tbody tr:first-child td { border-top: 2px solid var(--a2-line, rgba(255, 255, 255, 0.12)); }
+.a2-utier td:first-child { width: 2.2em; }
+.a2-utier .a2-civ { color: var(--a2-text); text-decoration: none; }
+.a2-utier .a2-civ:hover { color: var(--a2-gold); }
+.a2-utier tbody.is-small td { color: var(--a2-muted); }
+.a2-utier-sep td { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding-top: 14px; }
 .a2-tier { font-family: var(--a2-title); font-size: 26px; font-weight: 900; width: 1.4em; text-align: center; color: var(--a2-muted); }
 .a2-tier.is-S { color: var(--a2-gold); }
 .a2-tier.is-A { color: var(--a2-text); }
@@ -368,3 +375,16 @@
 .a2-tree-legend .is-bonus::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 99px; background: var(--a2-good); margin-right: 6px; vertical-align: -1px; }
 .a2-ficha-who .a2-pick { flex-wrap: wrap; max-width: 100%; }
 .a2-ficha-who .a2-pick select { max-width: 100%; }
+
+/* Datos curiosos de la portada (2026-11-26). */
+.a2-facts-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); gap: 10px; }
+.a2-facts-list li { display: grid; gap: 4px; padding: 10px 12px; border-radius: 6px; background: var(--a2-panel2); }
+.a2-facts-list small { color: var(--a2-muted); font-size: 12px; }
+.a2-facts-v { display: flex; align-items: center; gap: 6px; font-size: 20px; font-variant-numeric: tabular-nums; color: var(--a2-gold); }
+.a2-facts-list .a2-civ { color: var(--a2-text); font-size: 13px; text-decoration: none; }
+.a2-facts-list .a2-civ:hover { color: var(--a2-gold); }
+.a2-facts-massed { display: flex; align-items: center; gap: 10px; margin: 0; }
+.a2-bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.a2-bars li { display: grid; grid-template-columns: 7.5em 1fr 3.5em; align-items: center; gap: 8px; font-size: 13px; }
+.a2-bars i { display: block; height: 10px; border-radius: 3px; background: var(--a2-gold); opacity: 0.75; }
+.a2-bars b { text-align: right; font-variant-numeric: tabular-nums; }
