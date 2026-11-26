@@ -203,7 +203,16 @@
 .a2-op.is-maa, .a2-op.is-drush, .a2-op.is-drush_fc { color: #f08a24; }
 .a2-op.is-fc, .a2-op.is-boom { color: #6fa8ff; }
 .a2-op.is-tower { color: #c69cff; }
-.a2-hist-what .a2-op { justify-self: start; margin-top: 3px; }
+.a2-rec { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; margin-top: 3px; font-size: 12px; color: var(--a2-muted); }
+.a2-rec > span:not(.a2-op) { white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Unidades entrenadas de la ficha de partida (2026-11-26). */
+.a2-trained { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.a2-trained > li { display: grid; gap: 6px; }
+.a2-trained ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; }
+.a2-trained ul li { display: grid; grid-template-columns: 36px 1fr; grid-template-rows: auto auto; column-gap: 6px; align-items: center; padding: 4px; border-radius: 4px; background: var(--a2-panel2); }
+.a2-trained ul li .a2-ico { grid-row: span 2; }
+.a2-trained ul li span { font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; }
+.a2-trained ul li small { font-size: 11px; color: var(--a2-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .a2-top .a2-pos { width: 22px; text-align: center; }
 .a2-go { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr)); gap: 10px; }
