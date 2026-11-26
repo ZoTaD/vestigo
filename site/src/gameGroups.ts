@@ -18,7 +18,7 @@ export type GameGroup = "survival" | "arpg" | "shooters" | "rts";
  * Age of Empires II sale oculto (2026-11-26): publicado para que el colector diario junte partidas antes de anunciarlo,
  * pero fuera del menú, de la portada, del menú de la cuenta y del sitemap. Para mostrarlo, esto va en `false`.
  */
-export const AOE2_OCULTO = true;
+export const AOE2_OCULTO = false;
 
 export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
   { id: "survival", games: ["valheim", "zomboid", "stardew"] },
