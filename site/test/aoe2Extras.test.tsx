@@ -22,7 +22,7 @@ describe("prerender de Parches, Logros y Build orders de AoE2", () => {
   it("la lista de parches: sin datos, directo a las notas oficiales; una ficha inexistente no rompe", async () => {
     const html = await render("/es/aoe2/parches", Aoe2Patches);
     expect(html).toContain("Actualización 188329");
-    expect(html).toContain("store.steampowered.com/news/app/813780/view/1847286114049735");
+    expect(html).toContain("store.steampowered.com/news/app/813780/view/1807332909738413");
     expect(await render("/en/aoe2/patches/153015", Aoe2Patches)).toContain("We couldn");
   });
   it("los logros salen con nombre y porcentaje", async () => {

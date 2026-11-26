@@ -7,6 +7,7 @@
  * `test/aoe2Api.test.ts`, con respuestas reales recortadas en `test/fixtures/aoe2/`).
  */
 import { relicGet, steamIdOf } from "../../coh3/api/relic";
+import { paisDe } from "./pais";
 
 export const AOE2_API = { apiBase: "https://aoe-api.worldsedgelink.com/community/leaderboard", title: "age2" };
 
@@ -133,7 +134,7 @@ function filas(raw: { statGroups: RawStatGroup[]; leaderboardStats: RawStat[] })
       rank: s.rank,
       profileId: m.profile_id,
       alias: m.alias,
-      country: m.country || null,
+      country: paisDe(m.profile_id, m.country),
       elo: s.rating,
       maxElo: Math.max(s.rating, s.highestrating ?? 0),
       wins: s.wins,
@@ -156,7 +157,7 @@ export type Aoe2Standing = { leaderboard: number; elo: number; maxElo: number; r
 const perfil = (m: RawMember): Aoe2Profile => ({
   id: m.profile_id,
   alias: m.alias,
-  country: m.country || null,
+  country: paisDe(m.profile_id, m.country),
   steamId: steamIdOf(m.name),
   clan: m.clanlist_name || null,
   level: m.level ?? 0,
@@ -257,7 +258,7 @@ export function normalizeHistory(raw: RawAoe2History): Aoe2Match[] {
         return {
           profileId: x.profile_id,
           alias: p?.alias ?? String(x.profile_id),
-          country: p?.country || null,
+          country: paisDe(x.profile_id, p?.country),
           civ: x.civilization_id,
           team: x.teamid,
           color: null,

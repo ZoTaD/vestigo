@@ -45,7 +45,7 @@ export const GAME_LOGOS: Record<Game, [w: number, h: number]> = {
   warframe: [116, 30],
   cs2: [88, 34],
   coh3: [66, 40],
-  aoe2: [58, 40],
+  aoe2: [59, 40],
 };
 
 /** El archivo del logo de un juego en `public/logos/`: casi todos son PNG sacados de la caché de Steam; el de Warframe es un SVG propio. */
