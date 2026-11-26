@@ -92,7 +92,7 @@ const EN = {
     home: {
       title: () => "Vestigo — Tier lists, builds and data for the games you play",
       description: () =>
-        "Tier lists, builds, guides, maps and planners for Deadlock, Counter-Strike 2, Company of Heroes 3, " +
+        "Tier lists, builds, guides, maps and planners for Deadlock, Counter-Strike 2, Company of Heroes 3, Age of Empires II, " +
         "Valheim, Stardew Valley and Project Zomboid, in English and Spanish.",
     },
     deadlock: {
@@ -358,7 +358,7 @@ const ES: typeof EN = {
     home: {
       title: () => "Vestigo — Tier lists, builds y datos de tus juegos",
       description: () =>
-        "Tier lists, builds, guías, mapas y planificadores de Deadlock, Counter-Strike 2, Company of Heroes 3, " +
+        "Tier lists, builds, guías, mapas y planificadores de Deadlock, Counter-Strike 2, Company of Heroes 3, Age of Empires II, " +
         "Valheim, Stardew Valley y Project Zomboid, en español y en inglés.",
     },
     deadlock: {
