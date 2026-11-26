@@ -37,7 +37,8 @@ import unicodedata
 import urllib.parse
 import urllib.request
 from collections import Counter
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from itertools import islice
+from concurrent.futures import FIRST_COMPLETED, ThreadPoolExecutor, as_completed, wait
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -494,22 +495,35 @@ def main() -> None:
     print(f"historiales a pedir: {len(elegidos)}", flush=True)
     fin = time.time() + a.deadline
     hechos = 0
+    # Ventana acotada de pedidos en vuelo y cada respuesta se suelta al procesarla: con todos encolados de una, las
+    # ~95 mil respuestas del recorrido completo quedaban vivas en la lista y el runner se quedaba sin memoria (26/11).
+    pendientes = iter(elegidos)
     with ThreadPoolExecutor(a.workers) as ex:
-        futs = []
-        for pid in elegidos:
-            futs.append(ex.submit(_get, "getRecentMatchHistory", {"profile_ids": json.dumps([pid])}))
-        for f in as_completed(futs):
+        en_vuelo = set()
+
+        def pedir(n: int) -> None:
+            for pid in islice(pendientes, n):
+                en_vuelo.add(ex.submit(_get, "getRecentMatchHistory", {"profile_ids": json.dumps([pid])}))
+
+        pedir(a.workers * 4)
+        while en_vuelo:
+            listos, en_vuelo = wait(en_vuelo, return_when=FIRST_COMPLETED)
+            for f in listos:
+                h = f.result()
+                hechos += 1
+                for m in (h or {}).get("matchHistoryStats", []):
+                    acc.agregar(m)
+                for pr in (h or {}).get("profiles", []):
+                    de_historiales[pr.get("profile_id", 0)] = (pr.get("alias", ""), pr.get("country") or "")
+                if hechos % 5000 == 0:
+                    print(f"  historiales: {hechos}; partidas vistas: {len(acc.vistas)}", flush=True)
+            del listos, f, h
             if time.time() > fin:
                 print("plazo cumplido: se escribe lo juntado", flush=True)
-                for x in futs:
+                for x in en_vuelo:
                     x.cancel()
                 break
-            h = f.result()
-            hechos += 1
-            for m in (h or {}).get("matchHistoryStats", []):
-                acc.agregar(m)
-            for pr in (h or {}).get("profiles", []):
-                de_historiales[pr.get("profile_id", 0)] = (pr.get("alias", ""), pr.get("country") or "")
+            pedir(a.workers * 4 - len(en_vuelo))
     print(f"historiales: {hechos}; partidas vistas: {len(acc.vistas)}", flush=True)
 
     # 3b: aperturas. Grabaciones de una muestra de RM 1v1 de días completos, repartida entre bandas de ELO.
