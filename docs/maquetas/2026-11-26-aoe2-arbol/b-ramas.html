@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>B · Fuerza por rama</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  .head { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: center; }
+  .head img { width: 72px; height: 72px; grid-row: span 2; }
+  .head h1 { font-size: 34px; }
+  .head p { margin: 0; color: var(--muted); }
+  .head p b { color: var(--gold); }
+  .ramas { display: grid; gap: 6px; }
+  .rama { display: grid; grid-template-columns: 150px 1fr 280px; gap: 16px; align-items: center; padding: 10px 12px; border-radius: 8px; background: var(--panel2); }
+  .rama.top { background: rgba(240, 191, 76, .1); }
+  .rama h3 { font-size: 15px; }
+  .rama .nota { font-size: 12px; color: var(--muted); }
+  .bar { height: 12px; border-radius: 99px; background: #0b0f14; overflow: hidden; position: relative; }
+  .bar i { position: absolute; inset: 0 auto 0 0; border-radius: 99px; background: linear-gradient(90deg, #a87a1c, var(--gold)); }
+  .rama:not(.top) .bar i { background: linear-gradient(90deg, #3d5266, #7d93a8); }
+  .rama.flojo .bar i { background: linear-gradient(90deg, #6d2c25, var(--bad)); }
+  .best { display: flex; align-items: center; gap: 10px; }
+  .best b { font-size: 14px; }
+  .best .muted { font-size: 12px; display: block; }
+  .falta { color: var(--bad); }
+  .legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .uniq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .uniq .card { background: rgba(240, 191, 76, .07); border-radius: 8px; padding: 12px; display: grid; gap: 8px; }
+  .uniq small { color: var(--gold); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .uniq p { margin: 0; font-size: 14px; }
+  .bonos { columns: 2; gap: 30px; margin: 0; padding-left: 18px; }
+  .bonos li { margin-bottom: 6px; break-inside: avoid; }
+  @media (max-width: 760px) {
+    .rama { grid-template-columns: 1fr; gap: 8px; }
+    .uniq { grid-template-columns: 1fr; }
+    .bonos { columns: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag-maq">Maqueta B · Fuerza por rama <a href="a-ficha.html">← A</a><a href="c-arbol.html">C →</a></div>
+
+  <section class="panel head">
+    <img src="http://localhost:5331/aoe2/civ/franks.webp" alt="" />
+    <h1>Francos</h1>
+    <p><b>Civilización de caballería</b> · 55,1% de victorias en RM 1v1 (28 días) · mejor en Arabia</p>
+  </section>
+
+  <section class="panel">
+    <h2>En qué es fuerte</h2>
+    <p class="sub">Cada rama según cuántas unidades y mejoras tiene de todas las posibles, más sus bonos. Al lado, su mejor unidad de esa rama y lo que le falta.</p>
+    <div class="ramas">
+      <div class="rama top">
+        <div><h3>Caballería</h3><span class="nota">10 de 10</span></div>
+        <div class="bar"><i style="width: 100%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/u/2.webp" alt="" /><span><b>Paladín</b><span class="muted">+20% PV · establos +40% rápido</span></span></div>
+      </div>
+      <div class="rama">
+        <div><h3>Infantería</h3><span class="nota">8 de 10</span></div>
+        <div class="bar"><i style="width: 80%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/u/473.webp" alt="" /><span><b>Lanzador de hachas</b><span class="muted">única · Campeón con todo</span></span></div>
+      </div>
+      <div class="rama">
+        <div><h3>Economía</h3><span class="nota">8 de 10</span></div>
+        <div class="bar"><i style="width: 80%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/b/19.webp" alt="" /><span><b>Molino gratis</b><span class="muted">bayas +15% · <span class="falta">sin Sierra a dos</span></span></span></div>
+      </div>
+      <div class="rama">
+        <div><h3>Asedio</h3><span class="nota">6 de 10</span></div>
+        <div class="bar"><i style="width: 60%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/u/30.webp" alt="" /><span><b>Cañón de asedio</b><span class="muted falta">sin Ariete ni Onagro de asedio</span></span></div>
+      </div>
+      <div class="rama">
+        <div><h3>Defensa</h3><span class="nota">6 de 10</span></div>
+        <div class="bar"><i style="width: 60%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/b/7.webp" alt="" /><span><b>Castillos baratos</b><span class="muted falta">sin Torre del homenaje ni Bala roja</span></span></div>
+      </div>
+      <div class="rama">
+        <div><h3>Naval</h3><span class="nota">6 de 10</span></div>
+        <div class="bar"><i style="width: 60%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/u/203.webp" alt="" /><span><b>Galeota incendiaria</b><span class="muted falta">sin Barco incendiario rápido</span></span></div>
+      </div>
+      <div class="rama flojo">
+        <div><h3>Arqueros</h3><span class="nota">3 de 10</span></div>
+        <div class="bar"><i style="width: 30%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/u/21.webp" alt="" /><span><b>Guerrillero de élite</b><span class="muted falta">sin Arbalestero, Arquero a caballo, Dactilera ni Brazal</span></span></div>
+      </div>
+      <div class="rama flojo">
+        <div><h3>Monjes</h3><span class="nota">3 de 10</span></div>
+        <div class="bar"><i style="width: 30%"></i></div>
+        <div class="best"><img class="ico" src="http://localhost:5331/aoe2/u/33.webp" alt="" /><span><b>Monje</b><span class="muted falta">sin Redención ni Expiación</span></span></div>
+      </div>
+    </div>
+    <div class="legend"><span>Dorado: su fuerte</span><span>Gris: normal</span><span>Rojo: flojo</span></div>
+  </section>
+
+  <section class="panel">
+    <h2>Lo único</h2>
+    <div class="uniq">
+      <div class="card"><div class="row"><img class="ico l" src="http://localhost:5331/aoe2/u/46.webp" alt="" /><div><small>Unidad única</small><br /><b>Lanzador de hachas</b></div></div><p>Pega cuerpo a cuerpo desde media distancia. Fuerte contra infantería; débil contra arqueros y asedio.</p></div>
+      <div class="card"><div class="row"><img class="ico l" src="http://localhost:5331/aoe2/t/107.webp" alt="" /><div><small>Castillos</small><br /><b>Código caballeresco</b></div></div><p>Los establos trabajan +40% más rápido.</p></div>
+      <div class="card"><div class="row"><img class="ico l" src="http://localhost:5331/aoe2/t/33.webp" alt="" /><div><small>Imperial</small><br /><b>Compañías de ordenanza</b></div></div><p>Los ballesteros montados cuestan -40% de oro.</p></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Bonos</h2>
+    <ul class="bonos">
+      <li>Los recolectores trabajan +15% más rápido</li>
+      <li>Las tecnologías del molino son gratis</li>
+      <li>Unidades montadas: +20% de PV desde la Edad Feudal</li>
+      <li>Castillos -15% en Castillos y -25% en Imperial</li>
+      <li><b class="gold">De equipo:</b> la línea de caballeros ve +2 casillas</li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>

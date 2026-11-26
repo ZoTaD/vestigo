@@ -1,0 +1,28 @@
+/* Maquetas del árbol de AoE2 (2026-11-26). Colores y letra de la sección (site/src/styles/aoe2.css). */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans:wght@400;600;700&display=swap");
+:root {
+  --bg: #0b0f14; --panel: #121a23; --panel2: #18222e; --line: #24313f;
+  --text: #eef2f6; --muted: #93a3b5; --gold: #f0bf4c; --good: #69d27f; --bad: #f26b5b;
+  --title: "Cinzel", Georgia, serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 "Noto Sans", system-ui, sans-serif; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+.tag-maq { font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+.tag-maq a { color: var(--gold); margin-left: 10px; }
+.panel { background: var(--panel); border-radius: 10px; padding: 18px 20px; margin-bottom: 16px; }
+h1, h2, h3 { font-family: var(--title); margin: 0; }
+h2 { font-size: 18px; margin-bottom: 4px; }
+.sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+.muted { color: var(--muted); }
+.gold { color: var(--gold); }
+img.ico { width: 44px; height: 44px; border-radius: 6px; flex: none; background: #000; }
+img.ico.s { width: 32px; height: 32px; border-radius: 4px; }
+img.ico.l { width: 64px; height: 64px; border-radius: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 99px; background: var(--panel2); font-size: 13px; font-weight: 600; }
+.chip.gold { background: rgba(240, 191, 76, .14); color: var(--gold); }
+.chip.good { background: rgba(105, 210, 127, .13); color: var(--good); }
+.chip.bad { background: rgba(242, 107, 91, .13); color: var(--bad); }
+.row { display: flex; align-items: center; gap: 12px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }

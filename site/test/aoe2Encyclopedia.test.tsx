@@ -44,6 +44,11 @@ describe("prerender de la enciclopedia de AoE2", () => {
     const html = await render("/es/aoe2/arbol/franks", Aoe2TechTree);
     expect(html).toMatch(/<h1[^>]*>Francos<\/h1>/);
     expect(html).toContain("Arbalestero");
+    // La ficha de arriba (2026-11-26): mejores unidades con nota, lo único con su texto y bonos, ya en el prerender.
+    expect(html).toContain("Sus mejores unidades");
+    expect(html).toMatch(/Paladín[\s\S]*\+20% PV[\s\S]*a2-tier is-S/);
+    expect(html).toContain("Unidad de infantería única de los francos");
+    expect(html).toContain("Las tecnologías del molino son gratuitas");
   });
   it("el árbol muestra las variantes propias de la civ (Konnik de la Krepost) y lo que le falta ya en el prerender", async () => {
     const html = await render("/en/aoe2/tech-tree/bulgarians", Aoe2TechTree);
