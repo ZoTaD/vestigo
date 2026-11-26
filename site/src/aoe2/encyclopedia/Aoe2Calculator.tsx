@@ -18,7 +18,7 @@ const nombreDe = (n: { en: string; es: string }, lang: Lang) => n[lang] || n.en;
 type Lado = { civ: string; unit: string; off: number[] };
 
 export { armar, mejorasPara } from "./armar";
-import { armar, mejorasPara } from "./armar";
+import { armar, mejorasPara, unidadPara } from "./armar";
 
 function leerQuery(): Partial<Record<"a" | "b" | "ca" | "cb" | "e", string>> {
   if (typeof window === "undefined") return {};
@@ -46,6 +46,9 @@ function Calculadora({ us, a, ts, fx }: { us: Unidad[]; a: Arbol; ts: Tecnologia
     { civ: "franks", unit: "knight", off: [] },
     { civ: "britons", unit: "halberdier", off: [] },
   ]);
+  /** La dirección no se reescribe hasta haberla leído: si no, el modo estricto de React (que corre los efectos dos veces)
+   * leía la dirección ya pisada con el duelo de entrada. */
+  const [leida, setLeida] = useState(false);
   // Lo que venga en la dirección (link desde una ficha o compartido) manda, ya en el navegador.
   useEffect(() => {
     const q = leerQuery();
@@ -56,17 +59,19 @@ function Calculadora({ us, a, ts, fx }: { us: Unidad[]; a: Arbol; ts: Tecnologia
     const tiene = (c: string | undefined, u: string) => !!c && !!a.civs[c] && estado(a, c, `u${porSlug.get(u)!.id}`) !== "0";
     const ca = tiene(q.ca, ua) ? q.ca! : primeraCon(ua, "franks");
     const cb = tiene(q.cb, ub) ? q.cb! : primeraCon(ub, "britons");
-    if (q.e && /^[2-4]$/.test(q.e)) setE(Number(q.e));
+    const edad = q.e && /^[2-4]$/.test(q.e) ? Number(q.e) : 4;
+    setE(edad);
     setLados([
-      { civ: ca, unit: ua, off: [] },
-      { civ: cb, unit: ub, off: [] },
+      { civ: ca, unit: unidadPara(ua, ca, edad, us, a), off: [] },
+      { civ: cb, unit: unidadPara(ub, cb, edad, us, a), off: [] },
     ]);
+    setLeida(true);
   }, []);
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !leida) return;
     const p = new URLSearchParams({ a: lados[0].unit, ca: lados[0].civ, b: lados[1].unit, cb: lados[1].civ, e: String(e) });
     window.history.replaceState(window.history.state, "", `${window.location.pathname}?${p}`);
-  }, [lados, e]);
+  }, [lados, e, leida]);
 
   const set = (i: 0 | 1, l: Partial<Lado>) => setLados((ls) => (i === 0 ? [{ ...ls[0], ...l }, ls[1]] : [ls[0], { ...ls[1], ...l }]));
   const armados = lados.map((l) => {
@@ -86,7 +91,16 @@ function Calculadora({ us, a, ts, fx }: { us: Unidad[]; a: Arbol; ts: Tecnologia
       <Panel h={t.calc.h} sub={t.calc.sub}>
         <label className="a2-pick">
           {t.calc.age}{" "}
-          <select value={e} onChange={(ev) => setE(Number(ev.target.value))}>
+          <select
+            value={e}
+            onChange={(ev) => {
+              const n = Number(ev.target.value);
+              setE(n);
+              // Al bajar de edad, cada lado pasa a la unidad de su línea que existe en esa edad.
+              const ajustar = (l: Lado): Lado => ({ ...l, unit: unidadPara(l.unit, l.civ, n, us, a), off: [] });
+              setLados((ls) => [ajustar(ls[0]), ajustar(ls[1])]);
+            }}
+          >
             {[2, 3, 4].map((n) => (
               <option key={n} value={n}>
                 {edad(lang, n)}
@@ -106,7 +120,7 @@ function Calculadora({ us, a, ts, fx }: { us: Unidad[]; a: Arbol; ts: Tecnologia
                 <CivShield civ={civBySlug(l.civ)} size={40} />
                 <label>
                   {t.calc.civ}
-                  <select value={l.civ} onChange={(ev) => set(i, { civ: ev.target.value, unit: estado(a, ev.target.value, `u${x.id}`) !== "0" ? l.unit : "militia", off: [] })}>
+                  <select value={l.civ} onChange={(ev) => set(i, { civ: ev.target.value, unit: unidadPara(l.unit, ev.target.value, e, us, a), off: [] })}>
                     {civs.map((cv) => (
                       <option key={cv.slug} value={cv.slug}>
                         {cv.name[lang]}
@@ -191,7 +205,7 @@ function Calculadora({ us, a, ts, fx }: { us: Unidad[]; a: Arbol; ts: Tecnologia
                 <tr key={txt as string}>
                   <td>{txt as string}</td>
                   <td className="num">
-                    <b>{r.dano}</b>
+                    <b>{Number(r.dano.toFixed(1)).toLocaleString(lang)}</b>
                   </td>
                   <td className="num">
                     {r.golpes}

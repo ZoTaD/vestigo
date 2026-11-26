@@ -19,6 +19,8 @@ export type Combatiente = {
   range: number;
   speed: number;
   los: number;
+  /** Cuánto del daño de bonificación no recibe (0,4 = -40%: los soldados sicilianos). Atributo 24 del juego. */
+  bonusRes?: number;
 };
 
 /** Ataque y armadura en los efectos: clase × 256 + valor (un byte con signo). */
@@ -60,17 +62,22 @@ export function aplicar(u: Combatiente, fxs: readonly Fx[]): Combatiente {
     else if (attr === 10) o.reload = numero(o.reload, tipo, d);
     else if (attr === 11) o.accuracy = Math.min(100, numero(o.accuracy, tipo, d));
     else if (attr === 12) o.range = numero(o.range, tipo, d);
+    else if (attr === 24) o.bonusRes = Math.min(1, Math.max(0, numero(o.bonusRes ?? 0, tipo, d)));
   }
   o.hp = Math.round(o.hp);
   return o;
 }
 
-/** El daño de un golpe de A a B. */
-export function danio(a: Pick<Combatiente, "attacks">, b: Pick<Combatiente, "armors">): number {
+/** El daño de un golpe de A a B. Lo que no es el ataque base (cuerpo a cuerpo 4, a distancia 3) es daño de
+ * bonificación, y B recibe sólo `1 − bonusRes` de eso. */
+export function danio(a: Pick<Combatiente, "attacks">, b: Pick<Combatiente, "armors" | "bonusRes">): number {
   let s = 0;
+  const res = b.bonusRes ?? 0;
   for (const [c, v] of Object.entries(a.attacks)) {
     const arm = b.armors[Number(c)];
-    if (arm !== undefined) s += Math.max(0, v - arm);
+    if (arm === undefined) continue;
+    const parte = Math.max(0, v - arm);
+    s += c === "3" || c === "4" ? parte : parte * (1 - res);
   }
   return Math.max(1, s);
 }
