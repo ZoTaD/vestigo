@@ -47,6 +47,7 @@ import vistas as vistas_mod  # noqa: E402
 from patches import NOTAS, NOTICIA, PARCHES  # noqa: E402
 from openings import openings as _aperturas  # noqa: E402
 from replay import read_actions  # noqa: E402
+from pros import SALIDA as PROS_JSON  # noqa: E402
 from names import actualizar as actualizar_nombres, escribir as escribir_nombres, leer as leer_nombres  # noqa: E402
 
 AQUI = Path(__file__).resolve().parent
@@ -372,6 +373,14 @@ def home_json(foto: dict | None, resumen_: dict | None, top: int = 5) -> dict:
 
 # ---------- Red ----------
 
+#: El país que representa cada pro (`pros.py`): pisa al del perfil, que suele ser donde vive.
+PROS: dict[int, str] = {int(k): v for k, v in json.loads(PROS_JSON.read_text(encoding="utf-8")).items()} if PROS_JSON.exists() else {}
+
+
+def pais_de(perfil: int, pais: str | None) -> str:
+    return PROS.get(perfil) or pais or ""
+
+
 def _get(endpoint: str, params: dict, intentos: int = 3) -> dict | None:
     q = "&".join(f"{k}={urllib.parse.quote(str(v))}" for k, v in {**params, "title": "age2"}.items())
     for i in range(intentos):
@@ -409,7 +418,7 @@ def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str, str
         for st in p["leaderboardStats"]:
             if st["statgroup_id"] in grupos:
                 m = grupos[st["statgroup_id"]]
-                filas.append((m["profile_id"], st["rating"], st["lastmatchdate"], st["rank"], m.get("alias", ""), m.get("country") or ""))
+                filas.append((m["profile_id"], st["rating"], st["lastmatchdate"], st["rank"], m.get("alias", ""), pais_de(m["profile_id"], m.get("country"))))
     filas.sort(key=lambda x: x[3])
     return [(p, e, u, a, c) for p, e, u, _, a, c in filas]
 
@@ -514,7 +523,7 @@ def main() -> None:
                 for m in (h or {}).get("matchHistoryStats", []):
                     acc.agregar(m)
                 for pr in (h or {}).get("profiles", []):
-                    de_historiales[pr.get("profile_id", 0)] = (pr.get("alias", ""), pr.get("country") or "")
+                    de_historiales[pr.get("profile_id", 0)] = (pr.get("alias", ""), pais_de(pr.get("profile_id", 0), pr.get("country")))
                 if hechos % 5000 == 0:
                     print(f"  historiales: {hechos}; partidas vistas: {len(acc.vistas)}", flush=True)
             del listos, f, h
