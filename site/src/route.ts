@@ -36,7 +36,7 @@ export type DeadlockSection =
   | "dle"
   | "player"
   | "match";
-export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2" | "coh3" | "privacy" | "terms";
+export type View = "home" | "deadlock" | "poe2" | "valheim" | "d2r" | "zomboid" | "rust" | "terraria" | "stardew" | "warframe" | "cs2" | "coh3" | "aoe2" | "privacy" | "terms";
 /**
  * Las pestañas de Path of Exile 2 (2026-09-23). Economía primero, para que la
  * sección esté armada cuando salga la 1.0 (11-dic-2026); la enciclopedia y los
@@ -468,6 +468,27 @@ export function switchGame(route: Route, to: CohGame): Route {
   return { ...route, view: "coh3", cohGame: to === "coh3" ? undefined : to, c3Section: destino, detail: undefined };
 }
 
+/**
+ * Age of Empires II: DE (2026-11-20). Diseño: docs/superpowers/specs/2026-11-20-aoe2-design.md. Las fichas usan el
+ * slug en inglés (`franks`, `arabia`), igual en los dos idiomas. Jugador y partida llevan el número de la API y no se
+ * prerenderizan; la partida suma `?p=<jugador>` (la API sólo la encuentra dentro del historial de alguien).
+ */
+export type Aoe2Tab = "leaderboards" | "players" | "matches" | "civilizations" | "matchups" | "maps" | "units" | "technologies" | "tech-tree" | "calculator" | "patches" | "achievements" | "build-orders";
+export type Aoe2Section = "home" | Aoe2Tab;
+export const AOE2_SEGMENT = "aoe2";
+export const AOE2_SECTIONS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "matches", "units", "technologies", "tech-tree", "calculator", "patches", "achievements", "build-orders"];
+/** Las pestañas cuya dirección puede llevar una ficha (`/aoe2/civilizations/franks`). */
+export const AOE2_DETAIL_SECTIONS: Aoe2Tab[] = ["players", "matches", "civilizations", "maps", "units", "technologies", "tech-tree", "patches", "build-orders"];
+export const AOE2_SECTION_ES: Record<Aoe2Tab, string> = {
+  leaderboards: "ranking", players: "jugadores", matches: "partidas", civilizations: "civilizaciones", matchups: "matchups", maps: "mapas",
+  units: "unidades", technologies: "tecnologias", "tech-tree": "arbol", calculator: "calculadora",
+  patches: "parches", achievements: "logros", "build-orders": "build-orders",
+};
+const AOE2_SECTION_BY_ES = new Map(Object.entries(AOE2_SECTION_ES).map(([tab, es]) => [es, tab as Aoe2Tab]));
+const isAoe2Tab = (v: string | undefined): v is Aoe2Tab => !!v && (AOE2_SECTIONS as string[]).includes(v);
+/** La pestaña de AoE2 de un segmento, escrito en cualquiera de los dos idiomas. */
+const aoe2Tab = (v: string | undefined): Aoe2Tab | undefined => (isAoe2Tab(v) ? v : v ? AOE2_SECTION_BY_ES.get(v) : undefined);
+
 export interface Route {
   lang: Lang;
   view: View;
@@ -493,6 +514,8 @@ export interface Route {
   c2Section?: Cs2Section;
   /** Qué pestaña de Company of Heroes 3. Sin ella es la portada de la sección. */
   c3Section?: Coh3Section;
+  /** Qué pestaña de Age of Empires II. Sin ella es la portada de la sección. */
+  a2Section?: Aoe2Section;
   /** Cuál Company of Heroes (sin valor, CoH3). */
   cohGame?: CohGame;
   /** El slug de lo que se abre (un héroe, un ítem, una ficha, una edición), si la URL apunta a uno. */
@@ -645,6 +668,13 @@ export function parseRoute(pathname: string): Route {
     return { ...base, view: "coh3", ...juego, c3Section: tab, detail: ficha };
   }
 
+  if (head === AOE2_SEGMENT) {
+    const tab = aoe2Tab(rest[1]);
+    if (!tab) return { ...base, view: "aoe2", a2Section: "home" };
+    const ficha = AOE2_DETAIL_SECTIONS.includes(tab) && rest[2] ? rest[2] : undefined;
+    return { ...base, view: "aoe2", a2Section: tab, detail: ficha };
+  }
+
   if (head === CS2_SEGMENT) {
     const tab = cs2Tab(rest[1]);
     if (!tab) return { ...base, view: "cs2", c2Section: "home" };
@@ -786,6 +816,13 @@ export function routePath(route: Route): string {
     if (sec === "home") return root;
     const path = `${root}/${lang === "es" ? COH3_SECTION_ES[sec] : sec}`;
     return detail ? `${path}/${detail}` : path;
+  }
+  if (view === "aoe2") {
+    const sec = route.a2Section ?? "home";
+    const root = `/${lang}/${AOE2_SEGMENT}`;
+    if (sec === "home") return root;
+    const path = `${root}/${lang === "es" ? AOE2_SECTION_ES[sec] : sec}`;
+    return detail && AOE2_DETAIL_SECTIONS.includes(sec) ? `${path}/${detail}` : path;
   }
   if (view === "cs2") {
     const sec = route.c2Section ?? "home";

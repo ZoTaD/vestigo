@@ -41,6 +41,8 @@ const loadCs2 = () => import("./Cs2");
 export const Cs2Area = lazyWithPreload(loadCs2);
 const loadCoh3 = () => import("./Coh3");
 export const Coh3Area = lazyWithPreload(loadCoh3);
+const loadAoe2 = () => import("./Aoe2");
+export const Aoe2Area = lazyWithPreload(loadAoe2);
 export const PrivacyPage = lazyWithPreload(() => import("./Privacy"));
 export const TermsPage = lazyWithPreload(() => import("./Terms"));
 
@@ -64,6 +66,7 @@ const BY_VIEW: Partial<Record<View, { preload: () => Promise<void> }>> = {
   warframe: WarframeArea,
   cs2: Cs2Area,
   coh3: Coh3Area,
+  aoe2: Aoe2Area,
   privacy: PrivacyPage,
   terms: TermsPage,
 };
@@ -95,4 +98,5 @@ export const preloadRoute = async (route: Route): Promise<void> => {
   if (route.view === "warframe") await loadWarframe().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "cs2") await loadCs2().then((m) => m.preloadTab(route)).catch(() => undefined);
   if (route.view === "coh3") await loadCoh3().then((m) => m.preloadTab(route)).catch(() => undefined);
+  if (route.view === "aoe2") await loadAoe2().then((m) => m.preloadTab(route)).catch(() => undefined);
 };

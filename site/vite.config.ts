@@ -53,6 +53,9 @@ const cs2PricesDir = fileURLToPath(new URL("../games/cs2/prices", import.meta.ur
 // Company of Heroes 3 (2026-11-04): lo que escribe `games/coh3/tools/site_data.py`, y las stats de `stats.py`.
 const coh3Dir = fileURLToPath(new URL("../games/coh3/data", import.meta.url));
 const coh3StatsDir = fileURLToPath(new URL("../games/coh3/stats", import.meta.url));
+// Age of Empires II (2026-11-20): lo que escribe `games/aoe2/tools/game_data.py`, y las stats del colector diario.
+const aoe2Dir = fileURLToPath(new URL("../games/aoe2/data", import.meta.url));
+const aoe2StatsDir = fileURLToPath(new URL("../games/aoe2/stats", import.meta.url));
 // CoH2 y CoH1 (2026-11-06): `relic_daily.py` (stats) y `maps.py` (data).
 const cohDir = (g: string, sub: string) => fileURLToPath(new URL(`../games/${g}/${sub}`, import.meta.url));
 
@@ -391,6 +394,51 @@ function readSitemapData(): { data: OgData } {
       wf,
       c2,
       c3,
+      a2: (() => {
+        try {
+          const meta = JSON.parse(readFileSync(`${aoe2Dir}/meta.json`, "utf-8"));
+          const civs = JSON.parse(readFileSync(`${aoe2Dir}/civs.json`, "utf-8")).filter((c: { era: string }) => c.era === "base");
+          // Mapas: sólo los que tienen partidas de ranking en los últimos 28 días (el juego trae 194, casi todos de campaña).
+          let maps: { slug: string; name: { en: string; es: string } }[] = [];
+          try {
+            const sum = JSON.parse(readFileSync(`${aoe2StatsDir}/summary.json`, "utf-8"));
+            const jugados = new Set(Object.keys(sum.windows?.["28"]?.map ?? {}).map((k: string) => k.split("|")[1]));
+            maps = JSON.parse(readFileSync(`${aoe2Dir}/maps.json`, "utf-8")).filter((m: { slug: string }) => jugados.has(m.slug));
+          } catch {
+            maps = [];
+          }
+          // Enciclopedia: las fichas de unidades y tecnologías. Las variantes (mismo nombre, el id en el slug) también:
+          // la ficha de algunas civs enlaza a la suya (el Konnik de los búlgaros es una).
+          let units: { slug: string; name: { en: string; es: string } }[] = [];
+          let techs: { slug: string; name: { en: string; es: string } }[] = [];
+          try {
+            units = JSON.parse(readFileSync(`${aoe2Dir}/encyclopedia/units.json`, "utf-8")).units;
+            techs = JSON.parse(readFileSync(`${aoe2Dir}/encyclopedia/techs.json`, "utf-8"));
+          } catch {
+            units = [];
+          }
+          let patches: string[] = [];
+          let buildOrders: { slug: string; name: { en: string; es: string } }[] = [];
+          // Sólo los parches con ficha (civs antes y después o cambios de cifras); los demás enlazan a sus notas.
+          try {
+            const dif = JSON.parse(readFileSync(`${aoe2Dir}/encyclopedia/patchdiff.json`, "utf-8"));
+            patches = JSON.parse(readFileSync(`${aoe2StatsDir}/patches.json`, "utf-8"))
+              .filter((p: { name: string; civs: unknown[] }) => p.civs.length > 0 || dif[p.name])
+              .map((p: { name: string }) => p.name);
+          } catch {
+            patches = [];
+          }
+          try {
+            buildOrders = JSON.parse(readFileSync(`${aoe2Dir}/buildorders.json`, "utf-8")).list;
+          } catch {
+            buildOrders = [];
+          }
+          return { generatedAt: meta.generatedAt, civs, maps, units, techs, patches, buildOrders };
+        } catch (e) {
+          console.warn(`[aoe2] sin datos (${(e as Error).message}); el sitio sale sin la sección en el sitemap.`);
+          return undefined;
+        }
+      })(),
       // Los sellos de cada pipeline, para el `lastmod` del sitemap. La
       // enciclopedia de PoE2 no tiene sello y va sin fecha.
       dates: {
@@ -405,6 +453,13 @@ function readSitemapData(): { data: OgData } {
         warframe: wf?.generatedAt,
         cs2: c2?.generatedAt,
         coh3: c3?.generatedAt,
+        aoe2: (() => {
+          try {
+            return JSON.parse(readFileSync(`${aoe2Dir}/meta.json`, "utf-8")).generatedAt;
+          } catch {
+            return undefined;
+          }
+        })(),
         coh2: cohStatsDate("coh2"),
         coh1Data: (() => {
           try {
@@ -1128,6 +1183,31 @@ function coh3Api(): Plugin {
   };
 }
 
+/** El intermediario de Age of Empires II (2026-11-20) en dev y preview: igual que `coh3Api`. */
+function aoe2Api(): Plugin {
+  const handle = (load: () => Promise<{ handleAoe2: (u: URL, f: typeof fetch, m: string) => Promise<Response> }>) =>
+    (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
+      if (!req.url?.startsWith("/api/aoe2/")) return next();
+      load()
+        .then((m) => m.handleAoe2(new URL(req.url!, "http://localhost"), fetch, req.method ?? "GET"))
+        .then(async (r) => {
+          res.statusCode = r.status;
+          r.headers.forEach((v, k) => res.setHeader(k, v));
+          res.end(await r.text());
+        })
+        .catch(() => ((res.statusCode = 500), res.end()));
+    };
+  return {
+    name: "aoe2-api",
+    configureServer(server) {
+      server.middlewares.use(handle(() => server.ssrLoadModule("/src/aoe2/api/handler.ts") as never));
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(handle(() => import("./src/aoe2/api/handler")));
+    },
+  };
+}
+
 function cs2InventoryApi(): Plugin {
   const handle = (load: () => Promise<{ handleInventory: (u: URL) => Promise<Response> }>) =>
     (req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse, next: () => void) => {
@@ -1196,6 +1276,7 @@ export default defineConfig({
     cs2InventoryApi(),
     cs2MatchesApi(),
     coh3Api(),
+    aoe2Api(),
     localDeadlockAssets(),
     esSlugsModule("virtual:d2r-slugs-es", [`${d2rDir}/wiki/index.json`, `${d2rDir}/drops/index.json`], () => buildD2rEsSlugs(readD2Index())),
     // Antes que el de las secciones: su `load` atiende todo lo que empiece con `virtual:pz-slugs-es/`.
@@ -1232,7 +1313,7 @@ export default defineConfig({
     // Cada pipeline escribe su salida en games/<juego>/data y el sitio la lee
     // ahí mismo: una sola fuente, sin copias que se desincronicen. Un alias por
     // juego y no uno genérico, para que un import diga de qué juego habla.
-    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir, "@coh2stats": cohDir("coh2", "stats"), "@coh2": cohDir("coh2", "data"), "@coh1stats": cohDir("coh1", "stats"), "@coh1": cohDir("coh1", "data") },
+    alias: { "@deadlock": deadlockDir, "@poe2": poe2Dir, "@valheim": valheimDir, "@valheimMap": valheimMapDir, "@d2r": d2rDir, "@zomboid": zomboidDir, "@rust": rustDir, "@terraria": terrariaDir, "@stardew": stardewDir, "@warframe": warframeDir, "@cs2prices": cs2PricesDir, "@cs2": cs2Dir, "@coh3stats": coh3StatsDir, "@coh3": coh3Dir, "@aoe2stats": aoe2StatsDir, "@aoe2": aoe2Dir, "@coh2stats": cohDir("coh2", "stats"), "@coh2": cohDir("coh2", "data"), "@coh1stats": cohDir("coh1", "stats"), "@coh1": cohDir("coh1", "data") },
   },
   server: {
     // 5173 by default, but overridable so a second session can run its own

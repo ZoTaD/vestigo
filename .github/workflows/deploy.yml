@@ -38,6 +38,8 @@ on:
       # CoH2 y CoH1: mapas y logros (las estadísticas viajan como las de CoH3).
       - games/coh2/data/**
       - games/coh1/data/**
+      # AoE2 (2026-11-20): las civs y el arte. Las estadísticas (`games/aoe2/stats`) viajan como las de CoH.
+      - games/aoe2/data/**
       - netlify.toml
       - .github/workflows/deploy.yml
   # Los commits de las Actions de publicación los empuja el GITHUB_TOKEN, y

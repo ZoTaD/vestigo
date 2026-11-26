@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useCopy } from "./i18n";
 import RouteLink from "./RouteLink";
 import { routePath, type Route } from "./route";
+import { AOE2_OCULTO } from "./gameGroups";
 
 /**
  * La cuenta de Steam, a la derecha del idioma (2026-11-04, pedido de ZoTaD).
@@ -131,6 +132,20 @@ export default function NavAccount({ route, onNavigate }: { route: Route; onNavi
           >
             {copy.deadlockProfile}
           </RouteLink>
+          {/* AoE2 (2026-11-20): el perfil se busca por el SteamID de la cuenta (`/aoe2/players/steam-<id>`). */}
+          {!AOE2_OCULTO && (
+          <RouteLink
+            className="top-account-item"
+            role="menuitem"
+            to={{ ...route, view: "aoe2", a2Section: "players", detail: `steam-${account.steamId}` }}
+            onNavigate={(r) => {
+              setOpen(false);
+              onNavigate(r);
+            }}
+          >
+            {copy.aoe2Profile}
+          </RouteLink>
+          )}
           <button type="button" className="top-account-item" role="menuitem" onClick={signOut}>
             {copy.signOut}
           </button>

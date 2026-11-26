@@ -1,6 +1,7 @@
 import type { RustPage } from "./rust/sitemapPages";
 import { DLE_RANKING_OPEN } from "./dle/modes";
-import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, COH3_SEGMENT, COH3_SECTIONS, cohTabs, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
+import { AOE2_OCULTO } from "./gameGroups";
+import { LANGS, DEADLOCK_PAGES, D2R_SECTIONS, POE2_SECTIONS, PZ_DETAIL_SECTIONS, PZ_DETAILS_PENDING, PZ_PUBLISHED,PZ_SEGMENT, RUST_PUBLISHED, RUST_SEGMENT, STARDEW_DETAIL_SECTIONS, STARDEW_PUBLISHED, STARDEW_SEGMENT, WF_DETAIL_SECTIONS, WF_PUBLISHED, WF_SEGMENT, CS2_SEGMENT, CS2_SECTIONS, CS2_DETAIL_SECTIONS, COH3_SEGMENT, COH3_SECTIONS, cohTabs, AOE2_SEGMENT, AOE2_SECTIONS, TERRARIA_PUBLISHED, TERRARIA_SEGMENT, SITE_ORIGIN, VALHEIM_TABS, CALC_TOOLS, parseRoute, routePath, slugify, type D2rTab, type PzTab, type ValheimTab } from "./route";
 
 /**
  * The list of addresses we ask Google to crawl.
@@ -141,6 +142,19 @@ export interface Coh3Named {
  * Lo que el sitemap necesita de Company of Heroes 3 (2026-11-04): el sello de `meta.json` y las fichas de cada pestaña
  * del explorador. Jugadores y partidas no van: son infinitas y no se prerenderizan.
  */
+/** Age of Empires II: las civs (y en la Task 9, los mapas) con ficha indexable. */
+export interface Aoe2SitemapData {
+  generatedAt: string;
+  civs: { slug: string; name: { en: string; es: string } }[];
+  maps: { slug: string; name: { en: string; es: string } }[];
+  /** Enciclopedia (2026-11-21): fichas de unidades y tecnologías; el árbol va por cada civ de `civs`. */
+  units?: { slug: string; name: { en: string; es: string } }[];
+  techs?: { slug: string; name: { en: string; es: string } }[];
+  /** Parches (número) y build orders (2026-11-21). */
+  patches?: string[];
+  buildOrders?: { slug: string; name: { en: string; es: string } }[];
+}
+
 export interface Coh3SitemapData {
   generatedAt?: string;
   units: Coh3Named[];
@@ -240,11 +254,13 @@ export interface SitemapData {
   c2?: Cs2SitemapData;
   /** Company of Heroes 3. Opcional por lo mismo. */
   c3?: Coh3SitemapData;
+  /** Age of Empires II (2026-11-20). Opcional por lo mismo. */
+  a2?: Aoe2SitemapData;
   /**
    * Cuándo cambió de verdad cada juego, tal como lo sella su pipeline (ver
    * `sitemapLastmod`). Lo que no tiene sello va sin fecha.
    */
-  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string; coh2?: string; coh1?: string; coh2Data?: string; coh1Data?: string };
+  dates?: { deadlock?: string; poe2Economy?: string; valheim?: string; d2r?: string; zomboid?: string; rust?: string; terraria?: string; stardew?: string; warframe?: string; cs2?: string; coh3?: string; aoe2?: string; coh2?: string; coh1?: string; coh2Data?: string; coh1Data?: string };
 }
 
 /**
@@ -260,15 +276,16 @@ export interface SitemapData {
  * páginas siguen publicadas y prerenderizadas, así lo que Google ya conoce no da 404. Se borran el 2026-12-05 con 301 al
  * Home. `sitemapPaths` los sigue listando porque de ahí sale también el prerender.
  */
-export const SITEMAP_HIDDEN: SitemapGroup[] = ["poe2", "d2r", "warframe"];
-const HIDDEN_SEGMENTS = new Set(["poe2", "d2r", WF_SEGMENT]);
+export const SITEMAP_HIDDEN: SitemapGroup[] = ["poe2", "d2r", "warframe", ...(AOE2_OCULTO ? (["aoe2"] as const) : [])];
+// AoE2 también, mientras está oculto (2026-11-26, `AOE2_OCULTO` en `gameGroups.ts`).
+const HIDDEN_SEGMENTS = new Set(["poe2", "d2r", WF_SEGMENT, ...(AOE2_OCULTO ? [AOE2_SEGMENT] : [])]);
 
 /** Si una dirección es de un juego escondido (no va a ningún sitemap). */
 export function isHiddenPath(path: string): boolean {
   return HIDDEN_SEGMENTS.has(path.split("/")[2]);
 }
 
-export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2", "coh3"] as const;
+export const SITEMAP_GROUPS = ["main", "deadlock", "poe2", "valheim", "d2r", "zomboid", "rust", "terraria", "stardew", "warframe", "cs2", "coh3", "aoe2"] as const;
 export type SitemapGroup = (typeof SITEMAP_GROUPS)[number];
 
 function sitemapGroup(path: string): SitemapGroup {
@@ -282,6 +299,7 @@ function sitemapGroup(path: string): SitemapGroup {
   if (game === WF_SEGMENT) return "warframe";
   if (game === CS2_SEGMENT) return "cs2";
   if (game === COH3_SEGMENT || game === "coh2" || game === "coh1") return "coh3";
+  if (game === AOE2_SEGMENT) return "aoe2";
   return game === "deadlock" || game === "poe2" || game === "valheim" || game === "d2r" ? game : "main";
 }
 
@@ -361,6 +379,7 @@ export function sitemapLastmod(path: string, data: SitemapData): string | undefi
   // CS2: la fecha del catálogo. Los precios cambian todos los días y no mueven el `lastmod` (si no, cambiaría en todas).
   if (game === CS2_SEGMENT) return day(data.dates?.cs2);
   if (game === COH3_SEGMENT) return day(data.dates?.coh3);
+  if (game === AOE2_SEGMENT) return day(data.dates?.aoe2);
   // CoH2 y CoH1: el día de sus estadísticas (las pestañas cambian con cada recolección diaria).
   if (game === "coh2" || game === "coh1") {
     // Las fichas de la enciclopedia van con la fecha de sus datos; las pestañas en vivo, con la de las estadísticas.
@@ -598,6 +617,20 @@ export function sitemapPaths(data: SitemapData): string[] {
       for (const s of ["units", "weapons", "doctrines", "maps"] as const) {
         for (const slug of data.c3.coh1?.[s] ?? []) paths.push(routePath({ ...base, lang, view: "coh3", cohGame: "coh1", c3Section: s, detail: slug }));
       }
+    }
+    // Age of Empires II (2026-11-20): la portada, las pestañas (Jugadores es el buscador; Partidas no tiene página sin
+    // número) y una ficha
+    // por civ y por mapa.
+    if (data.a2) {
+      paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "home" }));
+      for (const s of AOE2_SECTIONS) if (s !== "matches") paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: s }));
+      for (const c of data.a2.civs) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "civilizations", detail: c.slug }));
+      for (const m of data.a2.maps) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "maps", detail: m.slug }));
+      for (const u of data.a2.units ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "units", detail: u.slug }));
+      for (const x of data.a2.techs ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "technologies", detail: x.slug }));
+      for (const c of data.a2.civs) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "tech-tree", detail: c.slug }));
+      for (const p of data.a2.patches ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "patches", detail: p }));
+      for (const b of data.a2.buildOrders ?? []) paths.push(routePath({ ...base, lang, view: "aoe2", a2Section: "build-orders", detail: b.slug }));
     }
     // Rust (2026-10-05): la portada y las pestañas que ya tienen página (`RUST_PUBLISHED`).
     if (data.rs) {

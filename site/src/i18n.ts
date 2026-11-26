@@ -47,6 +47,8 @@ const EN = {
     cs2Short: "CS2",
     coh3: "Company of Heroes",
     coh3Short: "CoH",
+    aoe2: "Age of Empires II",
+    aoe2Short: "AoE2",
     /** El botón de la barra que abre el menú de juegos, y el que lo cierra en el teléfono. */
     menu: "Games",
     close: "Close menu",
@@ -63,6 +65,7 @@ const EN = {
       warframe: { arsenal: "Arsenal", relics: "Relics", farming: "Where to farm" },
       cs2: { cases: "Cases", skins: "Skins", "trade-up": "Trade-up" },
       coh3: { units: "Units", penetration: "Penetration", leaderboards: "Leaderboards" },
+      aoe2: { leaderboards: "Leaderboards", civilizations: "Civilizations", matchups: "Matchups" },
     },
     /** Las categorías del menú y de la portada (`gameGroups.ts`). */
     groups: { survival: "Survival & sandbox", arpg: "ARPG", shooters: "Shooters", rts: "RTS" },
@@ -91,15 +94,17 @@ const EN = {
     signIn: "Sign in",
     menu: (name: string) => `Account: ${name}`,
     deadlockProfile: "My Deadlock profile",
+    aoe2Profile: "My Age of Empires II profile",
     signOut: "Sign out",
   },
 
   /** La cáscara del rediseño del 2026-09-06: buscador, "cómo se mide", pie. */
   shell: {
     search: "Search a player",
-    searchFor: (game: string) => `Search a ${game} player`,
+    // "an" delante de vocal (2026-11-26: "Search a Age of Empires II player").
+    searchFor: (game: string) => `Search ${/^[aeiou]/i.test(game) ? "an" : "a"} ${game} player`,
     searchItem: "Search an item",
-    searchItemFor: (game: string) => `Search a ${game} item`,
+    searchItemFor: (game: string) => `Search ${/^[aeiou]/i.test(game) ? "an" : "a"} ${game} item`,
     searchNone: "Nothing matches.",
     how: "How it's measured",
     menu: "Menu",
@@ -123,6 +128,7 @@ const EN = {
         stardew: "Crops, fish, farm planner and predictor.",
         cs2: "Every skin and case with its price in US$.",
         coh3: "Units, weapons and battlegroups for CoH 1, 2 and 3.",
+        aoe2: "Ranked ladder, player profiles and civilization win rates.",
       },
     },
     eyebrow: "Data, guides and tools",
@@ -223,6 +229,8 @@ const EN = {
       coh3Cta: "Open the leaderboards",
       coh3Units: "units",
       coh3Weapons: "weapons",
+      aoe2Civs: "civilizations",
+      aoe2Leaderboards: "ranked ladders",
       poe2Live: "Currency and unique prices for every league, the passive tree with build export, the item encyclopedia and every patch.",
       poe2Cta: "League prices",
       poe2Patches: "Patch notes",
@@ -314,6 +322,9 @@ const EN = {
       "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Relic Entertainment or SEGA. " +
       "Company of Heroes is a trademark or registered trademark of SEGA Corporation. Icons and game data are " +
       "property of Relic Entertainment. Match statistics: coh3stats.com open data. Game data: cohstats/coh3-data (MIT).",
+    disclaimerAoe2:
+      "Vestigo is an unofficial fan site and isn't endorsed by or affiliated with Microsoft or World's Edge. " +
+      "Age of Empires is a trademark of Microsoft Corporation. Images and game data are property of Microsoft, used under its Game Content Usage Rules.",
     disclaimerBlizzard:
       "Vestigo is a fan site and isn't endorsed by or affiliated with Blizzard Entertainment. Diablo and " +
       "Diablo II: Resurrected are trademarks or registered trademarks of Blizzard Entertainment, Inc.",
@@ -379,6 +390,8 @@ const ES: typeof EN = {
     cs2Short: "CS2",
     coh3: "Company of Heroes",
     coh3Short: "CoH",
+    aoe2: "Age of Empires II",
+    aoe2Short: "AoE2",
     menu: "Juegos",
     close: "Cerrar el menú",
     quick: {
@@ -393,6 +406,7 @@ const ES: typeof EN = {
       warframe: { arsenal: "Arsenal", relics: "Reliquias", farming: "Dónde farmear" },
       cs2: { cases: "Cajas", skins: "Skins", "trade-up": "Trade-up" },
       coh3: { units: "Unidades", penetration: "Penetración", leaderboards: "Ranking" },
+      aoe2: { leaderboards: "Ranking", civilizations: "Civilizaciones", matchups: "Matchups" },
     },
     groups: { survival: "Supervivencia y sandbox", arpg: "ARPG", shooters: "Shooters", rts: "Estrategia (RTS)" },
     /** La insignia de una pestaña que ya se puede usar pero todavía se mueve. */
@@ -418,6 +432,7 @@ const ES: typeof EN = {
     signIn: "Entrar",
     menu: (name: string) => `Cuenta: ${name}`,
     deadlockProfile: "Mi perfil de Deadlock",
+    aoe2Profile: "Mi perfil de Age of Empires II",
     signOut: "Salir",
   },
 
@@ -448,6 +463,7 @@ const ES: typeof EN = {
         stardew: "Cultivos, peces, planificador de granja y predictor.",
         cs2: "Cada skin y caja con su precio en US$.",
         coh3: "Unidades, armas y grupos de batalla de CoH 1, 2 y 3.",
+        aoe2: "Ranking, perfiles de jugador y porcentaje de victoria de cada civilización.",
       },
     },
     eyebrow: "Datos, guías y herramientas",
@@ -531,6 +547,8 @@ const ES: typeof EN = {
       coh3Cta: "Ver el ranking",
       coh3Units: "unidades",
       coh3Weapons: "armas",
+      aoe2Civs: "civilizaciones",
+      aoe2Leaderboards: "rankings",
       poe2Live: "Los precios de monedas y únicos de cada liga, el árbol de pasivas con exportación de build, la enciclopedia de objetos y cada parche.",
       poe2Cta: "Precios de la liga",
       poe2Patches: "Parches",
@@ -616,6 +634,9 @@ const ES: typeof EN = {
       "Vestigo es un sitio de fans no oficial y no está avalado por Relic Entertainment ni SEGA ni afiliado a ellas. " +
       "Company of Heroes es una marca comercial o registrada de SEGA Corporation. Los íconos y datos del juego son " +
       "propiedad de Relic Entertainment. Estadísticas de partidas: datos abiertos de coh3stats.com. Datos del juego: cohstats/coh3-data (MIT).",
+    disclaimerAoe2:
+      "Vestigo es un sitio de fans no oficial y no está avalado por Microsoft ni World's Edge ni afiliado a ellos. " +
+      "Age of Empires es una marca de Microsoft Corporation. Las imágenes y datos del juego son propiedad de Microsoft, usados según sus Game Content Usage Rules.",
     disclaimerBlizzard:
       "Vestigo es un sitio de fans y no está avalado por Blizzard Entertainment ni afiliado a ella. Diablo y " +
       "Diablo II: Resurrected son marcas comerciales o marcas registradas de Blizzard Entertainment, Inc.",

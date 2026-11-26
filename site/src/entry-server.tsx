@@ -29,6 +29,7 @@ import { loadHome as loadSdHome } from "./stardew/homeData";
 import { isDataTab as isWfTab, loadFicha as loadWfFicha, loadList as loadWfList } from "./warframe/data";
 import { preloadRoute as preloadCs2Route } from "./cs2/data";
 import { preloadRoute as preloadCoh3Route } from "./coh3/data";
+import { preloadAoe2Route } from "./aoe2/stats/data";
 import { preloadFarmingRoute } from "./rust/farming/data";
 import { preloadPatchesRoute } from "./rust/patches/data";
 import { preloadMonumentsRoute } from "./rust/monuments/data";
@@ -94,6 +95,11 @@ async function preload(route: Route): Promise<void> {
   // Company of Heroes 3 (2026-11-04): la lista o la ficha y lo que pida la pestaña (`coh3/data.ts`).
   if (route.view === "coh3") {
     await quiet(preloadCoh3Route(route));
+    return;
+  }
+  // Age of Empires II (2026-11-20): el resumen de estadísticas para Civilizaciones, Matchups y Mapas.
+  if (route.view === "aoe2") {
+    await quiet(preloadAoe2Route(route));
     return;
   }
   if (route.view !== "deadlock") return;

@@ -26,6 +26,8 @@
       "@warframe/*": ["../games/warframe/data/*"],
       "@cs2/*": ["../games/cs2/data/*"],
       "@coh3/*": ["../games/coh3/data/*"],
+      "@aoe2/*": ["../games/aoe2/data/*"],
+      "@aoe2stats/*": ["../games/aoe2/stats/*"],
       "@coh3stats/*": ["../games/coh3/stats/*"],
       "@coh2stats/*": ["../games/coh2/stats/*"],
       "@coh2/*": ["../games/coh2/data/*"],

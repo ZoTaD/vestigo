@@ -3,11 +3,13 @@ import { d1Store as d1BuildStore } from "./builds/store";
 import { d1PoolBackup, loadPool } from "./dle/pool";
 import { handleDle, runDaily } from "./dle/routes";
 import { d1Store } from "./dle/store";
+import { handleFollows } from "./follows/routes";
+import { d1FollowStore } from "./follows/store";
 import { accountIdOf, checkAuthBody, claimedSteamId, isValidResponse, loginUrl, safeReturn, STEAM_OPENID } from "./steam";
 
 /**
- * La API de vestigo.gg: el login con Steam, el Deadlockdle (`dle/`) y las
- * builds subidas a Vestigo (`builds/`).
+ * La API de vestigo.gg: el login con Steam, el Deadlockdle (`dle/`), las
+ * builds subidas a Vestigo (`builds/`) y los seguidos por juego (`follows/`).
  *
  * Netlify le reenvía `vestigo.gg/api/*` (ver `netlify.toml`), así que para el
  * navegador todo pasa en nuestro dominio: la cookie es nuestra y no hay CORS.
@@ -65,6 +67,10 @@ export default {
           limit: env.BUILDS_LIMIT ? async (key) => (await env.BUILDS_LIMIT!.limit({ key })).success : undefined,
         });
         if (builds) return builds;
+      }
+      if (url.pathname === "/api/follows") {
+        const f = await handleFollows(req, url, { store: d1FollowStore(env.DB), steamId: await sessionSteamId(req, env), siteOrigin: env.SITE_ORIGIN });
+        if (f) return f;
       }
       return json({ error: "not_found" }, 404);
     } catch (err) {

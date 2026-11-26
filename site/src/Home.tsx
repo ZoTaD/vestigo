@@ -7,10 +7,11 @@ import { useCopy, useLang, useLocale } from "./i18n";
 import RouteLink from "./RouteLink";
 import type { Route } from "./route";
 import type { Game } from "./Nav";
-import { GAME_LOGOS, logoFile } from "./gameGroups";
+import { AOE2_OCULTO, GAME_LOGOS, logoFile } from "./gameGroups";
 import pzMeta from "@zomboid/meta.json";
 import c2Meta from "@cs2/meta.json";
 import c3Meta from "@coh3/meta.json";
+import a2Meta from "@aoe2/meta.json";
 
 /**
  * La portada, desde el 2026-11-17: **oscura y para elegir juego** (maqueta A, elegida por ZoTaD).
@@ -139,6 +140,19 @@ export default function Home({
             [num(c3Meta.counts.weapons), copy.home.games.coh3Weapons],
           ]}
         />
+        {!AOE2_OCULTO && (
+        <Tile
+          game="aoe2"
+          name={copy.games.aoe2}
+          to={go({ view: "aoe2", a2Section: "home" })}
+          navigate={navigate}
+          note={p.notes.aoe2}
+          figures={[
+            [num(a2Meta.civs), copy.home.games.aoe2Civs],
+            [num(6), copy.home.games.aoe2Leaderboards],
+          ]}
+        />
+        )}
       </section>
 
       <section className="home-today">

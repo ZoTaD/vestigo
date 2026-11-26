@@ -14,11 +14,17 @@ export type GameGroup = "survival" | "arpg" | "shooters" | "rts";
  * PoE2, Diablo II y Warframe (la categoría ARPG entera) tampoco desde el 2026-11-05: además salen del sitemap
  * (`SITEMAP_HIDDEN` en `sitemap.ts`) y se borran el 2026-12-05 con 301 al Home.
  */
+/**
+ * Age of Empires II sale oculto (2026-11-26): publicado para que el colector diario junte partidas antes de anunciarlo,
+ * pero fuera del menú, de la portada, del menú de la cuenta y del sitemap. Para mostrarlo, esto va en `false`.
+ */
+export const AOE2_OCULTO = true;
+
 export const GAME_GROUPS: { id: GameGroup; games: Game[] }[] = [
   { id: "survival", games: ["valheim", "zomboid", "stardew"] },
   { id: "shooters", games: ["deadlock", "cs2"] },
   // RTS (2026-11-04): el género nuevo arranca con Company of Heroes 3.
-  { id: "rts", games: ["coh3"] },
+  { id: "rts", games: AOE2_OCULTO ? ["coh3"] : ["coh3", "aoe2"] },
 ];
 
 /**
@@ -39,6 +45,7 @@ export const GAME_LOGOS: Record<Game, [w: number, h: number]> = {
   warframe: [116, 30],
   cs2: [88, 34],
   coh3: [66, 40],
+  aoe2: [58, 40],
 };
 
 /** El archivo del logo de un juego en `public/logos/`: casi todos son PNG sacados de la caché de Steam; el de Warframe es un SVG propio. */

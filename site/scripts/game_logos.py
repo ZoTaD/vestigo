@@ -15,6 +15,7 @@ De dónde sale cada fuente (se copian a la carpeta de fuentes con el nombre del 
     de la expansión, con placa.
 
   - Company of Heroes 3: el `logo.png` de la caché de Steam (1677280).
+  - Age of Empires II: DE: el `logo.png` de la caché de Steam (813780).
 
 Un juego nuevo: su fuente, una línea en `CFG` y sus números en `GAME_LOGOS`.
 """
@@ -65,6 +66,8 @@ CFG = {
     "poe2": lambda a: crop(smooth(255 * ((a[..., 3] > 230) & (lum(a) > 90))), 200, 118, 530, 288),
     # Company of Heroes 3 (2026-11-04): el logo blanco de Steam (1677280), con las motas de desgaste rellenas.
     "coh3": lambda a: smooth(despeckle(255 * (a[..., 3] > 90))),
+    # Age of Empires II: DE (2026-11-20): el logo de Steam (813780), lo opaco.
+    "aoe2": lambda a: smooth(255 * (a[..., 3] > 120)),
 }
 
 
