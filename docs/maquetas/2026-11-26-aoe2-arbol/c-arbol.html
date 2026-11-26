@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>C · Árbol legible</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  .esencial { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; }
+  .esencial > img { width: 80px; height: 80px; }
+  .esencial h1 { font-size: 34px; }
+  .esencial .kind { color: var(--gold); font-family: var(--title); }
+  .tira { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+  .tira .c { display: flex; gap: 10px; align-items: center; padding: 8px 12px 8px 8px; border-radius: 8px; background: var(--panel2); max-width: 330px; }
+  .tira .c.u { background: rgba(240, 191, 76, .1); }
+  .tira small { display: block; color: var(--muted); font-size: 12px; }
+  .tira .c.u small { color: var(--gold); }
+  .leyenda { display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: var(--muted); margin: 0 0 14px; }
+  .leyenda i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: -2px; margin-right: 6px; }
+  .arbol { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .arbol { grid-template-columns: 1fr; } }
+  .edif { background: var(--panel); border-radius: 10px; padding: 14px 16px; }
+  .edif h3 { display: flex; gap: 10px; align-items: center; font-size: 17px; margin-bottom: 8px; }
+  .edad { display: grid; grid-template-columns: 74px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .edad .e { font-size: 12px; color: var(--muted); font-weight: 700; padding-top: 14px; }
+  .nodos { display: flex; flex-wrap: wrap; gap: 8px; }
+  .n { position: relative; width: 78px; display: grid; justify-items: center; gap: 4px; text-align: center; font-size: 11px; line-height: 1.2; }
+  .n img { width: 48px; height: 48px; border-radius: 6px; background: #000; }
+  .n.si img { box-shadow: 0 0 0 2px #3d5266; }
+  .n.pide img { box-shadow: 0 0 0 2px #3d5266; }
+  .n.pide::after { content: "con tecnología"; font-size: 10px; color: var(--muted); }
+  .n.no { color: var(--bad); }
+  .n.no img { filter: grayscale(1) brightness(.45); }
+  .n.no::before { content: "✕"; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 26px; color: var(--bad); font-weight: 700; text-shadow: 0 1px 3px #000; }
+  .n em { position: absolute; top: -6px; right: 0; font-style: normal; font-size: 10px; font-weight: 700; background: var(--good); color: #08210f; border-radius: 99px; padding: 1px 5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag-maq">Maqueta C · Árbol legible <a href="a-ficha.html">← A</a><a href="b-ramas.html">← B</a></div>
+
+  <section class="panel esencial">
+    <img src="http://localhost:5331/aoe2/civ/franks.webp" alt="" />
+    <div>
+      <h1>Francos</h1>
+      <div class="kind">Civilización de caballería · 55,1% de victorias en RM 1v1</div>
+      <div class="tira">
+        <span class="c u"><img class="ico" src="http://localhost:5331/aoe2/u/46.webp" alt="" /><span><small>Unidad única</small><b>Lanzador de hachas</b></span></span>
+        <span class="c u"><img class="ico" src="http://localhost:5331/aoe2/t/107.webp" alt="" /><span><small>Castillos</small><b>Código caballeresco</b> · establos +40% rápido</span></span>
+        <span class="c u"><img class="ico" src="http://localhost:5331/aoe2/t/33.webp" alt="" /><span><small>Imperial</small><b>Compañías de ordenanza</b> · ballesteros montados -40% oro</span></span>
+        <span class="c"><img class="ico" src="http://localhost:5331/aoe2/u/2.webp" alt="" /><span><small>Su unidad más fuerte</small><b>Paladín</b> · +20% PV</span></span>
+      </div>
+    </div>
+  </section>
+
+  <p class="leyenda">
+    <span><i style="box-shadow: 0 0 0 2px #3d5266; background: #18222e"></i>La tiene</span>
+    <span><i style="background: #333; outline: 2px solid var(--bad)"></i><span style="color: var(--bad)">✕ No la tiene</span></span>
+    <span><i style="background: var(--good)"></i>Mejorada por sus bonos</span>
+    <span>"con tecnología": la tiene después de investigar otra</span>
+  </p>
+
+  <div class="arbol">
+<section class="edif"><h3><img class="ico s" src="http://localhost:5331/aoe2/b/23.webp" alt="">Establo</h3>
+<div class="edad"><span class="e">Feudal</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/64.webp" alt=""><em>+20% PV</em><span>Cab. de exploración</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/t/110.webp" alt=""><span>Pureza de sangre</span></span>
+</div></div>
+<div class="edad"><span class="e">Castillos</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/1.webp" alt=""><em>+20% PV</em><span>Jinete</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/91.webp" alt=""><em>+20% PV</em><span>Caballería ligera</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/10.webp" alt=""><span>Ganadería</span></span>
+</div></div>
+<div class="edad"><span class="e">Imperial</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/49.webp" alt=""><em>+20% PV</em><span>Caballero</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/u/103.webp" alt=""><span>Húsar</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/2.webp" alt=""><em>+20% PV</em><span>Paladín</span></span>
+</div></div>
+</section>
+<section class="edif"><h3><img class="ico s" src="http://localhost:5331/aoe2/b/2.webp" alt="">Cuarteles</h3>
+<div class="edad"><span class="e">Oscura</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/8.webp" alt=""><span>Milicia</span></span>
+</div></div>
+<div class="edad"><span class="e">Feudal</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/10.webp" alt=""><span>Hombre de armas</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/31.webp" alt=""><span>Lancero</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/118.webp" alt=""><span>Incendiarismo</span></span>
+</div></div>
+<div class="edad"><span class="e">Castillos</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/11.webp" alt=""><span>Piquero</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/13.webp" alt=""><span>Espad. espada larga</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/80.webp" alt=""><span>Escuderos</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/116.webp" alt=""><span>Gambesones</span></span>
+</div></div>
+<div class="edad"><span class="e">Imperial</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/104.webp" alt=""><span>Alabardero</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/12.webp" alt=""><span>Espad. de mandoble</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/72.webp" alt=""><span>Campeón</span></span>
+</div></div>
+</section>
+<section class="edif"><h3><img class="ico s" src="http://localhost:5331/aoe2/b/0.webp" alt="">Galería de tiro con arco</h3>
+<div class="edad"><span class="e">Feudal</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/17.webp" alt=""><span>Arquero</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/20.webp" alt=""><span>Hostigador</span></span>
+</div></div>
+<div class="edad"><span class="e">Castillos</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/18.webp" alt=""><span>Ballestero</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/900.webp" alt=""><span>Ballestero montado</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/u/19.webp" alt=""><span>Arquero a caballo</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/u/21.webp" alt=""><span>Guerrillero de élite</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/t/112.webp" alt=""><span>Dactilera</span></span>
+</div></div>
+<div class="edad"><span class="e">Imperial</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/u/901.webp" alt=""><span>Ballestero montado pesado</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/u/71.webp" alt=""><span>Cab. pesada de arq.</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/u/90.webp" alt=""><span>Arbalestero</span></span>
+<span class="n pide"><img src="http://localhost:5331/aoe2/u/22.webp" alt=""><span>Artillero manual</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/56.webp" alt=""><span>Cranequines</span></span>
+</div></div>
+</section>
+<section class="edif"><h3><img class="ico s" src="http://localhost:5331/aoe2/b/4.webp" alt="">Herrería</h3>
+<div class="edad"><span class="e">Feudal</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/t/34.webp" alt=""><span>Emplumado de flechas</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/49.webp" alt=""><span>Arm. acolchada arq.</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/17.webp" alt=""><span>Forja</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/63.webp" alt=""><span>Armadura de láminas</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/66.webp" alt=""><span>Arm. láminas caball.</span></span>
+</div></div>
+<div class="edad"><span class="e">Castillos</span><div class="nodos">
+<span class="n si"><img src="http://localhost:5331/aoe2/t/35.webp" alt=""><span>Flecha de punzón</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/50.webp" alt=""><span>Arm. cuero arqueros</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/18.webp" alt=""><span>Fundición de hierro</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/22.webp" alt=""><span>Arm. cota de malla</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/23.webp" alt=""><span>Cota malla caball.</span></span>
+</div></div>
+<div class="edad"><span class="e">Imperial</span><div class="nodos">
+<span class="n no"><img src="http://localhost:5331/aoe2/t/37.webp" alt=""><span>Brazal</span></span>
+<span class="n no"><img src="http://localhost:5331/aoe2/t/51.webp" alt=""><span>Arm. anillos arqueros</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/21.webp" alt=""><span>Alto horno</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/64.webp" alt=""><span>Arm. placas malla</span></span>
+<span class="n si"><img src="http://localhost:5331/aoe2/t/65.webp" alt=""><span>Arm. placas caball.</span></span>
+</div></div>
+</section>
+  </div>
+  <p class="muted" style="margin-top:14px">(En la maqueta, 4 edificios; en la página van todos: Cuartel, Galería, Establo, Taller, Castillo, Herrería, Monasterio, Universidad, Muelle, economía y defensa.)</p>
+</div>
+</body>
+</html>

@@ -17,29 +17,8 @@ import { Icono, useEnc } from "./parts";
 const nombreDe = (n: { en: string; es: string }, lang: Lang) => n[lang] || n.en;
 type Lado = { civ: string; unit: string; off: number[] };
 
-const base = (u: Unidad): Combatiente => ({
-  id: u.id,
-  cls: u.class,
-  hp: u.hp,
-  attacks: Object.fromEntries(u.attacks),
-  armors: Object.fromEntries(u.armors),
-  reload: u.reload,
-  accuracy: u.accuracy || 100,
-  range: u.range,
-  speed: u.speed,
-  los: u.los,
-});
-
-/** Las tecnologías que la civ tiene hasta esa edad y que tocan a la unidad, de la edad más baja a la más alta. */
-export function mejorasPara(ts: readonly Tecnologia[], a: Arbol, civ: string, u: Unidad, e: number): Tecnologia[] {
-  return ts.filter((x) => x.units.includes(u.id) && x.age <= e && x.fx.length > 0 && estado(a, civ, `t${x.id}`) !== "0").sort((x, y) => x.age - y.age || x.id - y.id);
-}
-
-/** La unidad con los bonos de su civ hasta esa edad y las tecnologías elegidas. */
-export function armar(u: Unidad, civ: string, e: number, fx: CivFx, techs: readonly Tecnologia[]): Combatiente {
-  const bonos: Fx[] = (fx[civ]?.bonus ?? []).filter(([edadMin]) => edadMin <= e).flatMap(([, f]) => f);
-  return aplicar(base(u), [...bonos, ...techs.flatMap((x) => x.fx)]);
-}
+export { armar, mejorasPara } from "./armar";
+import { armar, mejorasPara } from "./armar";
 
 function leerQuery(): Partial<Record<"a" | "b" | "ca" | "cb" | "e", string>> {
   if (typeof window === "undefined") return {};

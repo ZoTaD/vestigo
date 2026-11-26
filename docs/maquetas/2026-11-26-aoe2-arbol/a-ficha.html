@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A · Ficha de la civ</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  .head { display: flex; gap: 18px; align-items: center; }
+  .head img.shield { width: 88px; height: 88px; }
+  .head h1 { font-size: 40px; line-height: 1; }
+  .kind { font-size: 18px; color: var(--gold); font-family: var(--title); margin: 6px 0 10px; }
+  .stats { margin-left: auto; display: flex; gap: 22px; text-align: right; }
+  .stats b { display: block; font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .stats span { font-size: 12px; color: var(--muted); }
+  .playstyle { display: flex; flex-wrap: wrap; gap: 8px; }
+  .grid2 { align-items: start; }
+  .best li { list-style: none; display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; background: var(--panel2); border-radius: 8px; padding: 10px 12px; }
+  .best ul { margin: 0; padding: 0; display: grid; gap: 10px; }
+  .best .why { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .best .why .chip { font-size: 12px; padding: 2px 8px; }
+  .rank { font-family: var(--title); font-size: 26px; color: var(--gold); }
+  .uniq { display: grid; gap: 10px; }
+  .uniq .card { display: grid; grid-template-columns: 64px 1fr; gap: 14px; background: rgba(240, 191, 76, .07); border-radius: 8px; padding: 12px; }
+  .uniq small { color: var(--gold); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+  .uniq p { margin: 4px 0 0; font-size: 14px; }
+  .bonos ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+  .bonos li { display: flex; gap: 10px; align-items: flex-start; }
+  .bonos li::before { content: "◆"; color: var(--gold); font-size: 11px; margin-top: 4px; }
+  .falta { display: flex; flex-wrap: wrap; gap: 8px; }
+  .falta .it { display: flex; align-items: center; gap: 8px; background: var(--panel2); border-radius: 6px; padding: 4px 10px 4px 4px; font-size: 13px; }
+  .falta .it img { filter: grayscale(1); opacity: .65; }
+  .falta .it.peso { background: rgba(242, 107, 91, .12); }
+  .note { font-size: 13px; color: var(--muted); margin-top: 10px; }
+  .more { display: block; text-align: center; padding: 14px; border-radius: 8px; background: var(--panel2); color: var(--gold); font-weight: 700; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tag-maq">Maqueta A · Ficha de la civ <a href="b-ramas.html">B →</a><a href="c-arbol.html">C →</a></div>
+
+  <section class="panel head">
+    <img class="shield" src="http://localhost:5331/aoe2/civ/franks.webp" alt="" />
+    <div>
+      <h1>Francos</h1>
+      <div class="kind">Civilización de caballería</div>
+      <div class="playstyle">
+        <span class="chip gold">🐎 Caballería pesada</span>
+        <span class="chip">⚔ Infantería</span>
+        <span class="chip">🌾 Economía de bayas y granjas</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div><b>55,1%</b><span>victorias · RM 1v1, 28 días</span></div>
+      <div><b>6,8%</b><span>se juega</span></div>
+      <div><b>Arabia</b><span>su mejor mapa</span></div>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="panel best">
+      <h2>Sus mejores unidades</h2>
+      <p class="sub">Las que tiene con todas las mejoras y que además le refuerzan sus bonos.</p>
+      <ul>
+        <li>
+          <img class="ico l" src="http://localhost:5331/aoe2/u/2.webp" alt="" />
+          <div><b>Paladín</b>
+            <div class="why"><span class="chip good">192 PV (+20%)</span><span class="chip good">Todas las mejoras de herrería</span><span class="chip good">Establos +40% rápido</span></div>
+          </div>
+          <span class="rank">S</span>
+        </li>
+        <li>
+          <img class="ico l" src="http://localhost:5331/aoe2/u/473.webp" alt="" />
+          <div><b>Lanzador de hachas de élite</b>
+            <div class="why"><span class="chip gold">Unidad única</span><span class="chip good">Fuerte contra infantería</span></div>
+          </div>
+          <span class="rank">A</span>
+        </li>
+        <li>
+          <img class="ico l" src="http://localhost:5331/aoe2/u/901.webp" alt="" />
+          <div><b>Ballestero montado pesado</b>
+            <div class="why"><span class="chip good">+20% PV</span><span class="chip good">-40% de oro (Compañías de ordenanza)</span></div>
+          </div>
+          <span class="rank">A</span>
+        </li>
+        <li>
+          <img class="ico l" src="http://localhost:5331/aoe2/u/72.webp" alt="" />
+          <div><b>Campeón</b>
+            <div class="why"><span class="chip good">Todas las mejoras de infantería</span></div>
+          </div>
+          <span class="rank">B</span>
+        </li>
+        <li>
+          <img class="ico l" src="http://localhost:5331/aoe2/u/30.webp" alt="" />
+          <div><b>Cañón de asedio</b>
+            <div class="why"><span class="chip">Pide Química</span></div>
+          </div>
+          <span class="rank">B</span>
+        </li>
+      </ul>
+    </section>
+
+    <div>
+      <section class="panel uniq">
+        <h2>Lo único</h2>
+        <p class="sub">Lo que sólo tienen los Francos.</p>
+        <div class="card">
+          <img class="ico l" src="http://localhost:5331/aoe2/u/46.webp" alt="" />
+          <div><small>Unidad única · Castillo</small><br /><b>Lanzador de hachas</b>
+            <p>Infantería que pega cuerpo a cuerpo desde media distancia. Fuerte contra infantería; débil contra arqueros y asedio.</p></div>
+        </div>
+        <div class="card">
+          <img class="ico l" src="http://localhost:5331/aoe2/t/107.webp" alt="" />
+          <div><small>Tecnología única · Edad de los Castillos</small><br /><b>Código caballeresco</b><p>Los establos trabajan +40% más rápido.</p></div>
+        </div>
+        <div class="card">
+          <img class="ico l" src="http://localhost:5331/aoe2/t/33.webp" alt="" />
+          <div><small>Tecnología única · Edad Imperial</small><br /><b>Compañías de ordenanza</b><p>Los ballesteros montados cuestan -40% de oro.</p></div>
+        </div>
+      </section>
+
+      <section class="panel bonos">
+        <h2>Bonos de civilización</h2>
+        <ul>
+          <li>Los recolectores trabajan +15% más rápido</li>
+          <li>Las tecnologías del molino son gratis</li>
+          <li>Unidades montadas: +20% de PV desde la Edad Feudal</li>
+          <li>Los castillos cuestan -15% en Castillos y -25% en Imperial</li>
+        </ul>
+        <p class="note"><b class="gold">De equipo:</b> la línea de caballeros ve +2 casillas.</p>
+      </section>
+    </div>
+  </div>
+
+  <section class="panel">
+    <h2>Lo que le falta</h2>
+    <p class="sub">En rojo, lo que más se nota en una partida.</p>
+    <div class="falta">
+      <span class="it peso"><img class="ico s" src="http://localhost:5331/aoe2/u/90.webp" alt="" />Arbalestero</span>
+      <span class="it peso"><img class="ico s" src="http://localhost:5331/aoe2/t/110.webp" alt="" />Pureza de sangre</span>
+      <span class="it peso"><img class="ico s" src="http://localhost:5331/aoe2/u/103.webp" alt="" />Húsar</span>
+      <span class="it"><img class="ico s" src="http://localhost:5331/aoe2/u/19.webp" alt="" />Arquero a caballo</span>
+      <span class="it"><img class="ico s" src="http://localhost:5331/aoe2/u/73.webp" alt="" />Ariete de asedio</span>
+      <span class="it"><img class="ico s" src="http://localhost:5331/aoe2/t/112.webp" alt="" />Dactilera</span>
+      <span class="it"><img class="ico s" src="http://localhost:5331/aoe2/t/37.webp" alt="" />Brazal</span>
+      <span class="it"><img class="ico s" src="http://localhost:5331/aoe2/t/51.webp" alt="" />Arm. anillos arqueros</span>
+    </div>
+    <p class="note">No tiene Pureza de sangre (+20 PV), pero su bono de +20% le da al Paladín +32: lo compensa de sobra.</p>
+  </section>
+
+  <a class="more" href="#">Ver el árbol completo, edificio por edificio ↓</a>
+</div>
+</body>
+</html>

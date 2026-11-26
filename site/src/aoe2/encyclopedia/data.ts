@@ -122,7 +122,9 @@ export async function preloadEncyclopedia(route: { a2Section?: string; detail?: 
     const x = route.detail ? t.find((f) => f.slug === route.detail) : undefined;
     if (x) await loadAyuda(lang, x.id);
   } else if (sec === "tech-tree") {
-    await Promise.all([arbol.load(), unidades.load(), tecnologias.load(), route.detail ? loadCivInfo(route.detail) : undefined]);
+    const [, , , info] = await Promise.all([arbol.load(), unidades.load(), tecnologias.load(), route.detail ? loadCivInfo(route.detail) : undefined, civFx.load()]);
+    // La ficha de la civ muestra el texto de su unidad y sus tecnologías únicas (2026-11-26).
+    if (info) await Promise.all([...info.uu.slice(0, 1), ...info.ut].map((x) => loadAyuda(lang, x.id)));
   } else if (sec === "civilizations" && route.detail) {
     await loadCivInfo(route.detail);
   }

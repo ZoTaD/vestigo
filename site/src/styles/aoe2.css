@@ -299,3 +299,63 @@
 .a2-bo td:first-child, .a2-bo td:nth-child(2) { white-space: nowrap; vertical-align: top; }
 .a2-bo td { line-height: 1.45; }
 @media (max-width: 560px) { .a2-ach li { grid-template-columns: 40px minmax(0, 1fr); } .a2-ach-pct { grid-column: 2; } .a2-ach .a2-ico { width: 40px; height: 40px; } .a2-bo-list { grid-template-columns: 1fr; } }
+
+/* Ficha de la civ arriba del árbol (2026-11-26, maqueta A). */
+.a2-ficha-head { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; container-type: inline-size; }
+.a2-ficha-head .a2-shield { width: 88px; height: 88px; }
+.a2-ficha-who { min-width: 0; }
+.a2-ficha-kind { margin: 4px 0 8px; font-family: var(--a2-title); color: var(--a2-gold); font-size: 17px; }
+.a2-ficha-tags { list-style: none; margin: 0 0 4px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.a2-ficha-tags li { padding: 2px 10px; border-radius: 99px; background: var(--a2-panel2); font-size: 13px; font-weight: 600; }
+.a2-ficha-tags li:first-child { background: rgba(240, 191, 76, 0.14); color: var(--a2-gold); }
+.a2-ficha-nums { display: flex; gap: 22px; margin: 0; text-align: right; }
+.a2-ficha-nums div { display: flex; flex-direction: column-reverse; }
+.a2-ficha-nums dd { margin: 0; font-family: var(--a2-title); font-size: 24px; font-weight: 700; color: var(--a2-gold); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.a2-ficha-nums dt { font-size: 12px; color: var(--a2-muted); }
+@media (max-width: 760px) {
+  .a2-ficha-head { grid-template-columns: auto 1fr; }
+  .a2-ficha-head .a2-shield { width: 64px; height: 64px; }
+  .a2-ficha-nums { grid-column: 1 / -1; justify-content: flex-start; text-align: left; flex-wrap: wrap; }
+}
+.a2-ficha-cols { align-items: start; }
+.a2-best, .a2-uniq, .a2-falta, .a2-ficha-bonus { list-style: none; margin: 0; padding: 0; }
+.a2-best { display: grid; gap: 8px; }
+.a2-best-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; padding: 8px 10px; border-radius: 8px; background: var(--a2-panel2); color: var(--a2-text); text-decoration: none; }
+.a2-best-row:hover { background: #22303f; }
+.a2-best-body { display: grid; gap: 4px; min-width: 0; }
+.a2-best-why { display: flex; flex-wrap: wrap; gap: 4px; }
+.a2-tag { font-size: 12px; font-weight: 600; padding: 1px 8px; border-radius: 99px; background: #0e151d; color: var(--a2-muted); }
+.a2-tag.is-good { background: rgba(105, 210, 127, 0.13); color: var(--a2-good); }
+.a2-tag.is-bad { background: rgba(242, 107, 91, 0.13); color: var(--a2-bad); }
+.a2-tag.is-gold { background: rgba(240, 191, 76, 0.14); color: var(--a2-gold); }
+.a2-tier { font-family: var(--a2-title); font-size: 26px; font-weight: 900; width: 1.4em; text-align: center; color: var(--a2-muted); }
+.a2-tier.is-S { color: var(--a2-gold); }
+.a2-tier.is-A { color: var(--a2-text); }
+.a2-uniq { display: grid; gap: 8px; }
+.a2-uniq-card { display: grid; grid-template-columns: 56px 1fr; gap: 12px; align-items: start; padding: 10px; border-radius: 8px; background: rgba(240, 191, 76, 0.07); color: var(--a2-text); text-decoration: none; }
+.a2-uniq-card:hover { background: rgba(240, 191, 76, 0.12); }
+.a2-uniq-card > span { display: grid; gap: 2px; min-width: 0; }
+.a2-uniq-card small { color: var(--a2-gold); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+.a2-uniq-txt { font-size: 14px; color: var(--a2-muted); }
+.a2-ficha-bonus { display: grid; gap: 6px; margin-bottom: 10px; }
+.a2-ficha-bonus li { display: flex; gap: 10px; }
+.a2-ficha-bonus li::before { content: "◆"; color: var(--a2-gold); font-size: 10px; margin-top: 5px; }
+.a2-gold { color: var(--a2-gold); }
+.a2-falta { display: flex; flex-wrap: wrap; gap: 6px; }
+.a2-falta a { display: flex; align-items: center; gap: 8px; padding: 3px 10px 3px 3px; border-radius: 6px; background: var(--a2-panel2); color: var(--a2-text); text-decoration: none; font-size: 13px; font-weight: 600; }
+.a2-falta .is-peso a { background: rgba(242, 107, 91, 0.13); color: var(--a2-bad); }
+/* Árbol legible (maqueta C): nombre bajo cada ícono, lo que no tiene tachado, lo que sus bonos mejoran marcado. */
+.a2-tree { grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); }
+.a2-tree-age ul { gap: 8px 6px; }
+.a2-tree-age li { width: 74px; }
+.a2-tree-age a { position: relative; display: grid; justify-items: center; gap: 3px; text-align: center; font-size: 11px; line-height: 1.2; color: var(--a2-text); text-decoration: none; padding: 2px 0; }
+.a2-tree-age a:hover span { color: var(--a2-gold); }
+.a2-tree-age a small { font-size: 10px; color: var(--a2-muted); padding: 0; }
+.a2-tree-age em { position: absolute; top: -4px; right: -2px; font-style: normal; font-size: 10px; font-weight: 700; background: var(--a2-good); color: #08210f; border-radius: 99px; padding: 0 5px; white-space: nowrap; }
+.a2-tree-age .is-off a { color: var(--a2-bad); }
+.a2-tree-age .is-off a::before { content: "✕"; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); font-size: 26px; font-weight: 700; color: var(--a2-bad); text-shadow: 0 1px 3px #000; z-index: 1; }
+.a2-tree-legend { display: flex; flex-wrap: wrap; gap: 16px; margin: 0; font-size: 13px; color: var(--a2-muted); }
+.a2-tree-legend .is-miss { color: var(--a2-bad); }
+.a2-tree-legend .is-bonus::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 99px; background: var(--a2-good); margin-right: 6px; vertical-align: -1px; }
+.a2-ficha-who .a2-pick { flex-wrap: wrap; max-width: 100%; }
+.a2-ficha-who .a2-pick select { max-width: 100%; }
