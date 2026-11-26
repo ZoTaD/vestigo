@@ -10,6 +10,9 @@ on:
       days:
         description: "Días hacia atrás que se reescriben"
         default: "120"
+      replays:
+        description: "Grabaciones a leer (unidades, APM, edades; sólo las de los últimos días siguen en el servidor)"
+        default: "0"
 
 concurrency:
   group: publish-aoe2
@@ -47,9 +50,11 @@ jobs:
         continue-on-error: true
         env:
           DAYS: ${{ inputs.days }}
+          REPLAYS: ${{ inputs.replays }}
         run: |
           case "$DAYS" in ''|*[!0-9]*) echo "::error::days tiene que ser un número"; exit 1;; esac
-          python games/aoe2/tools/daily.py --todos --rehacer --days "$DAYS" --replays 0 --workers 12 --deadline 16200
+          case "$REPLAYS" in ''|*[!0-9]*) echo "::error::replays tiene que ser un número"; exit 1;; esac
+          python games/aoe2/tools/daily.py --todos --rehacer --days "$DAYS" --replays "$REPLAYS" --workers 12 --deadline 12600 --deadline-rec 3600
 
       - name: guard
         id: guard

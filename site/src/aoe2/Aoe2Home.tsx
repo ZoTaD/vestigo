@@ -1,7 +1,8 @@
 /**
  * La portada de la sección Age of Empires II (2026-11-20): el top del ranking 1v1, los que más subieron, los que seguís,
  * la civ más fuerte en cada banda de ELO, los mapas más jugados, accesos a cada pestaña y todas las civs. Lo del ranking y
- * las estadísticas sale de `games/aoe2/stats/home.json` (lo escribe el colector diario; chico, va con la página).
+ * las estadísticas sale de `games/aoe2/stats/home.json` (lo escribe el colector diario; chico, va con la página). Desde
+ * el 26/11, los datos curiosos de las grabaciones (`facts`).
  */
 import { pedirSeguidos, type Seguido } from "./players/search";
 import { useEffect, useState } from "react";
@@ -15,7 +16,17 @@ import { mapIcon, mapLabel } from "./stats/parts";
 import civs from "@aoe2/civs.json";
 import home from "@aoe2stats/home.json";
 
+type UnidadChica = { id: number; pic: number; name: { en: string; es: string } };
+type MarcaKey = "feudal" | "imperial" | "apm" | "army" | "villagers";
+type Facts = {
+  players: number;
+  top: Partial<Record<MarcaKey, { value: number; match: number; profile: number; civ: string; alias: string; unit: UnidadChica | null }>>;
+  apm: [string, number][];
+  feudal: [string, number][];
+  mostMassed: { unit: UnidadChica | null; share: number } | null;
+};
 type Home = {
+  facts?: Facts | null;
   date: string | null;
   top: [number, number, string][];
   climbers: [number, number, string, number][];
@@ -86,6 +97,7 @@ export default function Aoe2Home({ route, navigate }: { route: Route; navigate: 
         )}
       </div>
       {H.climbers.length > 0 && <Seguidos route={route} navigate={navigate} />}
+      {H.facts && <DatosCuriosos f={H.facts} route={route} navigate={navigate} />}
       {Object.keys(H.best).length > 0 && (
         <Panel h={t.hm.bestH} sub={t.hm.bestSub}>
           <ul className="a2-cards">
@@ -154,6 +166,77 @@ export default function Aoe2Home({ route, navigate }: { route: Route; navigate: 
 }
 
 /** Los jugadores que seguís (y el tuyo arriba), con alias y ELO de 1v1 de `/api/aoe2/players`. */
+const MARCAS: MarcaKey[] = ["feudal", "imperial", "apm", "army", "villagers"];
+
+function DatosCuriosos({ f, route, navigate }: { f: Facts; route: Route; navigate: Nav }) {
+  const t = useAoe2Copy();
+  const { lang } = useLang();
+  const valor = (k: MarcaKey, v: number, u: UnidadChica | null) =>
+    k === "feudal" || k === "imperial" ? t.match.clock(v) : k === "apm" ? t.hm.factApm(v) : k === "army" ? t.hm.factArmy(v, u?.name[lang] ?? "") : t.hm.factVillagers(v);
+  const max = (xs: [string, number][]) => Math.max(1, ...xs.map(([, v]) => v));
+  return (
+    <Panel h={t.hm.factsH} sub={t.hm.factsSub(f.players)}>
+      <ul className="a2-facts-list">
+        {MARCAS.filter((k) => f.top[k]).map((k) => {
+          const x = f.top[k]!;
+          return (
+            <li key={k}>
+              <small>{t.hm.facts[k]}</small>
+              <b className="a2-facts-v">
+                {k === "army" && x.unit && <img src={`/aoe2/u/${x.unit.pic}.webp`} alt="" width={28} height={28} loading="lazy" decoding="async" />}
+                {valor(k, x.value, x.unit)}
+              </b>
+              <RouteLink to={{ ...route, view: "aoe2", a2Section: "matches", detail: `${x.match}?p=${x.profile}` }} onNavigate={navigate} className="a2-civ">
+                <CivShield civ={civBySlug(x.civ)} size={20} />
+                {x.alias || "–"}
+              </RouteLink>
+            </li>
+          );
+        })}
+      </ul>
+      {f.mostMassed?.unit && (
+        <>
+          <h3 className="a2-h3">{t.hm.massedH}</h3>
+          <p className="a2-facts-massed">
+            <img src={`/aoe2/u/${f.mostMassed.unit.pic}.webp`} alt="" width={36} height={36} loading="lazy" decoding="async" />
+            {t.hm.massed(f.mostMassed.unit.name[lang], `${Math.round(f.mostMassed.share * 100)}%`)}
+          </p>
+        </>
+      )}
+      <div className="a2-cols">
+        {f.apm.length > 0 && (
+          <div>
+            <h3 className="a2-h3">{t.hm.apmBandH}</h3>
+            <ul className="a2-bars">
+              {f.apm.map(([b, v]) => (
+                <li key={b}>
+                  <span>{t.st.bands[b]}</span>
+                  <i style={{ width: `${(v / max(f.apm)) * 100}%` }} />
+                  <b>{v}</b>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {f.feudal.length > 0 && (
+          <div>
+            <h3 className="a2-h3">{t.hm.feudalBandH}</h3>
+            <ul className="a2-bars">
+              {f.feudal.map(([b, v]) => (
+                <li key={b}>
+                  <span>{t.st.bands[b]}</span>
+                  <i style={{ width: `${(v / max(f.feudal)) * 100}%` }} />
+                  <b>{t.match.clock(v)}</b>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </Panel>
+  );
+}
+
 function Seguidos({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
   const yo = useAoe2Me();

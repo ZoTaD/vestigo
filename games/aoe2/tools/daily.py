@@ -34,6 +34,7 @@ import re
 import sys
 import time
 import unicodedata
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections import Counter
@@ -46,7 +47,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import vistas as vistas_mod  # noqa: E402
 from patches import NOTAS, NOTICIA, PARCHES  # noqa: E402
 from openings import openings as _aperturas  # noqa: E402
-from replay import read_actions  # noqa: E402
+from replay import leer as leer_grabacion  # noqa: E402
+import grabaciones as grab  # noqa: E402
 from pros import SALIDA as PROS_JSON  # noqa: E402
 from names import actualizar as actualizar_nombres, escribir as escribir_nombres, leer as leer_nombres  # noqa: E402
 
@@ -69,6 +71,7 @@ TOP_FOTO = 2000
 TOP_MEMORIA = 1000
 DIAS_MEMORIA = 90
 DIAS_GUARDADOS = 180
+DIAS_GRABACIONES = 14
 VISTAS = RAIZ / "games" / "aoe2" / ".cache" / "vistas.json.gz"
 
 
@@ -126,7 +129,7 @@ def slots_of(b64: str | None) -> dict[int, int]:
 
 
 def _dia_vacio(fecha: str) -> dict:
-    return {"date": fecha, "games": 0, "patch": None, "civ": {}, "map": {}, "vs": {}, "dur": {}, "open": {}, "n": {}}
+    return {"date": fecha, "games": 0, "patch": None, "civ": {}, "map": {}, "vs": {}, "dur": {}, "open": {}, "n": {}, "rec": {}, "units": {}, "apm": {}, "age": {}, "top": {}}
 
 
 def _sumar(d: dict, k: str, gano: bool | int, n: int = 1) -> None:
@@ -188,7 +191,7 @@ class Acumulador:
         if modo == "rm1v1" and len(js) == 2:
             lugares = slots_of(m.get("slotinfo"))
             if len(self.muestras) < 20000 and all(j["profile_id"] in lugares for j in js):
-                self.muestras.append({"id": m["id"], "fecha": fecha, "band": b, "jugador": js[0]["profile_id"], "js": [(lugares[j["profile_id"]], self.civ(j["civilization_id"]), j["outcome"] == 1) for j in js]})
+                self.muestras.append({"id": m["id"], "fecha": fecha, "band": b, "jugador": js[0]["profile_id"], "js": [(lugares[j["profile_id"]], self.civ(j["civilization_id"]), j["outcome"] == 1, j["profile_id"]) for j in js]})
             a, z = sorted(js, key=lambda j: self.civ(j["civilization_id"]))
             ca, cz = self.civ(a["civilization_id"]), self.civ(z["civilization_id"])
             if ca != cz:
@@ -197,9 +200,32 @@ class Acumulador:
     def aperturas(self, muestra: dict, por_lugar: dict[int, str]) -> None:
         """Suma las aperturas de una partida de la muestra: `"<banda>|<civ>|<apertura>": [partidas, victorias]`."""
         d = self.dias.setdefault(muestra["fecha"], _dia_vacio(muestra["fecha"]))
-        for lugar, civ, gano in muestra["js"]:
+        for lugar, civ, gano, *_ in muestra["js"]:
             if lugar in por_lugar:
                 _sumar(d.setdefault("open", {}), f"{muestra['band']}|{civ}|{por_lugar[lugar]}", gano)
+
+    def grabacion(self, muestra: dict, lectura, linea: dict[int, int]) -> None:
+        """Todo lo de una grabación leída: aperturas (primeros 25 minutos) y lo de `grabaciones.py`."""
+        self.aperturas(muestra, _aperturas([a for a in lectura.acciones if a.t <= 25 * 60]))
+        d = self.dias.setdefault(muestra["fecha"], _dia_vacio(muestra["fecha"]))
+        b = muestra["band"]
+        datos = grab.por_jugador(lectura, linea)
+        for lugar, civ, gano, perfil in muestra["js"]:
+            x = datos.get(lugar)
+            if not x:
+                continue
+            _sumar(d.setdefault("rec", {}), f"{b}|{civ}", gano)
+            for k, n in x["units"].items():
+                if n >= grab.MASA and k not in grab.ECONOMICAS:
+                    _sumar(d.setdefault("units", {}), f"{b}|{civ}|{k}", gano)
+            if x["apm"] is not None:
+                _sumar(d.setdefault("apm", {}), b, x["apm"])
+            for i, t in enumerate(x["ages"]):
+                if t is not None:
+                    _sumar(d.setdefault("age", {}), f"{b}|{i}", t)
+            top = d.setdefault("top", {})
+            for marca, (valor, extra) in grab.marcas(x).items():
+                top[marca] = grab.sumar_top(top.get(marca, []), [valor, muestra["id"], perfil, civ, extra], marca)
 
     def completos(self, hoy: date):
         """Los días ya terminados (UTC)."""
@@ -268,6 +294,18 @@ def _suma(dias: list[dict], clave: str) -> dict:
     return out
 
 
+def _tops(dias: list[dict]) -> dict:
+    """Las mejores marcas de varios días juntos (`grabaciones.MARCAS`)."""
+    out: dict[str, list] = {}
+    for d in dias:
+        for marca, filas in (d.get("top") or {}).items():
+            if marca not in grab.MARCAS:
+                continue
+            for f in filas:
+                out[marca] = grab.sumar_top(out.get(marca, []), f, marca)
+    return out
+
+
 def _n(dias: list[dict]) -> dict:
     """Las partidas por modo y banda, sólo si todos los días las tienen (los guardados antes del 21/11 no): con un día
     sin la cuenta, la elección dividiría las civs de toda la ventana por las partidas de parte de ella."""
@@ -281,7 +319,12 @@ def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
         return [d for f, d in dias.items() if desde.isoformat() <= f <= hasta.isoformat()]
 
     def ventana(ds):
-        return {"games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"), "dur": _suma(ds, "dur"), "open": _suma(ds, "open"), "n": _n(ds)}
+        return {
+            "games": sum(d["games"] for d in ds), "days": len(ds), "civ": _suma(ds, "civ"), "map": _suma(ds, "map"), "vs": _suma(ds, "vs"),
+            "dur": _suma(ds, "dur"), "open": _suma(ds, "open"), "n": _n(ds),
+            # De las grabaciones (2026-11-26): unidades, APM, edades y marcas.
+            "rec": _suma(ds, "rec"), "units": _suma(ds, "units"), "apm": _suma(ds, "apm"), "age": _suma(ds, "age"), "top": _tops(ds),
+        }
 
     ayer = hoy - timedelta(days=1)
     out = {"generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "patch": None, "windows": {}, "prev": {}}
@@ -295,6 +338,20 @@ def resumen(dias: dict[str, dict], hoy: date, ventanas=(7, 14, 28)) -> dict:
         out["patch"] = {"name": actual, "since": desde}
         out["windows"]["patch"] = ventana([d for f, d in dias.items() if f >= desde])
     return out
+
+
+def con_alias(sumario: dict, alias: dict[int, str]) -> None:
+    """Pone el nombre del jugador al final de cada marca (`top`) que todavía no lo tiene: de lo bajado en esta corrida o,
+    si no está, del índice del buscador."""
+    faltan = {f[2] for w in sumario["windows"].values() for filas in (w.get("top") or {}).values() for f in filas if len(f) < 6 and f[2] not in alias}
+    if faltan:
+        indice = leer_nombres()
+        alias = {**alias, **{p: indice[p][0] for p in faltan if p in indice}}
+    for w in sumario["windows"].values():
+        for filas in (w.get("top") or {}).values():
+            for f in filas:
+                if len(f) < 6:
+                    f.append(alias.get(f[2], ""))
 
 
 def parches_json(dias: dict[str, dict], ventana: int = 7, min_partidas: int = 200) -> list[dict]:
@@ -368,7 +425,35 @@ def home_json(foto: dict | None, resumen_: dict | None, top: int = 5) -> dict:
         if modo == "rm1v1":
             mapas[mapa] += g
     out["maps"] = [[m, g // 2] for m, g in mapas.most_common(6)]
+    out["facts"] = datos_curiosos(((resumen_ or {}).get("windows") or {}).get("28") or {})
     return out
+
+
+def datos_curiosos(w: dict, minimo: int = 30) -> dict | None:
+    """Los datos curiosos de la portada (2026-11-26), de las grabaciones de los últimos 28 días: la mejor marca de cada
+    tipo (`grabaciones.MARCAS`, con nombre e ícono de la unidad en `army`), APM y clic a Feudal promedio por banda, y la
+    unidad que más se usa en serio. None si todavía no hay grabaciones con unidades."""
+    if not w.get("rec"):
+        return None
+    u = {x["id"]: x for x in json.loads((RAIZ / "games" / "aoe2" / "data" / "encyclopedia" / "units.json").read_text(encoding="utf-8"))["units"]}
+    unidad = lambda i: {"id": i, "pic": u[i]["pic"], "name": u[i]["name"]} if i in u else None
+    top = {}
+    for marca, filas in (w.get("top") or {}).items():
+        if filas:
+            f = filas[0]
+            top[marca] = {"value": f[0], "match": f[1], "profile": f[2], "civ": f[3], "alias": f[5] if len(f) > 5 else "", "unit": unidad(f[4]) if f[4] else None}
+    promedio = lambda clave: [[b, round(x[1] / x[0])] for b in BANDAS if (x := (w.get(clave) or {}).get(b)) and x[0] >= minimo]
+    feudal = [[b, round(x[1] / x[0])] for b in BANDAS if (x := (w.get("age") or {}).get(f"{b}|0")) and x[0] >= minimo]
+    jugadores = sum(g for g, _ in (w.get("rec") or {}).values())
+    lineas: Counter = Counter()
+    for k, (g, _) in (w.get("units") or {}).items():
+        if int(k.split("|")[2]) not in grab.ECONOMICAS:
+            lineas[int(k.split("|")[2])] += g
+    masa = None
+    if lineas and jugadores:
+        linea, g = lineas.most_common(1)[0]
+        masa = {"unit": unidad(linea), "share": round(g / jugadores, 3)}
+    return {"players": jugadores, "top": top, "apm": promedio("apm"), "feudal": feudal, "mostMassed": masa}
 
 
 # ---------- Red ----------
@@ -423,15 +508,55 @@ def bajar_ranking(lb: int, workers: int) -> list[tuple[int, float, int, str, str
     return [(p, e, u, a, c) for p, e, u, _, a, c in filas]
 
 
-def _grabacion(match_id: int, perfil: int) -> bytes | None:
-    """La grabación de una partida (zip del servidor de Microsoft), descomprimida; None si no está."""
+def _grabacion(match_id: int, perfil: int) -> tuple[bytes | None, int]:
+    """La grabación de una partida (zip del servidor de Microsoft), descomprimida, y el estado HTTP (0 si no contestó)."""
     try:
         req = urllib.request.Request(f"https://aoe.ms/replay/?gameId={match_id}&profileId={perfil}", headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=30) as r:
             z = zipfile.ZipFile(io.BytesIO(r.read()))
-        return z.read(z.namelist()[0])
+        return z.read(z.namelist()[0]), 200
+    except urllib.error.HTTPError as e:
+        return None, e.code
     except Exception:
-        return None
+        return None, 0
+
+
+#: El servidor de grabaciones corta con 429 tras ~100 pedidos seguidos y deja de contestar un rato (medido el 26/11, sin
+#: `Retry-After`): se piden de a una, con una pausa, y ante un 429 se espera cada vez más.
+PAUSA_REC = 1.5
+ESPERAS_429 = (60, 120, 300, 600, 900)
+
+
+def bajar_grabaciones(elegidas: list[dict], fin: float, leer) -> tuple[int, int]:
+    """Baja y lee (`leer(muestra, datos)`) las grabaciones de `elegidas` hasta `fin` (hora). Si la del primer jugador no
+    está, prueba con el otro. Devuelve (leídas, cortes por 429)."""
+    leidas = cortes = seguidos = 0
+    for m in elegidas:
+        if time.time() > fin:
+            break
+        perfiles = [x[3] for x in m["js"]]
+        for perfil in perfiles:
+            datos, estado = _grabacion(m["id"], perfil)
+            while estado == 429 and time.time() < fin:
+                cortes += 1
+                espera = ESPERAS_429[min(seguidos, len(ESPERAS_429) - 1)]
+                seguidos += 1
+                print(f"  429 tras {leidas} grabaciones: espero {espera} s", flush=True)
+                time.sleep(min(espera, max(0, fin - time.time())))
+                datos, estado = _grabacion(m["id"], perfil)
+            time.sleep(PAUSA_REC)
+            if estado == 200:
+                seguidos = 0
+            if datos:
+                try:
+                    leer(m, datos)
+                    leidas += 1
+                except Exception as e:  # una grabación rara no puede dejar el día sin escribir
+                    print(f"grabación {m['id']} salteada: {e}", flush=True)
+                break
+            if estado != 404:
+                break
+    return leidas, cortes
 
 
 # ---------- Archivos ----------
@@ -454,7 +579,8 @@ def main() -> None:
     ap.add_argument("--budget", type=int, default=3000)
     ap.add_argument("--deadline", type=int, default=2400, help="segundos para pedir historiales")
     ap.add_argument("--workers", type=int, default=4)
-    ap.add_argument("--replays", type=int, default=500, help="grabaciones de RM 1v1 a bajar para las aperturas")
+    ap.add_argument("--replays", type=int, default=500, help="grabaciones de RM 1v1 a bajar (aperturas, unidades, APM)")
+    ap.add_argument("--deadline-rec", type=int, default=2400, help="segundos para bajar grabaciones")
     ap.add_argument("--todos", action="store_true", help="el historial de todo el ranking (recorrido completo)")
     ap.add_argument("--rehacer", action="store_true", help="reescribir los días de la ventana con lo juntado")
     ap.add_argument("--vistas", type=Path, default=VISTAS, help="las partidas ya contadas (caché de Actions)")
@@ -546,30 +672,18 @@ def main() -> None:
         a_escribir = {f for f, _ in acc.completos(hoy) if f >= desde and (f in previas or f not in guardados)}
     else:
         a_escribir = dias_a_escribir(acc, hoy, guardados, a.days)
-    candidatas = [m for m in acc.muestras if m["fecha"] in a_escribir]
+    # Sólo de los últimos días: las grabaciones viejas ya no están en el servidor (y cada pedido fallido cuenta para el 429).
+    reciente = (hoy - timedelta(days=DIAS_GRABACIONES)).isoformat()
+    candidatas = [m for m in acc.muestras if m["fecha"] in a_escribir and m["fecha"] >= reciente]
     por_banda = {b: [m for m in candidatas if m["band"] == b] for b in BANDAS}
     elegidas = []
     for b, ms in por_banda.items():
         cupo = a.replays // len(BANDAS)
         paso = max(1, len(ms) // max(1, cupo))
         elegidas += ms[::paso][:cupo]
-    hechas = 0
-    fin_rec = time.time() + a.deadline / 2
-    with ThreadPoolExecutor(a.workers) as ex:
-        futs = {ex.submit(_grabacion, m["id"], m["jugador"]): m for m in elegidas}
-        for f in as_completed(futs):
-            if time.time() > fin_rec:
-                for x in futs:
-                    x.cancel()
-                break
-            datos = f.result()
-            if datos:
-                try:
-                    acc.aperturas(futs[f], _aperturas(read_actions(datos)))
-                    hechas += 1
-                except Exception as e:  # una grabación rara no puede dejar el día sin escribir
-                    print(f"grabación {futs[f]['id']} salteada: {e}", flush=True)
-    print(f"grabaciones leídas: {hechas} de {len(elegidas)}", flush=True)
+    linea = grab.lineas()
+    hechas, cortes = bajar_grabaciones(elegidas, time.time() + a.deadline_rec, lambda m, datos: acc.grabacion(m, leer_grabacion(datos), linea))
+    print(f"grabaciones leídas: {hechas} de {len(elegidas)} ({cortes} cortes por 429)", flush=True)
 
     # 4: días nuevos y resumen.
     sumar = previas is not None and not a.rehacer
@@ -596,6 +710,7 @@ def main() -> None:
         dias[r.stem] = _leer(r)
     sumario = resumen({k: v for k, v in dias.items() if v}, hoy) if dias else None
     if sumario:
+        con_alias(sumario, {**{p: a for p, (a, _c) in de_historiales.items()}, **{p: v[0] for p, v in del_ranking.items()}})
         _escribir(STATS / "summary.json", sumario)
     # Parches: los días viejos se borran, así que lo ya calculado con más días se conserva.
     viejos = {p["name"]: p for p in (_leer(STATS / "patches.json") or [])}
