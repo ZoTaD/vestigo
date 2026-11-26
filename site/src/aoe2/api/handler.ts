@@ -9,6 +9,8 @@
  * - `players?ids=<id,id,…>` (hasta 50) → `{ players: [{ id, alias, country, elo }] }`, para los seguidos.
  * - `opening?id=<partida>&p=<perfil>` → `{ id, players: { <perfil>: <apertura> } }`: baja la grabación (≤ 32 MB, 8 s) y
  *   lee las aperturas; se guarda 30 días porque no cambia.
+ * - `analysis?id=<partida>&p=<perfil>` → `{ id, players: { <perfil>: Analisis } }`: apertura, APM, clics de edad y unidades
+ *   (`analysis.ts`), de la grabación entera; también 30 días.
  *
  * Errores: 400 parámetros, 404 no existe, 502 si la API falla o no contesta en 7 s. No registra nada.
  */
@@ -33,6 +35,7 @@ import {
 import { decodeOptions, namedOptions } from "../matches/options";
 import { readActions } from "./replay";
 import { openings } from "./openings";
+import { analizarGrabacion } from "./analysis";
 import { slotsOf } from "./slots";
 import { MAX_GRABACION, unzipFirst } from "./zip";
 
@@ -90,6 +93,27 @@ async function search(p: URLSearchParams, f: typeof fetch) {
  * `slotinfo` del historial de `p`. La respuesta no cambia nunca: se guarda 30 días.
  */
 async function opening(p: URLSearchParams, f: typeof fetch) {
+  const r = await grabacion(p, f);
+  if (r instanceof Response) return r;
+  const porLugar = openings(readActions(r.datos));
+  const players = Object.fromEntries(Object.entries(r.lugares).filter(([, lugar]) => porLugar[lugar]).map(([perfil, lugar]) => [perfil, porLugar[lugar]]));
+  return json({ id: r.id, players }, 200, cache(86400 * 30, 86400 * 30));
+}
+
+/**
+ * `analysis?id=<partida>&p=<perfil>` (2026-11-26): lo mismo que `opening` más APM, clics de edad y unidades entrenadas de
+ * cada jugador (`analysis.ts`), leyendo la grabación entera. `{ id, players: { <perfil>: Analisis } }`, guardado 30 días.
+ */
+async function analysis(p: URLSearchParams, f: typeof fetch) {
+  const r = await grabacion(p, f);
+  if (r instanceof Response) return r;
+  const porLugar = analizarGrabacion(r.datos);
+  const players = Object.fromEntries(Object.entries(r.lugares).filter(([, lugar]) => porLugar[lugar]).map(([perfil, lugar]) => [perfil, porLugar[lugar]]));
+  return json({ id: r.id, players }, 200, cache(86400 * 30, 86400 * 30));
+}
+
+/** La grabación de una partida y qué lugar ocupa cada perfil, o la respuesta de error que corresponde. */
+async function grabacion(p: URLSearchParams, f: typeof fetch): Promise<Response | { id: number; datos: Uint8Array; lugares: Record<string, number> }> {
   // Sólo `id` y `p`: otro parámetro haría una dirección nueva para la CDN y una bajada de ~1 MB más.
   if ([...p.keys()].some((k) => k !== "id" && k !== "p")) return bad("params");
   const id = entero(p.get("id"), null, 1, ID_MAX);
@@ -102,14 +126,15 @@ async function opening(p: URLSearchParams, f: typeof fetch) {
   // Sin historial no se sabe quién es quién: falla corta, no un resultado vacío guardado un mes.
   if (!hist) return fail(0);
   const slot = hist.matchHistoryStats.find((m) => m.id === id)?.slotinfo;
-  if (!slot || !rec || !rec.ok) return notFound();
+  if (!slot) return notFound();
+  // El servidor de grabaciones corta con 429 si se le pide mucho seguido (medido el 26/11): eso, o que no conteste, es
+  // una falla pasajera, no "no hay grabación" (el 404 la página no lo vuelve a pedir).
+  if (!rec || rec.status === 429 || rec.status >= 500) return fail(rec?.status ?? 0);
+  if (!rec.ok) return notFound();
   if (Number(rec.headers.get("content-length") ?? 0) > MAX_GRABACION) return notFound();
   const datos = unzipFirst(new Uint8Array(await rec.arrayBuffer()));
   if (!datos) return notFound();
-  const porLugar = openings(readActions(datos));
-  const lugares = slotsOf(slot);
-  const players = Object.fromEntries(Object.entries(lugares).filter(([, lugar]) => porLugar[lugar]).map(([perfil, lugar]) => [perfil, porLugar[lugar]]));
-  return json({ id, players }, 200, cache(86400 * 30, 86400 * 30));
+  return { id, datos, lugares: slotsOf(slot) };
 }
 
 /** `players?ids=1,2,3` (hasta 50): alias, país, ratings y última partida de cada uno (los seguidos de la portada y los
@@ -124,7 +149,7 @@ async function players(p: URLSearchParams, f: typeof fetch) {
   return json({ players: out }, 200, cache(300, 300));
 }
 
-const RUTAS: Record<string, (p: URLSearchParams, f: typeof fetch) => Promise<Response>> = { leaderboard, player, players, match, search, opening };
+const RUTAS: Record<string, (p: URLSearchParams, f: typeof fetch) => Promise<Response>> = { leaderboard, player, players, match, search, opening, analysis };
 
 export async function handleAoe2(url: URL, fetcher: typeof fetch = fetch, method = "GET"): Promise<Response> {
   if (method !== "GET" && method !== "HEAD") return json({ error: "method" }, 405, { Allow: "GET, HEAD" });

@@ -5,6 +5,8 @@
 import { useLang, type Lang } from "./i18n";
 import type { Aoe2Section, Aoe2Tab } from "./route";
 
+/** 8:24 (minutos:segundos de juego). */
+const mmss = (s: number) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
 /** El orden de las pestañas en la barra. */
 export const AOE2_TABS: Aoe2Tab[] = ["leaderboards", "civilizations", "matchups", "maps", "players", "units", "technologies", "tech-tree", "calculator", "build-orders", "patches", "achievements"];
 
@@ -122,12 +124,21 @@ const en = {
     gone: "That match is no longer in the player's recent history.",
     team: (n: number) => `Team ${n}`,
     winner: "Winner",
-    cols: { player: "Player", civ: "Civilization", elo: "Rating", change: "Change" },
-    facts: { map: "Map", mode: "Mode", length: "Length", date: "Played", size: "Map size", build: "Game build", observers: "Spectators" },
-    tiles: (n: number) => `${n}×${n} tiles`,
+    cols: { player: "Player", civ: "Civilization", elo: "Rating", change: "Change", apm: "APM" },
+    facts: { map: "Map", mode: "Mode", length: "Length", date: "Played", observers: "Spectators" },
+    ages: ["Feudal", "Castle", "Imperial"],
+    agesH: "Age-up clicks",
+    agesSub: "Game time when they clicked to advance (the research time depends on the civ).",
+    unitsH: "Units trained",
+    unitsSub: "Everything they queued, from the most to the least.",
+    noRec: "This match has no recording (yet): APM, age-ups and units come from it.",
+    apmHint: "Actions per minute of game time",
+    clock: mmss,
   },
   pl: {
     searchH: "Find a player",
+    showAll: (n: number) => `Show all ${n}`,
+    showLess: "Show fewer",
     searchLead: "Type part of the in-game name (capitals and accents don't matter) or a SteamID64.",
     notFound: "We couldn't find that player.",
     noGames: "No ranked games yet.",
@@ -330,12 +341,21 @@ const es: typeof en = {
     gone: "Esa partida ya no está en el historial reciente del jugador.",
     team: (n: number) => `Equipo ${n}`,
     winner: "Ganador",
-    cols: { player: "Jugador", civ: "Civilización", elo: "ELO", change: "Cambio" },
-    facts: { map: "Mapa", mode: "Modo", length: "Duración", date: "Jugada", size: "Tamaño del mapa", build: "Build del juego", observers: "Espectadores" },
-    tiles: (n: number) => `${n}×${n} casillas`,
+    cols: { player: "Jugador", civ: "Civilización", elo: "ELO", change: "Cambio", apm: "APM" },
+    facts: { map: "Mapa", mode: "Modo", length: "Duración", date: "Jugada", observers: "Espectadores" },
+    ages: ["Feudal", "Castillos", "Imperial"],
+    agesH: "Clics de edad",
+    agesSub: "Minuto de juego en que hizo clic para pasar de edad (lo que tarda depende de la civ).",
+    unitsH: "Unidades entrenadas",
+    unitsSub: "Todo lo que encoló, de lo que más a lo que menos.",
+    noRec: "Esta partida no tiene grabación (todavía): de ahí salen el APM, las edades y las unidades.",
+    apmHint: "Acciones por minuto de juego",
+    clock: mmss,
   },
   pl: {
     searchH: "Buscar un jugador",
+    showAll: (n: number) => `Ver las ${n}`,
+    showLess: "Ver menos",
     searchLead: "Escribí parte del nombre del juego (no importan mayúsculas ni acentos) o un SteamID64.",
     notFound: "No encontramos ese jugador.",
     noGames: "Todavía no tiene partidas de ranking.",

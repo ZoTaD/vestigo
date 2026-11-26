@@ -163,6 +163,8 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
             </Panel>
           )}
 
+          <MatchHistory matches={matches} id={id} route={route} navigate={navigate} />
+
           <div className="a2-cols">
             <Panel h={t.pl.eloH} sub={t.pl.eloSub}>
               {modos.length > 1 && (
@@ -209,7 +211,6 @@ function Perfil({ id, route, navigate }: { id: number; route: Route; navigate: N
           </Panel>
 
           <TheirOpenings matches={matches} id={id} />
-          <MatchHistory matches={matches} id={id} route={route} navigate={navigate} />
           <HeadToHead matches={matches} id={id} route={route} navigate={navigate} />
         </>
       )}
@@ -239,6 +240,7 @@ function TablaCivs({ filas }: { filas: ReturnType<typeof byCiv> }) {
   const t = useAoe2Copy();
   const { lang } = useLang();
   const { sort, th } = useSort<CivKey>({ key: "games", dir: -1 }, ["civ"]);
+  const [todas, setTodas] = useState(false);
   const cols: Record<CivKey, (r: (typeof filas)[number]) => string | number | null> = {
     civ: (r) => civById(r.civ)?.name[lang] ?? String(r.civ),
     games: (r) => r.games,
@@ -256,7 +258,7 @@ function TablaCivs({ filas }: { filas: ReturnType<typeof byCiv> }) {
         </tr>
       </thead>
       <tbody>
-        {sortRows(filas, cols, sort).map((r) => {
+        {sortRows(filas, cols, sort).slice(0, todas ? undefined : CORTE).map((r) => {
           const c = civById(r.civ);
           return (
             <tr key={r.civ}>
@@ -273,6 +275,7 @@ function TablaCivs({ filas }: { filas: ReturnType<typeof byCiv> }) {
           );
         })}
       </tbody>
+      <VerTodas n={filas.length} todas={todas} set={setTodas} cols={4} />
     </table>
   );
 }
@@ -282,6 +285,7 @@ function TablaMapas({ filas }: { filas: ReturnType<typeof byMap> }) {
   const t = useAoe2Copy();
   const { lang } = useLang();
   const { sort, th } = useSort<MapKey>({ key: "games", dir: -1 }, ["map"]);
+  const [todas, setTodas] = useState(false);
   const cols: Record<MapKey, (r: (typeof filas)[number]) => string | number> = { map: (r) => r.map, games: (r) => r.games, wr: (r) => r.wins / r.games };
   return (
     <table className="a2-table">
@@ -293,7 +297,7 @@ function TablaMapas({ filas }: { filas: ReturnType<typeof byMap> }) {
         </tr>
       </thead>
       <tbody>
-        {sortRows(filas, cols, sort).map((r) => (
+        {sortRows(filas, cols, sort).slice(0, todas ? undefined : CORTE).map((r) => (
           <tr key={r.map}>
             <td>{mapName(r.map, lang)}</td>
             <td className="num">{r.games}</td>
@@ -301,7 +305,26 @@ function TablaMapas({ filas }: { filas: ReturnType<typeof byMap> }) {
           </tr>
         ))}
       </tbody>
+      <VerTodas n={filas.length} todas={todas} set={setTodas} cols={3} />
     </table>
+  );
+}
+
+/** Civs y mapas muestran las primeras 8 filas; el resto, con un botón (2026-11-26: eran tablas de 40 filas). */
+const CORTE = 8;
+function VerTodas({ n, todas, set, cols }: { n: number; todas: boolean; set: (v: boolean) => void; cols: number }) {
+  const t = useAoe2Copy();
+  if (n <= CORTE) return null;
+  return (
+    <tfoot>
+      <tr>
+        <td colSpan={cols}>
+          <button type="button" className="a2-btn a2-more" onClick={() => set(!todas)}>
+            {todas ? t.pl.showLess : t.pl.showAll(n)}
+          </button>
+        </td>
+      </tr>
+    </tfoot>
   );
 }
 

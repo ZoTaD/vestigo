@@ -5,11 +5,12 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("pedido de aperturas", () => {
   it("si la función falla, la próxima vez se vuelve a pedir", async () => {
-    const f = vi.fn().mockResolvedValueOnce(new Response("", { status: 502 })).mockResolvedValueOnce(new Response(JSON.stringify({ players: { 1: "scouts" } }), { status: 200 }));
+    const f = vi.fn().mockResolvedValueOnce(new Response("", { status: 502 })).mockResolvedValueOnce(new Response(JSON.stringify({ players: { 1: { opening: "scouts", apm: 90, ages: [500, null, null], units: [] } } }), { status: 200 }));
     vi.stubGlobal("fetch", f);
     expect(await fetchOpening(1, 2)).toBeNull();
     expect(await fetchOpening(1, 2)).toEqual({ 1: "scouts" });
     expect(f).toHaveBeenCalledTimes(2);
+    expect(String(f.mock.calls[0][0])).toContain("/api/aoe2/analysis?");
   });
   it("sin grabación (404) no se vuelve a pedir", async () => {
     const f = vi.fn().mockResolvedValue(new Response("", { status: 404 }));
