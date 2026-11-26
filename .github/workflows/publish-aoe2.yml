@@ -42,11 +42,20 @@ jobs:
         with:
           python-version: "3.13"
 
+      # Las partidas ya contadas (2026-11-26, `games/aoe2/tools/vistas.py`): viajan de una corrida a la otra en la caché,
+      # así cada día se suma a lo guardado en vez de reemplazarlo. La comparte con `backfill-aoe2.yml`.
+      - name: vistas cache
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: games/aoe2/.cache
+          key: aoe2-vistas-${{ github.run_id }}
+          restore-keys: aoe2-vistas-
+
       # Una falla de la API no tumba el commit de lo que se haya juntado (`continue-on-error`); el colector tiene su
       # propio plazo para pedir historiales (`--deadline`) y escribe lo juntado.
       - name: stats
         continue-on-error: true
-        run: python games/aoe2/tools/daily.py --days 28 --budget 5000 --replays 500 --deadline 2400
+        run: python games/aoe2/tools/daily.py --days 60 --budget 5000 --replays 500 --deadline 2400
 
       - name: guard
         id: guard

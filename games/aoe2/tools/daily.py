@@ -3,6 +3,7 @@ El colector diario de Age of Empires II: DE (2026-11-20), directo de la API de W
 docs/superpowers/specs/2026-11-20-aoe2-design.md; plan: docs/superpowers/plans/2026-11-20-aoe2-etapa1.md (Task 8).
 
     python games/aoe2/tools/daily.py [--days 28] [--budget 3000] [--deadline 2400] [--workers 4]
+    python games/aoe2/tools/daily.py --todos --rehacer --days 120 --replays 0 --workers 12 --deadline 17000  # recorrido completo
 
 Qué hace:
   1. Baja los rankings (RM, EW y DM, 1v1 y equipos) entero, de a 200 filas, y escribe `stats/ladder/<id>.json`: la
@@ -11,9 +12,12 @@ Qué hace:
      perfil, que baja sólo su pedazo.
   3. Pide los historiales (≈ 64 partidas) de jugadores activos elegidos **repartiendo el presupuesto entre bandas de
      ELO** (no sólo el top), hasta `--budget` pedidos o `--deadline` segundos.
-  4. Cada partida de ranking cuenta una sola vez; los días completos (UTC) sin resumen van a `stats/days/<fecha>.json`
-     y se rehace `stats/summary.json` con las ventanas de 7, 14 y 28 días, la anterior de cada una (tendencia) y la del
-     parche actual.
+  4. Cada partida de ranking cuenta una sola vez; los días completos (UTC) van a `stats/days/<fecha>.json` y se rehace
+     `stats/summary.json` con las ventanas de 7, 14 y 28 días, la anterior de cada una (tendencia) y la del parche actual.
+     Desde el 2026-11-26 los días **se suman entre corridas**: `vistas.py` recuerda qué partidas ya se contaron (en la
+     caché de Actions), así cada corrida agrega las que trae de nuevo. Cada día se eligen jugadores distintos (al azar
+     dentro de cada banda, con la fecha como semilla). `--todos` pide el historial de todo el ranking (el recorrido
+     completo, `backfill-aoe2.yml`) y `--rehacer` reescribe los días de la ventana con lo juntado.
 
 Formato de un día: `{date, games, patch, civ: {"<modo>|<banda>|<civ>": [partidas, victorias]},
 map: {"<modo>|<mapa>|<civ>": […]}, vs: {"<banda>|<civA>|<civB>": [partidas, victorias de A]} (sólo RM 1v1, civA <
@@ -38,6 +42,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import vistas as vistas_mod  # noqa: E402
 from patches import NOTAS, NOTICIA, PARCHES  # noqa: E402
 from openings import openings as _aperturas  # noqa: E402
 from replay import read_actions  # noqa: E402
@@ -61,7 +66,8 @@ BANDAS = ["<1000", "1000-1400", "1400-1800", "1800+"]
 TOP_FOTO = 2000
 TOP_MEMORIA = 1000
 DIAS_MEMORIA = 90
-DIAS_GUARDADOS = 60
+DIAS_GUARDADOS = 180
+VISTAS = RAIZ / "games" / "aoe2" / ".cache" / "vistas.json.gz"
 
 
 def mode_of(t: int) -> str:
@@ -130,9 +136,12 @@ def _sumar(d: dict, k: str, gano: bool | int, n: int = 1) -> None:
 class Acumulador:
     """Junta partidas de historiales (cada una una sola vez) en resúmenes por día."""
 
-    def __init__(self, civs: dict[int, str]):
+    def __init__(self, civs: dict[int, str], previas: dict[str, set[int]] | None = None):
         self.civs = civs
         self.vistas: set[int] = set()
+        #: Lo ya contado en corridas anteriores (no se vuelve a sumar) y lo que cuenta esta, por día.
+        self.previas = previas or {}
+        self.nuevas: dict[str, set[int]] = {}
         self.dias: dict[str, dict] = {}
         #: Partidas de RM 1v1 candidatas a bajar la grabación (aperturas): id, día, banda, jugadores con lugar.
         self.muestras: list[dict] = []
@@ -156,6 +165,9 @@ class Acumulador:
             return
         b = band(sum(elos) / len(elos))
         fecha = datetime.fromtimestamp(m["startgametime"], timezone.utc).date().isoformat()
+        if m["id"] in self.previas.get(fecha, ()):
+            return
+        self.nuevas.setdefault(fecha, set()).add(m["id"])
         d = self.dias.setdefault(fecha, _dia_vacio(fecha))
         d["games"] += 1
         _sumar(d.setdefault("n", {}), f"{modo}|{b}", len(js), 1)
@@ -220,9 +232,12 @@ def dias_a_escribir(acc: "Acumulador", hoy: date, guardados: dict[str, int], dia
     return {f for f, d in acc.completos(hoy) if f >= desde and d["games"] > guardados.get(f, 0)}
 
 
-def pick_players(ladder: list[tuple[int, float]], budget: int) -> list[tuple[int, float]]:
+def pick_players(ladder: list[tuple[int, float]], budget: int, semilla: int | None = None) -> list[tuple[int, float]]:
     """`budget` jugadores repartidos en partes iguales entre las bandas de ELO (lo que sobra de una banda chica pasa a
-    las otras); dentro de cada banda, espaciados a lo largo del ranking."""
+    las otras); dentro de cada banda, espaciados a lo largo del ranking, o al azar con `semilla` (la fecha: cada día
+    otros jugadores, así las corridas se completan entre sí)."""
+    import random
+
     por = {b: [x for x in ladder if band(x[1]) == b] for b in BANDAS}
     por = {b: v for b, v in por.items() if v}
     out: list[tuple[int, float]] = []
@@ -232,8 +247,11 @@ def pick_players(ladder: list[tuple[int, float]], budget: int) -> list[tuple[int
         b = pendientes.pop(0)
         cupo = min(len(por[b]), restantes // (len(pendientes) + 1) or restantes)
         v = por[b]
-        paso = len(v) / cupo
-        out += [v[int(i * paso)] for i in range(cupo)]
+        if semilla is not None:
+            out += random.Random(semilla).sample(v, cupo)
+        else:
+            paso = len(v) / cupo
+            out += [v[int(i * paso)] for i in range(cupo)]
         restantes -= cupo
     return out
 
@@ -427,6 +445,9 @@ def main() -> None:
     ap.add_argument("--deadline", type=int, default=2400, help="segundos para pedir historiales")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--replays", type=int, default=500, help="grabaciones de RM 1v1 a bajar para las aperturas")
+    ap.add_argument("--todos", action="store_true", help="el historial de todo el ranking (recorrido completo)")
+    ap.add_argument("--rehacer", action="store_true", help="reescribir los días de la ventana con lo juntado")
+    ap.add_argument("--vistas", type=Path, default=VISTAS, help="las partidas ya contadas (caché de Actions)")
     a = ap.parse_args()
     hoy = datetime.now(timezone.utc).date()
     ahora = int(time.time())
@@ -434,6 +455,7 @@ def main() -> None:
 
     # 1 y 2: rankings, fotos y memoria de ELO.
     activos: dict[int, list[tuple[int, float]]] = {}
+    todos: dict[int, int] = {}
     del_ranking: dict[int, tuple[str, str, float]] = {}
     de_historiales: dict[int, tuple[str, str]] = {}
     for lb in LEADERBOARDS:
@@ -447,6 +469,9 @@ def main() -> None:
             if p not in del_ranking or e > del_ranking[p][2]:
                 del_ranking[p] = (a_, c, e)
         activos[lb] = [(p, e) for p, e, u, *_ in filas if ahora - u < 7 * DIA]
+        if lb in (3, 4, 13, 14):
+            for p, _e, u, *_ in filas:
+                todos[p] = max(todos.get(p, 0), u)
         if lb in (3, 4):
             carpeta = STATS / "elo" / str(lb)
             viejas = {n: _leer(carpeta / f"{n}.json") or {} for n in range(SHARDS)}
@@ -455,9 +480,18 @@ def main() -> None:
             (STATS / "elo" / f"{lb}.json").unlink(missing_ok=True)
 
     # 3: historiales.
-    acc = Acumulador(civs)
-    elegidos = [p for lb, parte in REPARTO.items() for p, _ in pick_players(activos.get(lb, []), int(a.budget * parte))]
-    elegidos = list(dict.fromkeys(elegidos))
+    previas = None if a.rehacer else vistas_mod.leer(a.vistas)
+    contadas = "ninguna guardada" if previas is None else sum(len(v) for v in previas.values())
+    print(f"partidas ya contadas: {contadas}", flush=True)
+    acc = Acumulador(civs, previas)
+    if a.todos:
+        # Primero los que jugaron hace menos: si el plazo corta, se cortan los que menos aportan.
+        elegidos = [p for p, _ in sorted(todos.items(), key=lambda x: -x[1])]
+    else:
+        semilla = hoy.toordinal()
+        elegidos = [p for lb, parte in REPARTO.items() for p, _ in pick_players(activos.get(lb, []), int(a.budget * parte), semilla)]
+        elegidos = list(dict.fromkeys(elegidos))
+    print(f"historiales a pedir: {len(elegidos)}", flush=True)
     fin = time.time() + a.deadline
     hechos = 0
     with ThreadPoolExecutor(a.workers) as ex:
@@ -480,7 +514,15 @@ def main() -> None:
 
     # 3b: aperturas. Grabaciones de una muestra de RM 1v1 de días completos, repartida entre bandas de ELO.
     guardados = {r.stem: (_leer(r) or {}).get("games", 0) for r in (STATS / "days").glob("*.json")}
-    a_escribir = dias_a_escribir(acc, hoy, guardados, a.days)
+    desde = (hoy - timedelta(days=a.days)).isoformat()
+    if a.rehacer:
+        a_escribir = {f for f, _ in acc.completos(hoy) if f >= desde}
+    elif previas is not None:
+        # Se suma a los días que ya se vienen sumando y a los que no tienen archivo; un día guardado sin registro de qué
+        # partidas tiene (de antes de la caché) queda como está, para no contar nada dos veces.
+        a_escribir = {f for f, _ in acc.completos(hoy) if f >= desde and (f in previas or f not in guardados)}
+    else:
+        a_escribir = dias_a_escribir(acc, hoy, guardados, a.days)
     candidatas = [m for m in acc.muestras if m["fecha"] in a_escribir]
     por_banda = {b: [m for m in candidatas if m["band"] == b] for b in BANDAS}
     elegidas = []
@@ -507,9 +549,21 @@ def main() -> None:
     print(f"grabaciones leídas: {hechas} de {len(elegidas)}", flush=True)
 
     # 4: días nuevos y resumen.
+    sumar = previas is not None and not a.rehacer
+    nuevas_vistas = {k: set(v) for k, v in (previas or {}).items()}
     for f, d in acc.completos(hoy):
-        if f in a_escribir:
-            _escribir(STATS / "days" / f"{f}.json", d)
+        if f not in a_escribir:
+            continue
+        ruta = STATS / "days" / f"{f}.json"
+        if sumar and f in guardados:
+            _escribir(ruta, vistas_mod.sumar_dia(_leer(ruta) or _dia_vacio(f), d))
+            nuevas_vistas[f] = nuevas_vistas.get(f, set()) | acc.nuevas.get(f, set())
+        else:
+            _escribir(ruta, d)
+            nuevas_vistas[f] = set(acc.nuevas.get(f, set()))
+    vistas_mod.escribir(a.vistas, nuevas_vistas, (hoy - timedelta(days=DIAS_GUARDADOS)).isoformat())
+    recordadas = sum(len(v) for v in nuevas_vistas.values())
+    print(f"días escritos: {len(a_escribir)}; partidas recordadas: {recordadas}", flush=True)
     limite = (hoy - timedelta(days=DIAS_GUARDADOS)).isoformat()
     dias = {}
     for r in sorted((STATS / "days").glob("*.json")):
