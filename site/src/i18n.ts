@@ -101,9 +101,10 @@ const EN = {
   /** La cáscara del rediseño del 2026-09-06: buscador, "cómo se mide", pie. */
   shell: {
     search: "Search a player",
-    searchFor: (game: string) => `Search a ${game} player`,
+    // "an" delante de vocal (2026-11-26: "Search a Age of Empires II player").
+    searchFor: (game: string) => `Search ${/^[aeiou]/i.test(game) ? "an" : "a"} ${game} player`,
     searchItem: "Search an item",
-    searchItemFor: (game: string) => `Search a ${game} item`,
+    searchItemFor: (game: string) => `Search ${/^[aeiou]/i.test(game) ? "an" : "a"} ${game} item`,
     searchNone: "Nothing matches.",
     how: "How it's measured",
     menu: "Menu",

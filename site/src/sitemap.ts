@@ -277,7 +277,8 @@ export interface SitemapData {
  * Home. `sitemapPaths` los sigue listando porque de ahí sale también el prerender.
  */
 export const SITEMAP_HIDDEN: SitemapGroup[] = ["poe2", "d2r", "warframe", ...(AOE2_OCULTO ? (["aoe2"] as const) : [])];
-const HIDDEN_SEGMENTS = new Set(["poe2", "d2r", WF_SEGMENT]);
+// AoE2 también, mientras está oculto (2026-11-26, `AOE2_OCULTO` en `gameGroups.ts`).
+const HIDDEN_SEGMENTS = new Set(["poe2", "d2r", WF_SEGMENT, ...(AOE2_OCULTO ? [AOE2_SEGMENT] : [])]);
 
 /** Si una dirección es de un juego escondido (no va a ningún sitemap). */
 export function isHiddenPath(path: string): boolean {

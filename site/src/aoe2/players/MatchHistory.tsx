@@ -62,7 +62,7 @@ export default function MatchHistory({ matches, id, route, navigate }: { matches
           <option value="">{t.hist.anyMap}</option>
           {mapas.map((m) => (
             <option key={m} value={m}>
-              {mapName(m)}
+              {mapName(m, lang)}
             </option>
           ))}
         </select>
@@ -85,7 +85,7 @@ export default function MatchHistory({ matches, id, route, navigate }: { matches
                 <RouteLink to={{ ...route, view: "aoe2", a2Section: "matches", detail: `${m.id}?p=${id}` }} onNavigate={navigate}>
                   <span className="a2-hist-res">{yo?.result === "win" ? t.pl.formWin : yo?.result === "loss" ? t.pl.formLoss : t.pl.formOther}</span>
                   <span className="a2-hist-what">
-                    <b>{mapName(m.map)}</b>
+                    <b>{mapName(m.map, lang)}</b>
                     <small>
                       {modo(m.mode)} · {new Date(m.start * 1000).toLocaleDateString(locale, { day: "numeric", month: "short", year: "numeric" })} · {t.hist.min(m.end - m.start)}
                     </small>

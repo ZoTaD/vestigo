@@ -8,10 +8,10 @@ import { useAoe2Copy } from "../../aoe2Copy";
 import { CivShield, ModePicker, civBySlug } from "../ui";
 import { BANDS, loadSummary, peekSummary, type BandOrAll, type StatMode, type Summary, type WindowKey } from "./data";
 import maps from "@aoe2/maps.json";
-import { mapName as prettify } from "../players/mapName";
+import { mapName } from "../players/mapName";
 
 const MAPAS = new Map((maps as { slug: string; name: { en: string; es: string }; icon: boolean }[]).map((m) => [m.slug, m]));
-export const mapLabel = (slug: string, lang: Lang): string => MAPAS.get(slug)?.name[lang] ?? prettify(slug);
+export const mapLabel = mapName;
 export const mapIcon = (slug: string): string => (MAPAS.get(slug)?.icon ? `/aoe2/map/${slug}.webp` : "/aoe2/map/_generic.webp");
 
 export function useSummary(): Summary | null | undefined {

@@ -23,10 +23,11 @@ function ids(detail: string | undefined): { id: string | null; p: string | null 
 
 export default function Aoe2Matches({ route, navigate }: { route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
+  const { lang } = useLang();
   useNoindex();
   const { id, p } = ids(route.detail);
   const { data, error, retry } = useApi<Aoe2Match>(id && p ? `/api/aoe2/match?id=${id}&p=${p}` : null);
-  useDocTitle(data ? `${mapName(data.map)} · ${t.match.h} · Age of Empires II · Vestigo` : null);
+  useDocTitle(data ? `${mapName(data.map, lang)} · ${t.match.h} · Age of Empires II · Vestigo` : null);
   if (!id || !p) return <Panel h={t.match.h}><p>{t.match.noP}</p></Panel>;
   if (error === 404) return <Panel h={t.match.h}><p>{t.match.gone}</p></Panel>;
   if (error != null) return <Aoe2Loading onRetry={retry} />;
@@ -43,7 +44,7 @@ function Ficha({ m, route, navigate, p }: { m: Aoe2Match; route: Route; navigate
   const modo = useModeName();
   const equipos = [...new Set(m.players.map((p) => p.team))].sort((a, b) => a - b);
   const hechos: [string, string][] = [
-    [t.match.facts.map, mapName(m.map)],
+    [t.match.facts.map, mapName(m.map, lang)],
     [t.match.facts.mode, modo(m.mode)],
     [t.match.facts.length, t.hist.min(m.end - m.start)],
     [t.match.facts.date, new Date(m.start * 1000).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" })],
@@ -52,7 +53,7 @@ function Ficha({ m, route, navigate, p }: { m: Aoe2Match; route: Route; navigate
   ];
   return (
     <>
-      <Panel h={`${mapName(m.map)} · ${modo(m.mode)}`}>
+      <Panel h={`${mapName(m.map, lang)} · ${modo(m.mode)}`}>
         <dl className="a2-facts">
           {hechos.map(([k, v]) => (
             <div key={k}>

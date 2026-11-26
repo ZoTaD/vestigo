@@ -280,6 +280,7 @@ function TablaCivs({ filas }: { filas: ReturnType<typeof byCiv> }) {
 type MapKey = "map" | "games" | "wr";
 function TablaMapas({ filas }: { filas: ReturnType<typeof byMap> }) {
   const t = useAoe2Copy();
+  const { lang } = useLang();
   const { sort, th } = useSort<MapKey>({ key: "games", dir: -1 }, ["map"]);
   const cols: Record<MapKey, (r: (typeof filas)[number]) => string | number> = { map: (r) => r.map, games: (r) => r.games, wr: (r) => r.wins / r.games };
   return (
@@ -294,7 +295,7 @@ function TablaMapas({ filas }: { filas: ReturnType<typeof byMap> }) {
       <tbody>
         {sortRows(filas, cols, sort).map((r) => (
           <tr key={r.map}>
-            <td>{mapName(r.map)}</td>
+            <td>{mapName(r.map, lang)}</td>
             <td className="num">{r.games}</td>
             <td className={`num ${r.wins / r.games >= 0.5 ? "a2-up" : "a2-down"}`}>{pct(r.wins, r.games)}</td>
           </tr>
