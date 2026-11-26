@@ -28,3 +28,22 @@ export function armar(u: Unidad, civ: string, e: number, fx: CivFx, techs: reado
   const bonos: Fx[] = (fx[civ]?.bonus ?? []).filter(([edadMin]) => edadMin <= e).flatMap(([, f]) => f);
   return aplicar(base(u), [...bonos, ...techs.flatMap((x) => x.fx)]);
 }
+
+/**
+ * La unidad que corresponde a una civ y una edad (2026-11-26): si la elegida es de una edad más alta, la de su línea que
+ * existe en esa edad (Alabardero en Castillos → Piquero); si la civ no la tiene, la mejor de su línea que sí tiene, o la
+ * primera del mismo edificio, o la Milicia. Devuelve el slug.
+ */
+export function unidadPara(slug: string, civ: string, e: number, us: readonly Unidad[], a: Arbol): string {
+  const porSlug = new Map(us.map((u) => [u.slug, u]));
+  const porId = new Map(us.map((u) => [u.id, u]));
+  const u = porSlug.get(slug);
+  if (!u) return slug;
+  const tiene = (x: Unidad) => estado(a, civ, `u${x.id}`) !== "0";
+  if (u.age <= e && tiene(u)) return slug;
+  const linea = [...u.line].reverse().map((id) => porId.get(id)).filter((x): x is Unidad => !!x);
+  const enLinea = linea.find((x) => x.age <= e && tiene(x)) ?? linea.find((x) => tiene(x));
+  if (enLinea) return enLinea.slug;
+  const mismoEdificio = us.find((x) => x.building === u.building && x.age <= e && tiene(x) && !x.slug.endsWith(`-${x.id}`) && x.attacks.length > 0 && x.reload > 0);
+  return mismoEdificio?.slug ?? "militia";
+}

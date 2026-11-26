@@ -49,3 +49,55 @@ describe("calculadora de AoE2", () => {
     expect(d.esperados).toBeCloseTo(50 / 0.8);
   });
 });
+
+describe("casos del juego con los datos reales (2026-11-26)", async () => {
+  const tree = (await import("@aoe2/encyclopedia/tree.json")).default as any;
+  const U = ((await import("@aoe2/encyclopedia/units.json")).default as any).units;
+  const T = (await import("@aoe2/encyclopedia/techs.json")).default as any[];
+  const F = (await import("@aoe2/encyclopedia/civfx.json")).default as any;
+  const { armar, mejorasPara } = await import("../src/aoe2/encyclopedia/armar");
+  const u = (s: string) => U.find((x: any) => x.slug === s);
+  const pelado = (s: string, civ = "britons") => armar(u(s), civ, 4, {}, []);
+  const conTodo = (s: string, civ: string) => armar(u(s), civ, 4, F, mejorasPara(T, tree, civ, u(s), 4));
+  it("un Caballero mata a un Arquero en 3 golpes", () => {
+    expect(duelo(pelado("knight"), pelado("archer")).golpes).toBe(3);
+  });
+  it("Alabardero contra Paladín, sin mejoras: 6 + 32 contra caballería − 2 de armadura = 36; 5 golpes", () => {
+    const d = duelo(pelado("halberdier"), pelado("paladin", "franks"));
+    expect(d.dano).toBe(36);
+    expect(d.golpes).toBe(5);
+  });
+  it("Paladín franco con todo: 192 de vida; contra un Alabardero con todo pega 15 y lo mata en 4", () => {
+    const pal = conTodo("paladin", "franks");
+    expect(pal.hp).toBe(192);
+    const d = duelo(pal, conTodo("halberdier", "britons"));
+    expect(d.dano).toBe(15);
+    expect(d.golpes).toBe(4);
+  });
+  it("la Mangonela mata a un Arquero de un golpe", () => {
+    expect(duelo(pelado("mangonel"), pelado("archer")).golpes).toBe(1);
+  });
+  it("los soldados sicilianos reciben 40% menos de daño de bonificación", () => {
+    const sic = conTodo("cavalier", "sicilians");
+    expect(sic.bonusRes).toBeCloseTo(0.4);
+    const contraSic = duelo(pelado("halberdier"), sic).dano;
+    const contraOtro = duelo(pelado("halberdier"), { ...sic, bonusRes: 0 }).dano;
+    // El bonus contra caballería (32) baja a 19,2; el ataque base no cambia.
+    expect(contraOtro - contraSic).toBeCloseTo(32 * 0.4, 5);
+  });
+});
+
+describe("unidad según civ y edad", async () => {
+  const tree = (await import("@aoe2/encyclopedia/tree.json")).default as any;
+  const U = ((await import("@aoe2/encyclopedia/units.json")).default as any).units;
+  const { unidadPara } = await import("../src/aoe2/encyclopedia/armar");
+  it("en Castillos, el Alabardero pasa a Piquero y el Paladín a Jinete", () => {
+    expect(unidadPara("halberdier", "britons", 3, U, tree)).toBe("pikeman");
+    expect(unidadPara("paladin", "franks", 3, U, tree)).toBe("knight");
+  });
+  it("una civ sin la unidad toma la mejor de su línea que tiene, o algo del mismo edificio", () => {
+    expect(unidadPara("paladin", "britons", 4, U, tree)).toBe("cavalier");
+    const azteca = unidadPara("cavalier", "aztecs", 4, U, tree);
+    expect(U.find((x: any) => x.slug === azteca).building).not.toBe(101);
+  });
+});

@@ -32,8 +32,9 @@ AYUDA = 21000
 CLASES_ARMADURA = 12400
 EDADES = {101: 2, 102: 3, 103: 4}
 #: Atributos de combate que la calculadora sabe aplicar: vida, visión, velocidad, armadura, ataque, recarga, precisión,
-#: alcance, alcance mínimo y costo (100, multiplicador).
-ATRIBUTOS = {0, 1, 5, 8, 9, 10, 11, 12, 20, 100}
+#: alcance, alcance mínimo, resistencia al daño de bonificación (24, desde el 2026-11-26: Sicilianos, Bengalíes) y costo
+#: (100, multiplicador).
+ATRIBUTOS = {0, 1, 5, 8, 9, 10, 11, 12, 20, 24, 100}
 #: Tipos de efecto que tocan atributos: fijar, sumar y multiplicar.
 MODIFICA = {0, 4, 5}
 RECURSOS = {0: "food", 1: "wood", 2: "stone", 3: "gold"}
