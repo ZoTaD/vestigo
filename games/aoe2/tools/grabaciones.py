@@ -25,8 +25,9 @@ EDADES = (101, 102, 103)
 #: unidades" (27/11): lo encolado cuenta aunque se cancele, y salían 564 aldeanos y 2152 exploradores en una partida.
 MARCAS = {"feudal": "min", "imperial": "min", "apm": "max"}
 #: Pisos para las marcas: clics más tempranos aparecen en mapas con comida de más o partidas raras, y una marca que
-#: parece mentira no sirve como dato curioso (26/11: un Feudal a 5:31 que no se pudo verificar).
-PISO = {"feudal": 390, "imperial": 1200}
+#: parece mentira no sirve como dato curioso (26/11: un Feudal a 5:31 que no se pudo verificar). Feudal a 6:00 desde el
+#: 27/11, con la prueba de Castillos: los pros hacen clic entre 6:28 y 6:51.
+PISO = {"feudal": 360, "imperial": 1200}
 #: Lo que tarda en investigarse Imperial (segundos de juego): un clic sin recursos también queda en la grabación, así
 #: que la marca pide que la partida haya seguido al menos eso después del clic.
 IMPERIAL = 190
