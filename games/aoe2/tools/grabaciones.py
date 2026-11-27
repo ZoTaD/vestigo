@@ -21,11 +21,15 @@ ALDEANO = 83
 #: Aldeanos, barcos pesqueros, de transporte y comerciales y carros de comercio: no son ejército.
 ECONOMICAS = {83, 13, 17, 128, 545}
 EDADES = (101, 102, 103)
-#: Las marcas de los datos curiosos y si gana el valor más chico (tiempos) o el más grande.
-MARCAS = {"feudal": "min", "imperial": "min", "apm": "max", "villagers": "max", "army": "max"}
+#: Las marcas de los datos curiosos y si gana el valor más chico (tiempos) o el más grande. Sin aldeanos ni "más
+#: unidades" (27/11): lo encolado cuenta aunque se cancele, y salían 564 aldeanos y 2152 exploradores en una partida.
+MARCAS = {"feudal": "min", "imperial": "min", "apm": "max"}
 #: Pisos para las marcas: clics más tempranos aparecen en mapas con comida de más o partidas raras, y una marca que
 #: parece mentira no sirve como dato curioso (26/11: un Feudal a 5:31 que no se pudo verificar).
-PISO = {"feudal": 390, "imperial": 900}
+PISO = {"feudal": 390, "imperial": 1200}
+#: Lo que tarda en investigarse Imperial (segundos de juego): un clic sin recursos también queda en la grabación, así
+#: que la marca pide que la partida haya seguido al menos eso después del clic.
+IMPERIAL = 190
 #: Una partida tiene que durar esto (segundos de juego) para que su APM cuente (las de 3 minutos dan cualquier cosa).
 MIN_APM = 10 * 60
 
@@ -53,25 +57,22 @@ def por_jugador(lectura, linea: dict[int, int]) -> dict[int, dict]:
                 k = linea.get(a.id, a.id)
                 units[k] = units.get(k, 0) + a.amount
         apm = round(lectura.cuenta.get(j, 0) / minutos) if lectura.fin >= MIN_APM else None
-        out[j] = {"apm": apm, "ages": ages, "units": units}
+        out[j] = {"apm": apm, "ages": ages, "units": units, "fin": lectura.fin}
     return out
 
 
 def marcas(datos: dict) -> dict[str, tuple[int, int | None]]:
-    """Las marcas de un jugador en una partida: `{marca: (valor, extra)}` (extra = la línea, en `army`)."""
+    """Las marcas de un jugador en una partida: `{marca: (valor, None)}`. Un clic de edad sin recursos también queda en
+    la grabación, así que cada edad pide una prueba de que llegó: Feudal, un clic a Castillos después (sólo se puede
+    desde Feudal); Imperial, que la partida haya seguido lo que tarda la investigación."""
     out: dict[str, tuple[int, int | None]] = {}
-    if datos["ages"][0] is not None and datos["ages"][0] >= PISO["feudal"]:
-        out["feudal"] = (datos["ages"][0], None)
-    if datos["ages"][2] is not None and datos["ages"][2] >= PISO["imperial"]:
-        out["imperial"] = (datos["ages"][2], None)
+    feudal, castillos, imperial = datos["ages"]
+    if feudal is not None and feudal >= PISO["feudal"] and castillos is not None and castillos > feudal:
+        out["feudal"] = (feudal, None)
+    if imperial is not None and imperial >= PISO["imperial"] and datos.get("fin", 0) >= imperial + IMPERIAL:
+        out["imperial"] = (imperial, None)
     if datos["apm"] is not None:
         out["apm"] = (datos["apm"], None)
-    if datos["units"].get(ALDEANO):
-        out["villagers"] = (datos["units"][ALDEANO], None)
-    militares = [(n, k) for k, n in datos["units"].items() if k not in ECONOMICAS]
-    if militares:
-        n, k = max(militares)
-        out["army"] = (n, k)
     return out
 
 

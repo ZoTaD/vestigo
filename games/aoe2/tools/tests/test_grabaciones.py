@@ -30,10 +30,17 @@ def test_por_jugador_de_una_grabacion_real():
 
 
 def test_marcas_ignoran_clics_imposibles():
-    m = g.marcas({"apm": None, "ages": [120, None, 600], "units": {83: 30, 4: 25, 7: 3}})
-    assert "feudal" not in m and "imperial" not in m and "apm" not in m
-    assert m["villagers"] == (30, None)
-    assert m["army"] == (25, 4)
+    m = g.marcas({"apm": None, "ages": [120, None, 600], "units": {83: 30, 4: 25, 7: 3}, "fin": 3000})
+    assert m == {}
+
+
+def test_marcas_piden_haber_llegado_a_la_edad():
+    sin_castillos = g.marcas({"apm": 50, "ages": [420, None, None], "units": {}, "fin": 3000})
+    assert "feudal" not in sin_castillos and sin_castillos["apm"] == (50, None)
+    assert g.marcas({"apm": None, "ages": [420, 900, None], "units": {}, "fin": 3000})["feudal"] == (420, None)
+    # Imperial a 21:00 en una partida que terminó a 22:00: no llegó a investigarla.
+    assert "imperial" not in g.marcas({"apm": None, "ages": [420, 900, 1260], "units": {}, "fin": 1320})
+    assert g.marcas({"apm": None, "ages": [420, 900, 1260], "units": {}, "fin": 1800})["imperial"] == (1260, None)
 
 
 def test_sumar_top_deja_las_mejores_y_no_repite():
@@ -80,12 +87,12 @@ def test_datos_curiosos_de_la_portada():
         "units": {"1800+|britons|4": [30, 18], "<1000|franks|38": [10, 4]},
         "apm": {"1800+": [40, 6000], "<1000": [10, 300]},
         "age": {"1800+|0": [40, 40 * 420]},
-        "top": {"army": [[120, 5, 9, "britons", 4, "wR.Nicov"]], "feudal": [[400, 6, 8, "franks", None, "x"]]},
+        "top": {"apm": [[120, 5, 9, "britons", None, "wR.Nicov"]], "feudal": [[400, 6, 8, "franks", None, "x"]]},
     }
     f = d.datos_curiosos(w)
     assert f["players"] == 80
     assert f["apm"] == [["1800+", 150]]  # la banda con 10 jugadores no alcanza
     assert f["feudal"] == [["1800+", 420]]
     assert f["mostMassed"]["unit"]["id"] == 4 and f["mostMassed"]["share"] == 0.375
-    assert f["top"]["army"]["alias"] == "wR.Nicov" and f["top"]["army"]["unit"]["name"]["en"] == "Archer"
+    assert f["top"]["apm"]["alias"] == "wR.Nicov" and f["top"]["feudal"]["value"] == 400
     assert d.datos_curiosos({}) is None

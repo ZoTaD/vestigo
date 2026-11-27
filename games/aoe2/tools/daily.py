@@ -302,6 +302,8 @@ def _tops(dias: list[dict]) -> dict:
             if marca not in grab.MARCAS:
                 continue
             for f in filas:
+                if f[0] < grab.PISO.get(marca, 0):  # los días guardados con un piso más bajo
+                    continue
                 out[marca] = grab.sumar_top(out.get(marca, []), f, marca)
     return out
 
@@ -431,7 +433,7 @@ def home_json(foto: dict | None, resumen_: dict | None, top: int = 5) -> dict:
 
 def datos_curiosos(w: dict, minimo: int = 30) -> dict | None:
     """Los datos curiosos de la portada (2026-11-26), de las grabaciones de los últimos 28 días: la mejor marca de cada
-    tipo (`grabaciones.MARCAS`, con nombre e ícono de la unidad en `army`), APM y clic a Feudal promedio por banda, y la
+    tipo (`grabaciones.MARCAS`), APM y clic a Feudal promedio por banda, y la
     unidad que más se usa en serio. None si todavía no hay grabaciones con unidades."""
     if not w.get("rec"):
         return None
@@ -439,7 +441,7 @@ def datos_curiosos(w: dict, minimo: int = 30) -> dict | None:
     unidad = lambda i: {"id": i, "pic": u[i]["pic"], "name": u[i]["name"]} if i in u else None
     top = {}
     for marca, filas in (w.get("top") or {}).items():
-        if filas:
+        if filas and marca in grab.MARCAS:
             f = filas[0]
             top[marca] = {"value": f[0], "match": f[1], "profile": f[2], "civ": f[3], "alias": f[5] if len(f) > 5 else "", "unit": unidad(f[4]) if f[4] else None}
     promedio = lambda clave: [[b, round(x[1] / x[0])] for b in BANDAS if (x := (w.get(clave) or {}).get(b)) and x[0] >= minimo]

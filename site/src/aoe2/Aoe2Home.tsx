@@ -166,7 +166,8 @@ export default function Aoe2Home({ route, navigate }: { route: Route; navigate: 
 }
 
 /** Los jugadores que seguís (y el tuyo arriba), con alias y ELO de 1v1 de `/api/aoe2/players`. */
-const MARCAS: MarcaKey[] = ["feudal", "imperial", "apm", "army", "villagers"];
+/** Sin aldeanos ni "más unidades" (27/11): lo encolado cuenta aunque se cancele y daba cifras imposibles. */
+const MARCAS: MarcaKey[] = ["feudal", "imperial", "apm"];
 
 function DatosCuriosos({ f, route, navigate }: { f: Facts; route: Route; navigate: Nav }) {
   const t = useAoe2Copy();
